@@ -1,0 +1,121 @@
+/* sidebar.css */
+.sidebar {
+    width: 264px;
+    
+    
+    color: #ffffff;
+    height: 1197px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    border : 1px solid ;
+    opacity: 100%;
+    background-color:#373656; 
+    color: #2c3e50;           
+    transform: rotate(0deg);  
+    opacity: 100%;   
+}
+
+.sidebar-header {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid #444;
+    border:none;
+    color:#ffffff;
+}
+
+.sidebar-header h3 {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.sidebar-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-grow: 1;
+    
+}
+
+.sidebar-nav li {
+    
+    position: relative; /* For dropdown positioning */
+}
+
+.nav-link, .dropdown > .nav-link {
+    display: block;
+    padding: 15px 20px;
+    color: #ddd;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-link:hover {
+    background-color: #d65e19;
+    color: #ffffff;
+}
+
+
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    background-color: #2a2a2a;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #444;
+    position: absolute;
+    top: 100%; /* Position below the button */
+    left: 0; /* Align with the button */
+    width: 100%; /* Full width of the parent item */
+    display: none; /* Hidden by default */
+    z-index: 10; /* Ensure it appears above other elements */
+}
+
+.dropdown-inline li {
+    border:none;
+    width:150px;
+    height: 50px;
+   
+   
+    
+
+}
+
+
+
+.dropdown-item:hover {
+    background-color: #444;
+    color: #ffffff;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block; /* Show dropdown on hover */
+}
+
+.sidebar-nav li:last-child {
+    border-bottom: none;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    .sidebar-header h3 {
+        font-size: 1.2rem;
+    }
+
+    .nav-link, .dropdown-menu .dropdown-item {
+        font-size: 0.9rem;
+        padding: 10px 15px;
+    }
+}

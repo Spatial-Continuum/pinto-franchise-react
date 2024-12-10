@@ -1,0 +1,15 @@
+.search-bar input{
+    width: 327px;
+    height:40px;
+    word-spacing: 16;
+    position: fixed;
+    top:268px;
+    left:288px;
+    opacity: 100%;
+    border-radius: 0px;
+    background-color: #FFFFFF;
+    border: 1px solid #D7D7D7;
+    transform: rotate(0deg);
+    color:#5A5858;
+    outline: none;
+  }
