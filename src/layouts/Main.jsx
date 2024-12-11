@@ -7,7 +7,7 @@ import '../assets/styles/adminLayout.css'
 
 import DateBox from '../components/Dropdown/DateBox'
 import FilterDropdown from "../components/Dropdown/FilterDropdown";
-import SearchBox from "../components/SearchBox/searchBox";
+import SearchBox from "../components/SearchBox/SearchBox";
 
 
 
