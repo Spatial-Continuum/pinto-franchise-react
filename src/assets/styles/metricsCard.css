@@ -17,7 +17,41 @@
     position: fixed;
     left: 288px; /* X-axis position */
     top: 96px;  
+    align-items: center;
+    text-align: center;
 }
+.card1-text {
+    
+    width:118px;
+    height: 67px;
+    margin-left: 35px;
+
+    
+
+    
+}
+.card1-text h1{
+    color:#1E99FF;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: -18px;
+    margin-top: 20px;
+    margin-left:-inherit;
+    
+    
+    
+}
+.card1-text h6{
+    width:115px;
+    height:22px;
+    opacity:100%;
+    color:#030714;
+    font-size: medium;
+    line-height: 22px;
+
+    
+}
+
 .card2{
     width:188px;
     height:124px;

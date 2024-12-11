@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from 'react-router-dom';
-import '../../assets/styles/sidebar.css'
+import '../assets/styles/sidebar.css'
 import { Container } from "postcss";
 
 
@@ -32,9 +32,9 @@ const Sidebar = () => {
                     <span className={`nav-link ${isDropdownOpen ? "active" : "" }`}>Delivery Partner</span>
                     {isDropdownOpen && (
                         <ul className="dropdown-inline">
-                          <li><Link to="/salaried" className="dropdown-item">Salaried</Link></li>
-                          <li><Link to="/delivery-based" className="dropdown-item">Delivery Based</Link></li>
-                          <li><Link to="/onboarding" className="dropdown-item">Onboarding</Link></li>
+                          <li><Link to="/delivery-partner/salaried" className="dropdown-item">Salaried</Link></li>
+                          <li><Link to="/delivery-partner/deliverybased" className="dropdown-item">Delivery Based</Link></li>
+                          <li><Link to="/delivery-partner/onboarding" className="dropdown-item">Onboarding</Link></li>
                         </ul>
                     )}
                 </li>

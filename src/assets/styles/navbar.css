@@ -4,76 +4,161 @@
     justify-content: space-between;
     align-items: baseline;
     padding: 10px 20px;
-  
+
     /* Dimensions */
-    width: 1176px;
+    width: 100%; /* 100% width of the screen */
     height: 72px;
-  
+
     /* Positioning */
     position: fixed;
-    left: 264px; /* X-axis position */
-    top: 0;      /* Y-axis position */
-  
+    left: 0; /* Align navbar to left */
+    top: 0;  /* Fixed at the top of the page */
+
     /* Appearance */
-    background-color: #f8f9fa; 
-    color: #2c3e50;           
-    transform: rotate(0deg);  
-    opacity: 100%;           
-  
+    background-color: #f8f9fa;
+    color: #2c3e50;
+
     /* Effects */
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Drop shadow */
-    border: 1px solid #F8F9FA;       /* Stroke with weight 1 */
-  
-    /* Other */
-    border-radius: 0px;       /* Slightly rounded corners */
-    box-sizing: border-box;   /* Include padding in dimensions */
-  }
-  
-  
-  .navbar-left {
+    border: 1px solid #F8F9FA; /* Border for the navbar */
+    box-sizing: border-box; /* Include padding in dimensions */
+}
+
+.navbar-left {
     flex: 1;
-  }
-  
-  .navbar-logo {
+}
+
+.navbar-logo {
     font-size: 24px;
     font-weight: bold;
     color: white;
     text-decoration: none;
-  }
-  
-  .navbar-center {
+}
+
+.navbar-center {
     flex: 2;
     display: flex;
     justify-content: center;
-  }
+}
 
- 
-  
- 
-  
-  .navbar-right {
+.search-bar input {
+    width: 300px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: none;
+    outline: none;
+}
+
+.navbar-right {
     flex: 1;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-  }
-  
-  .navbar-icons {
+}
+
+.navbar-icons {
     display: flex;
     gap: 15px;
-  }
-  
-  .navbar-icon {
+}
+
+.navbar-icon {
     font-size: 20px;
     cursor: pointer;
     transition: color 0.3s;
-  }
-  
-  .navbar-icon:hover {
+}
+
+.navbar-icon:hover {
     color: #f39c12;
-  }
-  
-  .navbar-icon:last-child {
+}
+
+.navbar-icon:last-child {
     font-size: 24px; /* Larger icon for user/profile */
-  }
-  
+}
+
+/* Media Queries */
+
+/* Large screens (greater than 1600px) */
+@media (min-width: 1600px) {
+    .navbar {
+        width: 100%; /* Full width of the screen */
+        padding: 10px 40px; /* Adjust padding for larger screens */
+    }
+
+    .navbar-logo {
+        font-size: 28px; /* Larger logo text */
+    }
+
+    .search-bar input {
+        width: 400px; /* Larger search bar */
+    }
+
+    .navbar-icon {
+        font-size: 24px; /* Larger icons */
+    }
+}
+
+/* Screens between 768px and 1600px */
+@media (max-width: 1600px) and (min-width: 768px) {
+    .navbar {
+        width: 100%; /* Full width of the screen */
+        padding: 10px 20px; /* Adjust padding for medium screens */
+    }
+
+    .navbar-logo {
+        font-size: 26px; /* Slightly larger logo text */
+    }
+
+    .search-bar input {
+        width: 350px; /* Search bar adjusted for medium screens */
+    }
+
+    .navbar-icon {
+        font-size: 22px; /* Slightly larger icons */
+    }
+}
+
+/* Mobile devices (less than 768px) */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column; /* Stack items vertically */
+        height: auto; /* Allow height to adjust dynamically */
+        padding: 10px;
+        left: 0; /* Full-width navbar */
+        width: 100%; /* Full-width navbar */
+    }
+
+    .navbar-left, .navbar-center, .navbar-right {
+        flex: unset; /* Reset flex-grow */
+        width: 100%; /* Full-width sections */
+        text-align: center; /* Center-align content */
+    }
+
+    .navbar-logo {
+        font-size: 20px;
+    }
+
+    .search-bar input {
+        width: 80%; /* Adjust search bar for small screens */
+        margin: 10px 0;
+    }
+
+    .navbar-icons {
+        gap: 10px; /* Reduce gap between icons */
+        justify-content: center;
+    }
+
+    .navbar-icon {
+        font-size: 18px; /* Smaller icons */
+    }
+}
+
+/* Ultra-small devices (less than 480px) */
+@media (max-width: 480px) {
+    .search-bar input {
+        width: 100%; /* Full-width search bar */
+    }
+
+    .navbar-icon {
+        font-size: 16px; /* Smaller icons for ultra-small devices */
+    }
+}
