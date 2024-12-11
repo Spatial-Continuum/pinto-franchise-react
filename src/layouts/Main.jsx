@@ -3,10 +3,11 @@ import Sidebar from "../layouts/Sidebar";
 import Navbar from "../layouts/Navbar";
 import MetricsCard from "../components/MetricsCard/MetricsCard";
 import '../assets/styles/adminLayout.css'
-import SearchBox from "../components/SearchBox/searchBox";
+
 
 import DateBox from '../components/Dropdown/DateBox'
 import FilterDropdown from "../components/Dropdown/FilterDropdown";
+import SearchBox from "../components/SearchBox/searchBox";
 
 
 
@@ -19,7 +20,7 @@ const Main = ({ children }) => {
                 <div className="cards-and-content">
                     <MetricsCard />
                     <div className="searchBox-and-content">
-                        <SearchBox />
+                        <SearchBox/>
                         <div className="datepicker-and-content">
                             <DateBox />
                             <div className="filterDropdown-and-content">
