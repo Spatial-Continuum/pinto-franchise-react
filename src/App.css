@@ -8,3 +8,19 @@ body {
   padding-bottom: 500px;
   
 }
+@media screen and (max-width: 767px) {
+  body{
+    height: 3000px;
+    width:1400px;
+    padding-top: -500px;
+    margin-top: -500px;
+  }
+}
+@media screen and (max-width: 1024px) and (min-width: 768px) {
+  body{
+    height: 3000px;
+    width:1400px;
+    padding-top: -500px;
+    margin-top: -500px; 
+  }
+}

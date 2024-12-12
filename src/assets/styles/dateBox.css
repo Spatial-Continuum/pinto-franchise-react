@@ -32,9 +32,8 @@
 /* Mobile devices (width <= 767px) */
 @media screen and (max-width: 767px) {
   .date-box-container {
-    left: 20px;  /* Adjust the position to be more accessible on mobile */
-    top: 20px;  /* Adjust top for mobile */
-    width: 120px; /* Reduce width */
+    margin-left: -550px;
+    width: 150px; /* Reduce width */
   }
 
   .date-picker {

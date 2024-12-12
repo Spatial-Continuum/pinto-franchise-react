@@ -68,13 +68,16 @@
   /* Mobile devices (width <= 767px) */
   @media screen and (max-width: 767px) {
     .card-container {
-      margin-left: 0; /* Reset margin on small screens */
+      margin-left: 210px; /* Reset margin on small screens */
+      margin-top: -100px;
       flex-direction: column; /* Stack the cards vertically */
       align-items: center; /* Center the cards horizontally */
+      
     }
   
     .card1, .card2, .card3, .card4 {
       width: 90%; /* Make the cards take up 90% of the screen width */
+      height:300px;
       margin-bottom: 15px; /* Add spacing between stacked cards */
     }
   }

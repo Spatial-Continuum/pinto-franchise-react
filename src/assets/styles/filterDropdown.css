@@ -39,9 +39,7 @@
 /* Mobile devices (width <= 767px) */
 @media screen and (max-width: 767px) {
   .filter-dropdown-container {
-    left: 20px; /* Adjust the position for smaller screens */
-    top: 10px; /* Adjust top for mobile */
-    width: 140px; /* Reduce width for mobile */
+    margin-left: -198px;
   }
 
   .filter-dropdown {
