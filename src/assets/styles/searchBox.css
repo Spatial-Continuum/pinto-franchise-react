@@ -52,7 +52,11 @@
 /* Tablet devices (width between 768px and 1024px) */
 @media screen and (max-width: 1024px) and (min-width: 768px) {
   .search-bar input {
-    width: 80%; /* Make the search bar 80% of the screen width */
+  
+    width: 30%; /* Take up most of the screen width */
+    height:60px;
+    margin-top:-200px; 
+    text-align: left;
   }
 }
 

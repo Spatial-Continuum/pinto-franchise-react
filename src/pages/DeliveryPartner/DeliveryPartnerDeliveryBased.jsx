@@ -1,7 +1,7 @@
 import React from 'react'
 import Main from '../../layouts/Main'
 import DeliveryBasedTable from '../../modules/deliveryPartners/DeliveryBased/DeliveryBasedTable'
-import '../../assets/styles/DeliveryPartnerDeliveryBased.css'
+
 const DeliveryPartnerDeliveryBased = () => {
   return (
     <div className='app'>
