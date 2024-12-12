@@ -1,15 +1,53 @@
-.search-bar input{
-    width: 327px;
-    height:40px;
-    word-spacing: 16;
-    position: fixed;
-    top:268px;
-    left:288px;
-    opacity: 100%;
-    border-radius: 8px;
-    background-color: #FFFFFF;
-    border: 1px solid #D7D7D7;
-    transform: rotate(0deg);
-    color:#5A5858;
-    outline: none;
+/* Styling for the search bar input */
+.search-bar {
+  display: flex;
+  justify-content: center; /* Centers the input horizontally */
+  align-items: center; /* Vertically center the input */
+  width: 100%;
+  padding-top: 20px; /* Adjust top spacing */
+}
+
+.search-bar input {
+  width: 327px; /* Fixed width */
+  height: 40px;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  left:-100px;
+  top:128px;
+  position: relative;
+  border: 1px solid #D7D7D7;
+  color: #5A5858;
+  outline: none; /* Removes the default outline on focus */
+  padding-left: 10px; /* Adds some padding inside the input */
+  font-size: 14px; /* Adjusts font size for readability */
+  transition: border-color 0.3s ease; /* Smooth transition for focus state */
+}
+
+/* Focus state for search bar */
+.search-bar input:focus {
+  border-color: #1E99FF; /* Change border color on focus */
+  box-shadow: 0 0 5px rgba(30, 153, 255, 0.5); /* Add a subtle glow */
+}
+
+/* Media Queries for Responsiveness */
+
+/* Mobile devices (width <= 767px) */
+@media screen and (max-width: 767px) {
+  .search-bar input {
+    width: 90%; /* Take up most of the screen width */
   }
+}
+
+/* Tablet devices (width between 768px and 1024px) */
+@media screen and (max-width: 1024px) and (min-width: 768px) {
+  .search-bar input {
+    width: 80%; /* Make the search bar 80% of the screen width */
+  }
+}
+
+/* Desktop and larger screens (width >= 1025px) */
+@media screen and (min-width: 1025px) {
+  .search-bar input {
+    width: 327px; /* Keep the fixed width for larger screens */
+  }
+}

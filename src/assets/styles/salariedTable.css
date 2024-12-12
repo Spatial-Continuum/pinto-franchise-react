@@ -1,15 +1,39 @@
-.salaried-Table{
-    position:fixed;
-    left: 288px;
-    top:329px;
+.salaried-Table {
+    position: relative;
+    left: 282px; /* Removed left offset to make it more centered */
+    top: 93px;
     transform: rotate(0deg);
-    width: 1130px;
-    height: 584px;
+    width: 100%; /* Makes table width responsive */
+    max-width: 1130px; /* Max width for larger screens */
+    max-height: 584px; /* Max height for larger screens */
     opacity: 100%;
     border-radius: 12px;
     background-color: #FFFFFF;
     border: 1px solid #D7D7D7;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: auto; /* Allows the table to be scrollable if it exceeds the container */
 }
 
+.salaried-Table::-webkit-scrollbar {
+    display: none; /* Hides the scrollbar in WebKit browsers (Chrome, Safari) */
+}
 
+/* Make the table horizontally and vertically scrollable on smaller screens */
+@media (max-width: 1024px) {
+    .salaried-Table {
+        width: 100%; /* Take full width on smaller screens */
+        max-height: 500px; /* Adjust max height on smaller screens */
+        overflow-x: auto; /* Enable horizontal scrolling */
+        overflow-y: auto; /* Enable vertical scrolling */
+    }
+}
+
+/* Mobile devices (less than 768px) */
+@media (max-width: 768px) {
+    .salaried-Table {
+        width: 100%; /* Full width for mobile devices */
+        max-height: 400px; /* Reduce max-height on small screens */
+        overflow-x: auto; /* Enable horizontal scrolling */
+        overflow-y: auto; /* Enable vertical scrolling */
+    }
+}

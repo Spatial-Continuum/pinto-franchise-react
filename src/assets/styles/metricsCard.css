@@ -1,95 +1,108 @@
-.card-container{
-    gap:20px;
-    display:flex;
+/* Card container */
+.card-container {
+    gap: 20px;
+    display: flex;
     flex-direction: row;
     margin-left: 274px;
-
-}
-.card1{
-    width:188px;
-    height:124px;
-    border: 1px solid #1E99FF;
+    flex-wrap: wrap; /* Allows wrapping of cards when the screen is smaller */
+  }
+  
+  /* Common card styles */
+  .card1, .card2, .card3, .card4 {
+    width: 188px;
+    height: 124px;
     border-radius: 12px;
-    background-color:#FFFFFF;
+    background-color: #FFFFFF;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     transform: rotate(0deg);  
     opacity: 100%;
-    position: fixed;
-    left: 288px; /* X-axis position */
-    top: 96px;  
-    align-items: center;
-    text-align: center;
-}
-.card1-text {
-    
-    width:118px;
+    position: relative;
+    left: 5px;
+    top: 0px;
+  }
+  
+  .card1 {
+    border: 1px solid #1E99FF;
+  }
+  
+  .card2 {
+    border: 1px solid #FF6B00;
+  }
+  
+  .card3 {
+    border: 1px solid #008B0E;
+  }
+  
+  .card4 {
+    border: 1px solid #D5D5D5;
+    border-radius: 12px;
+  }
+  
+  /* Card text styles */
+  .card1-text {
+    width: 118px;
     height: 67px;
     margin-left: 35px;
-
-    
-
-    
-}
-.card1-text h1{
-    color:#1E99FF;
+  }
+  
+  .card1-text h1 {
+    color: #1E99FF;
     font-size: 28px;
     font-weight: bold;
     margin-bottom: -18px;
     margin-top: 20px;
-    margin-left:-inherit;
-    
-    
-    
-}
-.card1-text h6{
-    width:115px;
-    height:22px;
-    opacity:100%;
-    color:#030714;
+    margin-left: -inherit;
+  }
+  
+  .card1-text h6 {
+    width: 115px;
+    height: 22px;
+    opacity: 100%;
+    color: #030714;
     font-size: medium;
     line-height: 22px;
-
-    
-}
-
-.card2{
-    width:188px;
-    height:124px;
-    border: 1px solid #FF6B00;
-    border-radius: 12px;
-    background-color:#FFFFFF;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    transform: rotate(0deg);  
-    opacity: 100%;
-    position: fixed;
-    left: 500px; /* X-axis position */
-    top: 96px; 
-    
-}
-.card3{
-    width:188px;
-    height:124px;
-    border: 1px solid #008B0E;
-    border-radius: 12px;
-    background-color:#FFFFFF;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    transform: rotate(0deg);  
-    opacity: 100%;
-    position: fixed;
-    left: 712px; 
-    top: 96px; 
-}
-.card4{
-    width:188px;
-    height:124px;
-    border: 50% solid #D5D5D5;
-    border-radius: 12px;
-    background-color:#FFFFFF;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    transform: rotate(0deg);  
-    opacity: 100%;
-    position: fixed;
-    left: 924px; 
-    top: 96px; 
-    
-}
+  }
+  
+  /* Media Queries for Responsiveness */
+  
+  /* Mobile devices (width <= 767px) */
+  @media screen and (max-width: 767px) {
+    .card-container {
+      margin-left: 0; /* Reset margin on small screens */
+      flex-direction: column; /* Stack the cards vertically */
+      align-items: center; /* Center the cards horizontally */
+    }
+  
+    .card1, .card2, .card3, .card4 {
+      width: 90%; /* Make the cards take up 90% of the screen width */
+      margin-bottom: 15px; /* Add spacing between stacked cards */
+    }
+  }
+  
+  /* Tablet devices (width between 768px and 1024px) */
+  @media screen and (max-width: 1024px) and (min-width: 768px) {
+    .card-container {
+      flex-direction: row;
+      justify-content: space-around; /* Ensure cards are spaced evenly */
+      align-items: center;
+    }
+  
+    .card1, .card2, .card3, .card4 {
+      width: 45%; /* Each card takes up 45% of the width */
+      margin-bottom: 20px; /* Add some bottom margin between rows */
+    }
+  }
+  
+  /* Desktop and larger screens (width >= 1025px) */
+  @media screen and (min-width: 1025px) {
+    .card-container {
+      flex-direction: row; /* Keep cards in a row for larger screens */
+      justify-content: flex-start; /* Align items to the left */
+    }
+  
+    .card1, .card2, .card3, .card4 {
+      width: 188px; /* Keep the original width */
+      height: 124px;
+    }
+  }
+  

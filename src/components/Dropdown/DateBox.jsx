@@ -29,14 +29,7 @@ const DateBox = () => {
         placeholderText="Select Date"
       />
 
-      {/* Display the selected date inside a box */}
-      {selectedDate && (
-        <div className="selected-date-box">
-          <p className="selected-date-text">
-            {selectedDate.toISOString().split("T")[0]} {/* Format the date */}
-          </p>
-        </div>
-      )}
+      
     </div>
   );
 };

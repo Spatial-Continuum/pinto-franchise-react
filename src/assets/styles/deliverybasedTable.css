@@ -1,0 +1,22 @@
+.deliverybased-Table{
+    position:relative;
+    left: 288px;
+    top:93px;
+    transform: rotate(0deg);
+    width: 1130px;
+    max-height: 584px;
+    opacity: 100%;
+    border-radius: 12px;
+    background-color: #FFFFFF;
+    border: 1px solid #D7D7D7;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    
+    /* Set height to limit table size */
+    
+}
+
+.deliverybased-Table::-webkit-scrollbar {
+    display: none; /* Hides the scrollbar in WebKit browsers (Chrome, Safari) */
+}
+
+

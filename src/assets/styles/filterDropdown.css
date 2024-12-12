@@ -1,42 +1,82 @@
 /* Style for the container */
 .filter-dropdown-container {
-    position: fixed;
+  position: relative;
   left: 1082px;
-  top: 268px;
+  top: 43px;
   width: 168px;
   height: 40px;
   background-color: #FFFFFF;
   border: none;
   border-radius: 4px;
-
   color: #030714;
-  z-index: 10; 
-  }
-  
-  
-  
-  /* Style for the dropdown */
-  .filter-dropdown {
-    
-    padding: 8px;
-    font-size: 14px;
-    border-radius: 4px;
-    cursor: pointer;
-    position: fixed;
-  left: 1082px;
-  top: 268px;
+}
+
+/* Style for the dropdown */
+.filter-dropdown {
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  left: 0px;
+  top: 0px;
   width: 168px;
   height: 40px;
   background-color: #FFFFFF;
-  border:0.5px solid #A7D7FF;
+  border: 0.5px solid #A7D7FF;
   color: #030714;
-  z-index: 10; 
+}
+
+/* Style for options inside the dropdown */
+.filter-dropdown option {
+  padding: 10px;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Media Queries for Responsiveness */
+
+/* Mobile devices (width <= 767px) */
+@media screen and (max-width: 767px) {
+  .filter-dropdown-container {
+    left: 20px; /* Adjust the position for smaller screens */
+    top: 10px; /* Adjust top for mobile */
+    width: 140px; /* Reduce width for mobile */
   }
-  
-  /* Style for options inside the dropdown */
-  .filter-dropdown option {
-    padding: 10px;
-    font-size: 14px;
-    color: #333;
+
+  .filter-dropdown {
+    width: 140px; /* Adjust dropdown width */
+    height: 35px; /* Adjust height */
+    font-size: 12px; /* Reduce font size for mobile */
   }
-  
+}
+
+/* Tablet devices (width between 768px and 1024px) */
+@media screen and (max-width: 1024px) and (min-width: 768px) {
+  .filter-dropdown-container {
+    left: 50px; /* Adjust left for tablet */
+    top: 20px; /* Adjust top for tablet */
+    width: 150px; /* Adjust width */
+  }
+
+  .filter-dropdown {
+    width: 150px; /* Adjust dropdown width */
+    height: 38px; /* Adjust height */
+    font-size: 13px; /* Adjust font size */
+  }
+}
+
+/* Desktop and larger screens (width >= 1025px) */
+@media screen and (min-width: 1025px) {
+  .filter-dropdown-container {
+    left: 1082px; /* Keep original position for larger screens */
+    top: 43px;
+    width: 168px; /* Keep original width */
+  }
+
+  .filter-dropdown {
+    width: 168px; /* Keep original width for larger screens */
+    height: 40px; /* Keep original height */
+    font-size: 14px; /* Keep original font size */
+  }
+}

@@ -1,13 +1,13 @@
 import React from 'react'
 import Main from '../../layouts/Main'
-import SalariedTable from '../../modules/deliveryPartners/Salaried/SalariedTable'
-
+import DeliveryBasedTable from '../../modules/deliveryPartners/DeliveryBased/DeliveryBasedTable'
+import '../../assets/styles/DeliveryPartnerDeliveryBased.css'
 const DeliveryPartnerDeliveryBased = () => {
   return (
-    <div>
+    <div className='app'>
       <Main>
       <div className="delivery-partner-salaried">
-        <SalariedTable />
+        <DeliveryBasedTable />
       </div>
     </Main>
     </div>

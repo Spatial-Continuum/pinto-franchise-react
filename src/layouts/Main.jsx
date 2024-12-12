@@ -2,13 +2,13 @@ import React, { Children } from "react";
 import Sidebar from "../layouts/Sidebar";
 import Navbar from "../layouts/Navbar";
 import MetricsCard from "../components/MetricsCard/MetricsCard";
-import '../assets/styles/adminLayout.css'
+
 
 
 import DateBox from '../components/Dropdown/DateBox'
 import FilterDropdown from "../components/Dropdown/FilterDropdown";
 import SearchBox from "../components/SearchBox/SearchBox";
-
+import '../assets/styles/main.css'
 
 
 const Main = ({ children }) => {
@@ -25,7 +25,7 @@ const Main = ({ children }) => {
                             <DateBox />
                             <div className="filterDropdown-and-content">
                                 <FilterDropdown />
-                                <div className="main-content">
+                                <div className="main-content-scrollable">
                                     {children}
                                 </div>
                             </div>

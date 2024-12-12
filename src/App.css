@@ -1,3 +1,7 @@
 body{
-  background-color:#FAFAFA;
+  background-color: #FAFAFA;
+  height: 100%; /* Height adjusts based on the content */
+  margin: 0;
+  padding: 0;
+  background-size:cover;
 }

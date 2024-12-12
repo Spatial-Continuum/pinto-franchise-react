@@ -1,15 +1,15 @@
 /* Styling for the container of the date box */
 .date-box-container {
-  position: fixed;
+  position: relative;
   left: 1270px;
-  top: 268px;
+  top: 83px;
   width: 140px;
   height: 40px;
   background-color: #F1F5F9;
   border: 1px solid #DBEFFF;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   color: #030714;
-  z-index: 10; /* Ensure the date box is above other elements */
+  /* Ensure the date box is above other elements */
 }
 
 /* Styling for the date picker input */
@@ -21,41 +21,52 @@
   border-radius: 6px;
   background-color: #F1F5F9;
   border: 1px solid #DBEFFF;
-  position: relative; /* Changes here to make the picker calendar align correctly */
-  left: 0; /* Adjust left as needed */
-  top: 0; /* Adjust top as needed */
-  z-index: 20; /* Ensure the picker input is on top of the date box */
-  text-align:center;
-  
+  position: relative;
+  left: 0;
+  top: 0;
+  text-align: center;
 }
 
-/* Styling for the selected date display box */
-.selected-date-box {
-  font-size: 18px;
-  font-weight: bold;
-  position: fixed;
-  background-color: #DBEFFF;
-  left: 1270px;
-  top: 268px;
-  border: 1px solid #DBEFFF;
-  border-radius: 6px;
-  color: #030714;
-  width: 140px;
-  height: 40px;
-  z-index: 15; /* Ensure the selected date box is above the rest of the content */
+/* Media Queries for Responsiveness */
+
+/* Mobile devices (width <= 767px) */
+@media screen and (max-width: 767px) {
+  .date-box-container {
+    left: 20px;  /* Adjust the position to be more accessible on mobile */
+    top: 20px;  /* Adjust top for mobile */
+    width: 120px; /* Reduce width */
+  }
+
+  .date-picker {
+    width: 120px; /* Adjust date picker width */
+    height: 35px; /* Slightly smaller height */
+  }
 }
 
-/* Styling for the text inside the selected date box */
-.selected-date-text {
-  font-size: 14px;
-  font-weight: normal;
-  text-align: end;
-  color: #030714;
-  background-color: #DBEFFF;
-  padding-right: 10px; /* Ensure the text is aligned correctly */
-  height: 12px;
-  line-height: 12px;
-  width: 90%;
-  opacity: 100%;
-  z-index: 15; /* Ensure text is on top of the selected date box */
+/* Tablet devices (width between 768px and 1024px) */
+@media screen and (max-width: 1024px) and (min-width: 768px) {
+  .date-box-container {
+    left: 50px;  /* Adjust left for tablet */
+    top: 60px;  /* Adjust top for tablet */
+    width: 130px;  /* Adjust width */
+  }
+
+  .date-picker {
+    width: 130px;  /* Adjust date picker width */
+    height: 38px;  /* Adjust height */
+  }
+}
+
+/* Desktop and larger screens (width >= 1025px) */
+@media screen and (min-width: 1025px) {
+  .date-box-container {
+    left: 1270px;  /* Keep original position for larger screens */
+    top: 83px;
+    width: 140px;
+  }
+
+  .date-picker {
+    width: 140px;  /* Keep original size for larger screens */
+    height: 40px;
+  }
 }

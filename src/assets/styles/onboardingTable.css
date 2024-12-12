@@ -1,0 +1,24 @@
+.onboarding-Table {
+    position: relative;
+    left: 288px;
+    top: 93px;
+    transform: rotate(0deg);
+    width: 1130px; /* Fixed width */
+    max-width: 1900px; /* Maximum width */
+    height: auto; /* Allow the height to adjust based on content */
+    opacity: 100%;
+    border-radius: 12px;
+    background-color: #FFFFFF;
+    border: 1px solid #D7D7D7;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    overflow-x: auto; /* Enables horizontal scrolling */
+    overflow-y: hidden; /* Disable vertical scrolling */
+    display: block; /* Ensure it handles overflow correctly */
+    white-space: nowrap; /* Prevent content from wrapping to preserve column width */
+  }
+
+
+.onboarding-Table::-webkit-scrollbar {
+    display: none; /* Hides the scrollbar in WebKit browsers (Chrome, Safari) */
+  }
+  
