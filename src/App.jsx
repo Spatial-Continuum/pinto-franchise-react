@@ -14,7 +14,7 @@ import DeliveryPartnerOnboarding from './pages/DeliveryPartner/DeliveryPartnerOn
 
 const App = () => {
   return (
-   
+    <>
     <Router>
       <Routes>
        
@@ -35,7 +35,7 @@ const App = () => {
         <Route path="/delivery-partner/onboarding" element={<DeliveryPartnerOnboarding />}/>
       </Routes>
     </Router>
-    
+    </>
   );
 };
 

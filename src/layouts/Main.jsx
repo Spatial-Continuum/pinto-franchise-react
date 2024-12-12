@@ -13,6 +13,7 @@ import '../assets/styles/main.css'
 
 const Main = ({ children }) => {
     return (
+        <div className="kila">
         <div className="admin-layout">
             <Navbar />
             <div className="sidebar-and-content">
@@ -33,6 +34,7 @@ const Main = ({ children }) => {
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     )
 }
