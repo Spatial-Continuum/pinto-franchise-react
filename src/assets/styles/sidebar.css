@@ -3,7 +3,7 @@
     width: 264px;
     color: #ffffff;
     height: 100%;
-    position: fixed;
+    position: relative;
     top: 0;
     left: 0;
     overflow-y: auto;
@@ -254,4 +254,30 @@
     .sidebar-nav li:last-child {
         border-bottom: none;
     }
+}
+
+@media (max-width: 768px) {
+  /* Adjust sidebar list items for smaller screens */
+  .sidebar-nav li, .dropdown-item {
+    padding: 10px 16px; /* Reduce padding */
+    font-size: 14px; /* Reduce font size */
+  }
+
+  .dropdown-inline li {
+    padding: 10px 20px; /* Adjust padding for dropdown items */
+    font-size: 14px; /* Reduce font size */
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Adjust sidebar list items for tablets */
+  .sidebar-nav li, .dropdown-item {
+    padding: 12px 18px; /* Slightly smaller padding */
+    font-size: 15px; /* Slightly smaller font size */
+  }
+
+  .dropdown-inline li {
+    padding: 12px 22px; /* Adjust padding for dropdown items */
+    font-size: 15px; /* Slightly smaller font size */
+  }
 }

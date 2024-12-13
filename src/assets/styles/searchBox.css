@@ -29,40 +29,29 @@
   box-shadow: 0 0 5px rgba(30, 153, 255, 0.5); /* Add a subtle glow */
 }
 
-/* Media Queries for Responsiveness */
-
-/* Mobile devices (width <= 767px) */
-@media screen and (max-width: 767px) {
+@media (max-width: 767px){
   .search-bar {
-    display: flex;
-    justify-content: center; /* Centers the input horizontally */
-    align-items: center; /* Vertically center the input */
-    width: 100%;
-    height: 0px;
-    padding-top: 0px; /* Adjust top spacing */ 
+    padding-top: -40px; /* Remove additional padding */
   }
   .search-bar input {
-    width: 30%; /* Take up most of the screen width */
-    height:60px;
-    margin-left:0px; 
-    text-align: left;
+    top: 52px; /* Move 50px above its current position */
+    width: 100%; /* Make input responsive */
+    max-width: 200px; /* Limit the max width */
+    left: 16px; /* Align to center */
+    margin-left:-300px;
   }
-}
+  }
 
-/* Tablet devices (width between 768px and 1024px) */
-@media screen and (max-width: 1024px) and (min-width: 768px) {
+ @media (min-width: 768px) and (max-width: 1024px){
+  .search-bar {
+    padding-top: -40px; /* Remove additional padding */
+  }
   .search-bar input {
+    top: 40px; /* Move 50px above its current position */
+    width: 100%; /* Make input responsive */
+    max-width: 300px; /* Limit the max width */
+    left: 34px; /* Align to center */
+  }
+  }
   
-    width: 30%; /* Take up most of the screen width */
-    height:60px;
-    margin-top:-200px; 
-    text-align: left;
-  }
-}
 
-/* Desktop and larger screens (width >= 1025px) */
-@media screen and (min-width: 1025px) {
-  .search-bar input {
-    width: 327px; /* Keep the fixed width for larger screens */
-  }
-}

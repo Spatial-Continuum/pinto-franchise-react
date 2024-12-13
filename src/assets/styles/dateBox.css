@@ -1,12 +1,12 @@
 /* Styling for the container of the date box */
 .date-box-container {
-  position: relative;
-  left: 1270px;
-  top: 83px;
-  width: 140px;
-  height: 40px;
+  position: relative; /* Use relative positioning */
+  left: 1270px; /* Adjust position for larger screens */
+  top: 83px; /* Position the date box container */
+  width:200px;
+  height:40px;
   background-color: #F1F5F9;
-  border: 1px solid #DBEFFF;
+  border: 1px solid  #DBEFFF;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   color: #030714;
   /* Ensure the date box is above other elements */
@@ -14,7 +14,7 @@
 
 /* Styling for the date picker input */
 .date-picker {
-  width: 140px;
+  width: 200px; /* Fill the container */
   height: 40px;
   cursor: pointer;
   color: #030714;
@@ -22,50 +22,62 @@
   background-color: #F1F5F9;
   border: 1px solid #DBEFFF;
   position: relative;
-  left: 0;
-  top: 0;
   text-align: center;
 }
 
-/* Media Queries for Responsiveness */
+/* Media Queries */
 
-/* Mobile devices (width <= 767px) */
-@media screen and (max-width: 767px) {
+/* Tablets (768px to 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
   .date-box-container {
-    margin-left: -550px;
-    width: 150px; /* Reduce width */
+    position: relative; /* Remove absolute positioning */
+     /* Remove absolute positioning */
+    top: 40px; /* Set some space from the top */
+    left: 0; /* Align with the left edge */
+    margin: -50px auto ; /* Center the dropdown below the cards */
+     /* Increase width for better visibility */
+    width:7%;
+    
+    height: 100%; /* Increase height */
+    max-height: 100px;
+    margin-bottom: 50px;
+    margin-right:-30px;
+  
+    /* Align with the left edge */
+  /* Center the date box below other elements */
+     /* Increase height */
+    
   }
 
   .date-picker {
-    width: 120px; /* Adjust date picker width */
-    height: 35px; /* Slightly smaller height */
+    font-size: 16px; /* Increase font size for better readability */
+    padding: 12px; /* Adjust padding */
+    height: 100%; /* Increase height */
+    max-height: 100px;
+    width: 150%; /* Increase width for better visibility */
+    max-width:max-content;
+    margin-right: 20px;
+    
   }
 }
 
-/* Tablet devices (width between 768px and 1024px) */
-@media screen and (max-width: 1024px) and (min-width: 768px) {
+/* Mobile devices (less than 768px) */
+@media (max-width: 767px) {
   .date-box-container {
-    left: 50px;  /* Adjust left for tablet */
-    top: 60px;  /* Adjust top for tablet */
-    width: 130px;  /* Adjust width */
+    position: relative; /* Remove absolute positioning */
+    top: 29px; /* Space from the top */
+    left: 0; /* Align with the left edge */
+    width: 100%; /* Make it fill the screen width */
+    max-width: 200px; /* Limit the width for better layout */
+    height: 50%; /* Maintain normal height */
+    margin: -20px 20px; /* Add margin to ensure it's not too close to the edges */
+    justify-items: center;
+    margin-left: 510px;
+    
   }
 
   .date-picker {
-    width: 130px;  /* Adjust date picker width */
-    height: 38px;  /* Adjust height */
-  }
-}
-
-/* Desktop and larger screens (width >= 1025px) */
-@media screen and (min-width: 1025px) {
-  .date-box-container {
-    left: 1270px;  /* Keep original position for larger screens */
-    top: 83px;
-    width: 140px;
-  }
-
-  .date-picker {
-    width: 140px;  /* Keep original size for larger screens */
-    height: 40px;
+    font-size: 14px; /* Keep normal font size */
+    padding: 0px; /* Keep normal padding */
   }
 }

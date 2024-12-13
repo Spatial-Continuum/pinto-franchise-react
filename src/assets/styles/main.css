@@ -1,0 +1,20 @@
+/* Default body styles (applies to larger screens) */
+body {
+    width: 100%;
+    height: auto;
+    background-color: #FAFAFA; /* Default background color for larger screens */
+}
+
+/* Media Query for Tablets (between 768px and 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    body {
+        background-color:#FAFAFA; /* Change background color for tablets */
+    }
+}
+
+/* Media Query for Mobile Devices (less than 768px) */
+@media (max-width: 767px) {
+    body {
+        background-color: #FAFAFA; /* Change background color for mobile */
+    }
+}

@@ -91,31 +91,30 @@
 /* Mobile devices (less than 768px) */
 @media (max-width: 768px) {
     .navbar {
-        flex-direction: column; /* Stack items vertically */
-        height: 250px; /* Allow height to adjust dynamically */
-        padding: 10px;
-        left: 0; /* Full-width navbar */
+        
+        padding: 10px 20px; /* Reduce padding for smaller screens */
         width: 100%; /* Full-width navbar */
+        height: 150px;
     }
+
     .navbar-icons {
         display: flex;
-        gap: 50px;
+        gap: 25px; /* Reduce gap between icons for smaller screens */
     }
+
     .navbar-right {
         flex: 1;
-        height: 50px;
+        height: auto; /* Let height adjust dynamically */
         display: flex;
         justify-content: flex-end;
-        align-items: center;
-        margin-left: 900px;
-        width: 400px;
-    }   
+        
+        margin-left: 0;
+        width: auto; 
+    }
+
     .navbar-icon {
-        font-size: 90px;
+        font-size: 50px; /* Set icons to a normal size */
         cursor: pointer;
         transition: color 0.3s;
     }
-
 }
-
-
