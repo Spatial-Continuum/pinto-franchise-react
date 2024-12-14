@@ -1,6 +1,6 @@
 import DeliveryBasedData from "./DeliveryBasedList";
 import React from 'react'
-import '../../../assets/styles/deliverybasedTable.css'
+
 import DataTable from "react-data-table-component";
 const DeliveryBasedTable = () => {
     const columns =[
@@ -73,7 +73,7 @@ const DeliveryBasedTable = () => {
             
             style: (row) => ({
                 height: "56px",
-                width: "1100px", // override the row height
+                // override the row height
                 backgroundColor: row.status === "OFFLINE" ? "#989898" : "#FFFFFF", // Apply background color based on status
               }),
         },
@@ -93,7 +93,7 @@ const DeliveryBasedTable = () => {
     };
    
   return (
-    <div className="deliverybased-Table">
+    <div className="rounded-md gap-5 w-3/4 border-[1px] border-green-600 ml-5">
     <DataTable 
       columns={columns}
       data={DeliveryBasedData}

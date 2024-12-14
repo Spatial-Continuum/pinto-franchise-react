@@ -1,7 +1,7 @@
 import React from "react";
 import DataTable from "react-data-table-component";
 import salariedData from "./SalariedList";
-import '../../../assets/styles/salariedTable.css';
+
 
 
 const SalariedTable = () => {
@@ -71,7 +71,7 @@ const SalariedTable = () => {
             
             style: (row) => ({
                 height: "56px",
-                width: "1100px", // override the row height
+               // override the row height
                 backgroundColor: row.status === "OFFLINE" ? "#989898" : "#FFFFFF", // Apply background color based on status
               }),
         },
@@ -91,7 +91,7 @@ const SalariedTable = () => {
     };
    
   return (
-    <div className="salaried-Table">
+    <div className="rounded-md gap-5 w-3/4 border-[1px] border-green-600 ml-5">
       <DataTable 
         columns={columns}
         data={salariedData}

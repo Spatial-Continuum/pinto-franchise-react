@@ -1,7 +1,7 @@
 import OnboardingData from "./OnboardingList";
 import React from 'react'
 import DataTable from "react-data-table-component";
-import '../../../assets/styles/onboardingTable.css';
+
 const OnboardingTable = () => {
     const columns = [{
         name:"NAME",
@@ -91,7 +91,7 @@ const customStyles = {
       style: {
         height: "56px",
         backgroundColor:"#FFFFFF",
-        width:"100%",
+        
         
     },
     },
@@ -106,7 +106,7 @@ const customStyles = {
   };
 
   return (
-    <div className="onboarding-Table">
+    <div className="rounded-md gap-5 w-3/4 border-[1px] border-green-600 ml-5">
       <DataTable
         
         columns={columns}

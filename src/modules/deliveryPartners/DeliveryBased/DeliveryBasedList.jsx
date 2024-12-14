@@ -165,6 +165,105 @@ import React from "react";
         deliveryValue:"Rs.5000",
         commision:"Rs.25,000"
       },
+      {
+        partnerId: "P007",
+        name: "Daniel Lee",
+        status: "ONLINE",
+        joinDate: "2023-05-15",
+        phone: "+3344556677",
+        orders: 35,
+        orderValue: "$7000",
+        deliveryValue:"Rs.5000",
+        commision:"Rs.25,000"
+      },
+      {
+        partnerId: "P008",
+        name: "Laura White",
+        status: "OFFLINE",
+        joinDate: "2022-09-10",
+        phone: "+1122112233",
+        orders: 15,
+        orderValue: "$3000",
+        deliveryValue:"Rs.5000",
+        commision:"Rs.25,000"
+      },
+      {
+        partnerId: "P009",
+        name: "Alex Green",
+        status: "ONLINE",
+        joinDate: "2023-06-01",
+        phone: "+4455667788",
+        orders: 50,
+        orderValue: "$10000",
+        deliveryValue:"Rs.5000",
+        commision:"Rs.25,000"
+      },
+      {
+          partnerId: "P006",
+          name: "Sara Wilson",
+          status: "OFFLINE",
+          joinDate: "2023-04-01",
+          phone: "+9988776655",
+          orders: 40,
+          orderValue: "$8000",
+          deliveryValue:"Rs.5000",
+          commision:"Rs.25,000"
+        },
+        {
+          partnerId: "P007",
+          name: "Daniel Lee",
+          status: "ONLINE",
+          joinDate: "2023-05-15",
+          phone: "+3344556677",
+          orders: 35,
+          orderValue: "$7000",
+          deliveryValue:"Rs.5000",
+          commision:"Rs.25,000"
+        },
+        {
+          partnerId: "P008",
+          name: "Laura White",
+          status: "OFFLINE",
+          joinDate: "2022-09-10",
+          phone: "+1122112233",
+          orders: 15,
+          orderValue: "$3000",
+          deliveryValue:"Rs.5000",
+          commision:"Rs.25,000"
+        },
+        {
+          partnerId: "P006",
+          name: "Sara Wilson",
+          status: "OFFLINE",
+          joinDate: "2023-04-01",
+          phone: "+9988776655",
+          orders: 40,
+          orderValue: "$8000",
+          deliveryValue:"Rs.5000",
+          commision:"Rs.25,000"
+        },
+        {
+          partnerId: "P007",
+          name: "Daniel Lee",
+          status: "ONLINE",
+          joinDate: "2023-05-15",
+          phone: "+3344556677",
+          orders: 35,
+          orderValue: "$7000",
+          deliveryValue:"Rs.5000",
+          commision:"Rs.25,000"
+        },
+        {
+          partnerId: "P008",
+          name: "Laura White",
+          status: "OFFLINE",
+          joinDate: "2022-09-10",
+          phone: "+1122112233",
+          orders: 15,
+          orderValue: "$3000",
+          deliveryValue:"Rs.5000",
+          commision:"Rs.25,000"
+        },
   ];
 
 export default DeliveryBasedData;
