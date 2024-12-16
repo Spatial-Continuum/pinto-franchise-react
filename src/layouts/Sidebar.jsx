@@ -284,16 +284,19 @@ const SideBar = ({isExpanded,setIsExpanded}) => {
         { text: "Onboarding",to: "/delivery-partner/onboarding" }
       ]
     },
-    // { 
-    //   icon: FireIcon, 
-    //   text: "Menu",
-    //   menuKey: "menu",
-    //   submenu: [
-    //     { text: "Home Screen", to: "/menu/home-screen" },
-    //     { text: "Explore Screen" },
-    //     { text: "Quick Search" }
-    //   ]
-    // },
+    
+    
+    
+    { 
+      icon: FireIcon, 
+      text: "Menu",
+      menuKey: "menu",
+      submenu: [
+        { text: "Restaurants", to: "/menu/restaurants" },
+        { text: "new-menu", to:"/menu/addmenu" },
+        { text: "Quick Search" }
+      ]
+    },
     // { 
     //   icon: ChartBarSquareIcon, 
     //   text: "Analytics & Report",
