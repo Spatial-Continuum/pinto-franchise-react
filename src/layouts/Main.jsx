@@ -12,24 +12,27 @@ import SearchBox from "../components/SearchBox/SearchBox";
 
 
 const Main = ({ children }) => {
-    const [isExpanded, setIsExpanded] = useState(true);
-    return (
-      <div className="h-screen bg-gray-100">
-        <div className="grid grid-cols-[auto,1fr] h-full">
-          {/* Sidebar with fixed height */}
-          <Sidebar isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
-          
-          {/* Main content with scrollable area */}
-          <div className="flex flex-col h-full overflow-hidden">
-            <Navbar />
-            <main className="main-content-scrollable overflow-y-auto flex-1">
-              {children}
-            </main>
-          </div>
+  const [isExpanded, setIsExpanded] = useState(true);
+  return (
+    <div className="h-screen bg-gray-100">
+      <div className="grid grid-cols-[auto,1fr] h-full">
+        {/* Sidebar with fixed height */}
+        <Sidebar isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
+
+        {/* Main content with scrollable area */}
+        <div className="flex flex-col h-full overflow-hidden">
+          <Navbar />
+          <main className="main-content-scrollable overflow-y-auto flex-1" style={{
+            scrollbarWidth: "thin", /* For Firefox */
+            scrollbarColor: "#4a5568 #e2e8f0", /* Thumb and track colors */
+          }}>
+            {children}
+          </main>
         </div>
       </div>
-    );
-  };
-  
+    </div>
+  );
+};
+
 
 export default Main

@@ -106,7 +106,7 @@ const customStyles = {
   };
 
   return (
-    <div className="rounded-md gap-5 w-3/4 border-[1px] border-green-600 ml-5">
+    <div className="hide-scrollbar rounded-md gap-5 w-3/4 border-[1px] border-green-600 ml-5">
       <DataTable
         
         columns={columns}
