@@ -9,7 +9,7 @@ import PropsSearchBox from '../../components/SearchBox/PropsSearchBox'
 const Restaurants = () => {
   return (
     <div>
-      <Main>
+      <Main className="bg-[#F8F8F8]">
         <div className='flex justify-between items-center  mx-6 mt-5'>
             <PropsSearchBox className="text-sm" placeholder="Search Restaurant name, id, menu, item"/>
             <button className='bg-orange-500 text-xs text-white rounded-md pl-7 pr-3 py-2'>+  ADD ITEM</button>
