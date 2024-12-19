@@ -292,9 +292,10 @@ const SideBar = ({isExpanded,setIsExpanded}) => {
       text: "Menu",
       menuKey: "menu",
       submenu: [
+        { text: "Home screen", to:"" },
+        { text: "Quick search", to:"" },
         { text: "Restaurants", to: "/menu/restaurants" },
-        { text: "new-menu", to:"/menu/addmenu" },
-        { text: "Quick Search" }
+        { text: "Placeholder", to:"" },
       ]
     },
     // { 

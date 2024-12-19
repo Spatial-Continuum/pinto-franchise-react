@@ -1,49 +1,118 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CategoryData from './CategoryData';
 import { ChevronDownIcon, PencilIcon, MagnifyingGlassIcon, PhotoIcon, CheckCircleIcon, ChevronRightIcon, EyeIcon, TrashIcon } from '@heroicons/react/24/outline';
-
-const DiningMenu = () => {
+import RestaurantService from '../restaurants/RestaurantService';
+const DiningMenu = ({ restaurantId }) => {
     const [openCategories, setOpenCategories] = useState([]); // Track open categories
     const [activeTab, setActiveTab] = useState("dining"); // Default is dining
 
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [categories, setCategories] = useState([]); // Dynamic categories
 
-    const handleCategoryClick = (category) => {
-        if (openCategories.includes(category)) {
-            // If the category is already open, remove it from the list
-            setOpenCategories(openCategories.filter((cat) => cat !== category));
-        } else {
-            // Otherwise, add it to the list of open categories
-            setOpenCategories([...openCategories, category]);
-        }
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                setLoading(true);
+                const data = await RestaurantService.getRestaurantById(restaurantId);
+                console.log(data);
+                setCategories(data || []); // Assuming the API returns categories
+                console.log(categories)
+                console.log(categories.menu_categories)
+            } catch (err) {
+                setError("Failed to fetch menu data.");
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (restaurantId) fetchCategories();
+    }, [restaurantId]);
+
+
+
+    const handleCategoryClick = (categoryId) => {
+        setOpenCategories((prev) =>
+            prev.includes(categoryId)
+                ? prev.filter((id) => id !== categoryId)
+                : [...prev, categoryId]
+        );
     };
+    const getCurrentDayHours = (openingHours) => {
+        const daysOfWeek = [
+
+         "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+
+
+
+        ];
+        const currentDay = new Date().getDay();
+        const currentDayName = daysOfWeek[currentDay];
+        const CurrentDayHours = openingHours[currentDayName] || "Hours not available";
+        return `${currentDayName}:${CurrentDayHours}`;
+    };
+
+    if (loading) return <p className="text-center text-gray-500">Loading menu...</p>;
+    if (error) return <p className="text-center text-red-500">{error}</p>;
+
     const handleTabClick = (tab) => {
         setActiveTab(tab);
     };
 
+    // const numMenuCategories = categories.menu_categories.length;
+
+
 
     return (
         <div>
-            <div className=' h-32 mx-5 mt-5 border-red-300 border-[1px] rounded-md bg-white-400'>
+            <div className="h-32 mx-5 mt-5 flex  border-red-300 border-[1px] rounded-md bg-white  items-center p-4">
+                {/* Left Section: Image, Restaurant Name, and Address */}
+                <div className="flex    items-center w-3/4">
+                    <div className='flex justify-center items-center'>
+                        <img
+                            src={categories.image}
+                            alt="Restaurant"
+                            className="w-20 h-20 object-cover rounded-md  mr-6 "
+                        />
+                    </div>
+                    <div className='flex flex-col justify-center'>
+                        {/* Restaurant Name */}
+                        <h3 className="font-semibold text-xl text-gray-800">{categories.name}</h3>
+                        {/* Address */}
+                        <p className="text-md text-gray-600">{categories.address}</p>
+                    </div>
+                </div>
 
-
+                {/* Right Section: Phone Number and Timings */}
+                <div className="w-1/4 flex flex-col items-center justify-center">
+                    {/* Phone Number */}
+                    <p className="text-lg  text-gray-800 font-medium">{categories.contact_number}</p>
+                    {/* Timings */}
+                    <h5 className="text-md text-gray-600">
+                        ⏰ {categories.opening_hours && getCurrentDayHours(categories.opening_hours)}
+                    </h5>
+                </div>
             </div>
-           
+
+
 
             <div className={`p-4 ${activeTab === "dining" ? "" : "hidden"}`}>
                 <div className="flex justify-between items-center p-4 bg-gray-100 border-b border-gray-300">
                     <div className="flex items-center  space-x-4">
-                    <button
-                    className={` py-2  text-lg font-medium ${activeTab === "dining" ? "  underline" : "text-black-700"}`}
-                    onClick={() => handleTabClick("dining")}
-                >
-                    Dining Menu
-                </button>
-                <button
-                    className={`px-4 py-2 text-lg font-medium ${activeTab === "charges" ? " text-orange-600 underline" : "text-black-700"}`}
-                    onClick={() => handleTabClick("charges")}
-                >
-                    Charges
-                </button>
+                        <button
+                            className={` py-2  text-lg font-medium ${activeTab === "dining" ? "  underline" : "text-black-700"}`}
+                            onClick={() => handleTabClick("dining")}
+                        >
+                            Dining Menu
+                        </button>
+                        <button
+                            className={`px-4 py-2 text-lg font-medium ${activeTab === "charges" ? " text-orange-600 underline" : "text-black-700"}`}
+                            onClick={() => handleTabClick("charges")}
+                        >
+                            Charges
+                        </button>
                     </div>
                     <button className="px-4 py-2 bg-orange-500 text-white font-bold rounded-md hover:bg-blue-600">
                         + Add Item
@@ -60,25 +129,28 @@ const DiningMenu = () => {
                         </div>
 
                         <div className="bg-slate-200 py-2 -mx-4">
-                            <h2 className="text-gray-400 px-4 text-md font-semibold">12 Categories</h2>
+                            <h2 className="text-gray-400 px-4 text-md font-semibold">
+
+                                { } Categories                          </h2>
                         </div>
 
                         {/* Category Navbar */}
                         <div className="flex flex-col mb-4 gap-2">
-                            {CategoryData.map((category, index) => (
-                                <div key={index}>
+                            {categories && categories.menu_categories?.map((category) => (
+                                <div key={category.menu_category_id}>
                                     {/* Category Button */}
                                     <div className="text-md text-start font-normal px-4 py-2 justify-between text-black rounded-md flex items-center">
                                         <div className="flex flex-row items-center">
                                             <div
-                                                onClick={() => handleCategoryClick(category.category)}
+                                                onClick={() => handleCategoryClick(category.menu_category_id)}
                                             >
-                                                {category.category}
+                                                {category.menu_title}
+
                                             </div>
                                             {/* Dropdown Arrow */}
                                             <div>
                                                 <ChevronDownIcon
-                                                    className={`h-3 w-3 mt-1 ml-4 transition-transform duration-200 ${openCategories.includes(category.category)
+                                                    className={`h-3 w-3 mt-1 ml-4 transition-transform duration-200 ${openCategories.includes(category.menu_category_id)
                                                         ? 'rotate-180'
                                                         : ''
                                                         }`}
@@ -88,16 +160,23 @@ const DiningMenu = () => {
                                     </div>
 
                                     {/* Display items below the selected category */}
-                                    {openCategories.includes(category.category) && (
+                                    {openCategories.includes(category.menu_category_id) && (
                                         <div className="pl-8">
                                             <ul className="list-disc">
-                                                {category.items.map((item, itemIndex) => (
+                                                {category.items.map((item) => (
                                                     <ul
-                                                        key={itemIndex}
+                                                        key={item.item_id}
                                                         className="mb-2 ml-10 text-sm flex justify-between"
                                                     >
-                                                        <div className="font-normal text-slate-700">
-                                                            <strong>{item.name}</strong> - ₹{item.price}
+                                                        <div className='flex '>
+                                                        <img
+                                                            src={item.image} 
+                                                            alt={item.item_name}
+                                                            className="w-8 h-8  object-cover rounded-full mr-4"
+                                                        />
+                                                        <div className="font-normal flex items-center gap-6 text-slate-700">
+                                                            <strong>{item.item_name}</strong>  <p>{item.item_type}</p> <p>₹{item.price}</p>
+                                                        </div>
                                                         </div>
                                                         <div className="flex items-center space-x-4">
                                                             <PencilIcon

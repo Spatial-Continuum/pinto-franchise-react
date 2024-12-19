@@ -22,7 +22,16 @@ const RestaurantService ={
             console.error("Error fetching restaurant:",error);
             throw error;    
         }
-    }
+    },
+    getRestaurantById: async (restaurantId) => {
+        try {
+            const response = await apiclient.get(`/restaurant/merchant/${restaurantId}`);
+            return response.data;
+        } catch (error) {
+            console.error(`Error fetching restaurant by item ID ${restaurantId}:`, error);
+            throw error;
+        }
+    },
 }
 
 export default RestaurantService;

@@ -1,6 +1,7 @@
 import React, { useState,useEffect } from 'react';
 
 import RestaurantService from './RestaurantService';
+import { useNavigate } from 'react-router-dom';
 
 const NewRestaurants = () => {
     const [showAll, setShowAll] = useState(false); // State to toggle between showing all data or just the first 4
@@ -8,6 +9,7 @@ const NewRestaurants = () => {
     const [restaurants, setRestaurants] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate()
     // Toggle the view to show all restaurants
     useEffect(() => {
         const fetchRestaurants = async () => {
@@ -84,6 +86,7 @@ const NewRestaurants = () => {
                     <div
                         key={index}
                         className="flex flex-col items-start border bg-[#FFFFFF] border-gray-300 shadow-lg rounded-lg w-[260px] h-[140px]  p-3"
+                        onClick={() => navigate(`/restaurant/addmenu/${restaurant.restaurant_id}`)}
                     >
                         <div className="flex items-center  w-full">
                             <img

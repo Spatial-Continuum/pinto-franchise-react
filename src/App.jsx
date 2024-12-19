@@ -35,7 +35,8 @@ const App = () => {
         <Route path="/delivery-partner/deliveryBased" element={<DeliveryPartnerDeliveryBased />}></Route>
         <Route path="/delivery-partner/onboarding" element={<DeliveryPartnerOnboarding />}></Route>
         <Route path="/menu/restaurants" element={<Restaurants />}></Route>
-        <Route path="/menu/addmenu" element={<Addmenu />}></Route>
+        
+        <Route path="/restaurant/addmenu/:restaurantId" element={<Addmenu />}></Route>
       </Routes>
     </Router>
   );

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 
 import RestaurantService from "./RestaurantService";
+import { useNavigate } from "react-router-dom";
 
 const RestaurantList = () => {
 
   const [restaurants, setRestaurants] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const navigate= useNavigate();
 
   const fetchRestaurants = async () => {
     try{
@@ -38,6 +40,7 @@ const RestaurantList = () => {
           <div
             key={restaurant.restaurant_id}
             className="flex flex-col items-start bg-[#FFFFFF] border border-gray-300 shadow-lg rounded-lg w-[260px] h-[140px]  p-3"
+            onClick={() => navigate(`/restaurant/addmenu/${restaurant.restaurant_id}`)}
           >
             <div className="flex items-center  " >
               <img
