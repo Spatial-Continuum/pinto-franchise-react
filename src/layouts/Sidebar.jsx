@@ -292,7 +292,7 @@ const SideBar = ({isExpanded,setIsExpanded}) => {
       text: "Menu",
       menuKey: "menu",
       submenu: [
-        { text: "Home screen", to:"" },
+        { text: "Home screen", to:"/menu/homescreen" },
         { text: "Quick search", to:"" },
         { text: "Restaurants", to: "/menu/restaurants" },
         { text: "Placeholder", to:"" },
@@ -303,11 +303,12 @@ const SideBar = ({isExpanded,setIsExpanded}) => {
     //   text: "Analytics & Report",
     //   menuKey: "analytics"
     // },
-    // { 
-    //   icon: SpeakerWaveIcon, 
-    //   text: "Marketing",
-    //   menuKey: "marketing"
-    // },
+    { 
+      icon: SpeakerWaveIcon, 
+      text: "Marketing",
+      menuKey: "marketing",
+      to:"/marketing"
+    },
     // { 
     //   icon: ChartBarIcon, 
     //   text: "Finance",

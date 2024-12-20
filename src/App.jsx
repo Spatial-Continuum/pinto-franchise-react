@@ -8,6 +8,8 @@ import DeliveryPartnerDeliveryBased from "./pages/DeliveryPartner/DeliveryPartne
 import DeliveryPartnerOnboarding from "./pages/DeliveryPartner/DeliveryPartnerOnboarding";
 import Restaurants from "./pages/Menu/Restaurants";
 import Addmenu from "./pages/Menu/Addmenu";
+import HomeScreen from "./pages/Menu/HomeScreen";
+import MarketingScreen from "./pages/Marketing/MarketingScreen";
 
 const App = () => {
   return (
@@ -35,8 +37,9 @@ const App = () => {
         <Route path="/delivery-partner/deliveryBased" element={<DeliveryPartnerDeliveryBased />}></Route>
         <Route path="/delivery-partner/onboarding" element={<DeliveryPartnerOnboarding />}></Route>
         <Route path="/menu/restaurants" element={<Restaurants />}></Route>
-        
+        <Route path="/menu/homescreen" element={<HomeScreen />}></Route>
         <Route path="/restaurant/addmenu/:restaurantId" element={<Addmenu />}></Route>
+        <Route path="/marketing" element={<MarketingScreen />}></Route>
       </Routes>
     </Router>
   );

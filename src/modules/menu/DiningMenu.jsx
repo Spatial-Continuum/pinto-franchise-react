@@ -67,9 +67,9 @@ const DiningMenu = ({ restaurantId }) => {
 
     return (
         <div>
-            <div className="h-32 mx-5 mt-5 flex  border-red-300 border-[1px] rounded-md bg-white  items-center p-4">
+            <div className="h-32 mx-5 mt-5 flex  bg-[#FAFAFA] border-[#D4D4D4] border-[1px] rounded-md bg-white  items-center p-4">
                 {/* Left Section: Image, Restaurant Name, and Address */}
-                <div className="flex    items-center w-3/4">
+                <div className="flex   items-center w-3/4">
                     <div className='flex justify-center items-center'>
                         <img
                             src={categories.image}
@@ -120,26 +120,26 @@ const DiningMenu = ({ restaurantId }) => {
                 </div>
 
                 <div className="flex flex-col lg:flex-row gap-5 p-4">
-                    <div className="w-full lg:w-3/5 bg-gray-100 p-4 border border-gray-300 rounded-lg">
+                    <div className="w-full lg:w-3/5 bg-gray-100  border border-gray-300 rounded-lg">
                         <div className="flex justify-between items-center mb-4">
-                            <h1 className="text-lg font-bold text-gray-800">Menu</h1>
+                            <h1 className="text-lg font-bold px-4 text-gray-800">Menu</h1>
                             <button className="px-4 py-2 text-orange-500 font-medium rounded-md">
                                 + Add Category
                             </button>
                         </div>
 
-                        <div className="bg-slate-200 py-2 -mx-4">
+                        <div className="bg-slate-200 py-2  px-4">
                             <h2 className="text-gray-400 px-4 text-md font-semibold">
 
                                 { } Categories                          </h2>
                         </div>
 
                         {/* Category Navbar */}
-                        <div className="flex flex-col mb-4 gap-2">
+                        <div className="flex flex-col  mb-4 gap-2">
                             {categories && categories.menu_categories?.map((category) => (
-                                <div key={category.menu_category_id}>
+                                <div key={category.menu_category_id} className=''>
                                     {/* Category Button */}
-                                    <div className="text-md text-start font-normal px-4 py-2 justify-between text-black rounded-md flex items-center">
+                                    <div className="text-md text-start px-4 bg-[#FFFFFF] font-normal  py-3 justify-between text-black rounded-md flex items-center">
                                         <div className="flex flex-row items-center">
                                             <div
                                                 onClick={() => handleCategoryClick(category.menu_category_id)}
@@ -161,7 +161,7 @@ const DiningMenu = ({ restaurantId }) => {
 
                                     {/* Display items below the selected category */}
                                     {openCategories.includes(category.menu_category_id) && (
-                                        <div className="pl-8">
+                                        <div className="pl-8 py-3">
                                             <ul className="list-disc">
                                                 {category.items.map((item) => (
                                                     <ul
