@@ -35,17 +35,17 @@ const ShowCategory = () => {
             <div className="flex flex-row mt-8 gap-5">
                 {categories.slice(0, 5).map((category) => ( 
                     <div
-                        className="w-52 h-52 flex flex-col items-center justify-center rounded-md border-[#EDEDED] bg-[#FFFFFF]"
+                        className="w-52 h-52 flex flex-col items-center  rounded-md border-[#EDEDED] bg-[#FFFFFF]"
                         key={category.id}
                     >
-                        <div className="w-24 h-24 flex flex-wrap items-center">
+                        <div className="w-24 h-24 flex flex-wrap mt-5 items-center">
                             <img
                                 src={category.image}
                                 alt={category.category_title}
-                                className="object-fit w-full h-full"
+                                className="object-fit w-32 h-32"
                             />
                         </div>
-                        <div className="items-center">
+                        <div className="items-center mt-12">
                             <h5 className="text-sm">{category.category_title}</h5>
                         </div>
                     </div>

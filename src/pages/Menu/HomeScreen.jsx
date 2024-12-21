@@ -25,14 +25,11 @@ const HomeScreen = () => {
                     <div className='mt-14'>
                         <ShowCategory />
                     </div>
-                    <div className='mt-14'> 
+                    <div className='mt-14'>
                         <ShowFilter />     {/*dish filter */}
                     </div>
                     <div className='mt-14'>
-                        <ShowCuisine />
-                    </div>
-                    <div className='mt-14'>
-                        <ShowCityBanquets />
+                        <ShowSpotLight />
                     </div>
                     <div className='mt-14'>
                         <ShowPopularDish />
@@ -40,11 +37,15 @@ const HomeScreen = () => {
                     <div className='mt-14'>
                         <ShowTopBrand />
                     </div>
+
                     <div className='mt-14'>
-                        <ShowSpotLight />
+                        <ShowCityBanquets />
                     </div>
                     <div className='mt-14'>
                         <QuickFilterRestaurant />
+                    </div>
+                    <div className='mt-14'>
+                        <ShowCuisine />
                     </div>
                     <div className='mt-14'>
                         <AuthenticCookingStyle />

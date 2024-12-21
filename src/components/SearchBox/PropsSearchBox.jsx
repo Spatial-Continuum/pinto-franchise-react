@@ -11,7 +11,7 @@ const PropsSearchBox = ({ placeholder, img }) => {
       <input
         type="text"
         placeholder={placeholder}
-        className="w-full h-full px-2 text-gray-700 bg-transparent items-center focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg"
+        className="w-full h-full px-2 text-gray-700 bg-[#FFFFFF] items-center focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg"
       />
     </div>
   );

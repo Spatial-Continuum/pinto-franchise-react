@@ -37,7 +37,7 @@ const ShowFilter = () => {
                 {filters.map((filter) => (
                     <div
                         key={filter.quickfilter_id}
-                        className=" max-w-56 min-w-40 rounded-md h-20 flex flex-col relative border border-[#EDEDED]  shadow-md bg-[#FFFFFF] text-gray-800 text-sm font-medium"
+                        className=" max-w-56 min-w-40 rounded-md h-16 flex flex-col relative border border-[#EDEDED]  shadow-md bg-[#FFFFFF] text-gray-800 text-sm font-medium"
                     >
                         {/* Vector image in top-right */}
                         <img
@@ -52,7 +52,7 @@ const ShowFilter = () => {
                         
                     </div>
                 ))}
-                <div className="max-w-56 min-w-40 h-20 flex gap-2 justify-center items-center border border-[#FB6B00] rounded-sm shadow-md bg-[#FFFFFF] text-gray-800 text-sm font-normal">
+                <div className="max-w-56 min-w-40 h-16 flex gap-2 justify-center items-center border border-[#FB6B00] rounded-sm shadow-md bg-[#FFFFFF] text-gray-800 text-sm font-normal">
                     <img src={gala} />
                     <p>Add New</p>
                 </div>
