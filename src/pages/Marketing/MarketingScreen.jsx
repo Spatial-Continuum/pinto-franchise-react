@@ -14,10 +14,10 @@ const MarketingScreen = () => {
                         <PropsSearchBox  placeholder="Search here" img={search} />
                         <button className='flex bg-[#008B0E] justify-center items-center rounded-md px-5 text-white text-sm '>Place Holder</button>
                     </div>
-                    <div className='mt-10'>
+                    <div className='mt-16'>
                     <BannerSection />
                     </div>
-                    <div className='mt-10'>
+                    <div className='mt-16'>
                     <DealSection />
                     </div>
 

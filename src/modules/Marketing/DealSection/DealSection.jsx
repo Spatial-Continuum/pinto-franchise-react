@@ -11,11 +11,11 @@ const DealSection = () => {
     return (
         <div>
             <div className="flex justify-between mx-4 mt-3">
-                <h2 className="text-lg font-semibold">Deals section</h2>
+                <h2 className="text-2xl font-semibold">Deals section</h2>
                 <p className="text-md text-orange-500">View All</p>
             </div>
 
-            <div className="flex flex-row gap-5">
+            <div className="flex flex-row mt-5 gap-5">
                 {[image1, image2, image3, image4].map((image, index) => (
                     <div
                         key={index}
@@ -25,8 +25,8 @@ const DealSection = () => {
                         <div className="flex flex-col  text-[#1E1E1E]">
                             <p className=" flex justify-between text-sm font-bold mx-3 mt-3">FESTIVE DELIGHTS <span><img src={vector}/></span></p>
                             <p className=" flex flex-row text-[#FF6B00] text-xs gap-1 font-normal ml-3 "><span><img src={light}/></span>FLAT 50% OFF</p>
-                            <button className="mt-2 w-11 p-2 h-3 ml-3   text-[#515151] border-[#515151] border-[1px] text-xs font-thin rounded-full flex items-center justify-center">
-                                MEALS
+                            <button className="mt-2 w-11 p-2 h-3 ml-3   text-[#515151] border-[#ECC756] border-[1px]  text-[10px] rounded-full flex items-center justify-center">
+                                Meals
                             </button>
                         </div>
 

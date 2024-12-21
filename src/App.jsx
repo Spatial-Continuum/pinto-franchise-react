@@ -10,6 +10,7 @@ import Restaurants from "./pages/Menu/Restaurants";
 import Addmenu from "./pages/Menu/Addmenu";
 import HomeScreen from "./pages/Menu/HomeScreen";
 import MarketingScreen from "./pages/Marketing/MarketingScreen";
+import AuthenticViewAllPage from "./pages/viewallPages/AuthenticViewAllPage";
 
 const App = () => {
   return (
@@ -40,6 +41,7 @@ const App = () => {
         <Route path="/menu/homescreen" element={<HomeScreen />}></Route>
         <Route path="/restaurant/addmenu/:restaurantId" element={<Addmenu />}></Route>
         <Route path="/marketing" element={<MarketingScreen />}></Route>
+        <Route path="/homescreen/authenticstyle" element={<AuthenticViewAllPage />} />
       </Routes>
     </Router>
   );

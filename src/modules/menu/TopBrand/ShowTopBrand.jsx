@@ -28,17 +28,17 @@ const ShowTopBrand = () => {
     if (error) return <div>{error}</div>;
 
     return (
-        <div className="flex flex-col gap-5 mx-5">
-            <div className="flex flex-row flex-wrap gap-5 mt-3 mb-2 justify-between">
-                <h2 className="text-lg font-semibold">TopBrands</h2>
-                <p className="text-md">view All</p>
+        <div className="flex flex-col  pl-5">
+            <div className="flex flex-row flex-wrap gap-5 mt-3  justify-between">
+                <h2 className="text-2xl font-semibold">Top Brands/Hotels</h2>
+                <p className="mr-16 text-lg font-normal text-[#FB6B00]">view All</p>
             </div>
-            <div className="flex flex-row flex-wrap gap-5">
+            <div className="flex flex-row mt-8 flex-wrap gap-5">
                 {/* Mapping topBrands */}
                 {topBrands.map((brand) => (
                     <div
                         key={brand.top_restaurant_id}
-                        className="w-36 h-36 flex flex-col items-center justify-center border border-[#EDEDED] bg-[#FFFFFF] rounded-lg shadow-md"
+                        className="w-52 h-52 flex flex-col items-center justify-center border border-[#EDEDED] bg-[#FFFFFF] rounded-lg shadow-md"
                     >
                         <img
                             src={vector}
@@ -58,7 +58,7 @@ const ShowTopBrand = () => {
                 ))}
 
                 {/* Empty div to appear after mapped items */}
-                <div className="w-36 h-36 flex flex-col items-center justify-center border border-[#FB6B00] bg-[#FFFFFF] rounded-lg shadow-md">
+                <div className="w-52 h-52 flex flex-col items-center justify-center border border-[#FB6B00] bg-[#FFFFFF] rounded-lg shadow-md">
                     <img src={gala} alt="addnew" />
                     <p className='mt-2'>Add New</p>
                 </div>

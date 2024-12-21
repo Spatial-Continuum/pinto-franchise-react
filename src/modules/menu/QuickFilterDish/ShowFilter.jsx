@@ -28,16 +28,16 @@ const ShowFilter = () => {
     if (error) return <div className="text-center text-red-600">{error}</div>;
 
     return (
-        <div className="px-4">
+        <div className="pl-4">
             <div className='flex flex-row justify-between '>
-                <h2 className="text-lg font-semibold mb-4">Quick filter</h2>
-                <p className='mr-96'>view All</p>
+                <h2 className="text-2xl font-semibold mb-4">Quick filter</h2>
+                <p className='mr-16 text-lg font-normal text-[#FB6B00]'>view All</p>
             </div>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap mt-8 gap-4">
                 {filters.map((filter) => (
                     <div
                         key={filter.quickfilter_id}
-                        className="w-56 h-28 flex flex-col relative border border-[#EDEDED] rounded-sm shadow-md bg-[#FFFFFF] text-gray-800 text-sm font-medium"
+                        className=" max-w-56 min-w-40 rounded-md h-20 flex flex-col relative border border-[#EDEDED]  shadow-md bg-[#FFFFFF] text-gray-800 text-sm font-medium"
                     >
                         {/* Vector image in top-right */}
                         <img
@@ -47,12 +47,12 @@ const ShowFilter = () => {
                         />
                         {/* Centered title */}
                         <div className="flex items-center justify-center h-full">
-                            <h6 className="text-center">{filter.filter_title}</h6>
+                            <h6 className="text-center text-lg">{filter.filter_title}</h6>
                         </div>
                         
                     </div>
                 ))}
-                <div className="w-56 h-28 flex gap-2 justify-center items-center border border-[#FB6B00] rounded-sm shadow-md bg-[#FFFFFF] text-gray-800 text-sm font-normal">
+                <div className="max-w-56 min-w-40 h-20 flex gap-2 justify-center items-center border border-[#FB6B00] rounded-sm shadow-md bg-[#FFFFFF] text-gray-800 text-sm font-normal">
                     <img src={gala} />
                     <p>Add New</p>
                 </div>
