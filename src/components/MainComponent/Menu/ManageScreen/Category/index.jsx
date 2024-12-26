@@ -27,7 +27,7 @@ function Category()
               {viewall&&categories?.length>4? categories: categories?.slice(0, 5).map((category) => ( 
                 
                 <CategoryCard key={category.category_id} {...category}
-                
+                imagestyle={"w-24 h-24  text-center "}
                 title= {category.category_title}/>
               ))}
               <CategoryCard add={true} isAdd={true} categories={categories} />
