@@ -1,0 +1,57 @@
+/* Styling for the search bar input */
+.search-bar {
+  display: flex;
+  justify-content: center; /* Centers the input horizontally */
+  align-items: center; /* Vertically center the input */
+  width: 100%;
+  padding-top: 20px; /* Adjust top spacing */
+}
+
+.search-bar input {
+  width: 327px; /* Fixed width */
+  height: 40px;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  left:-100px;
+  top:128px;
+  position: relative;
+  border: 1px solid #D7D7D7;
+  color: #5A5858;
+  outline: none; /* Removes the default outline on focus */
+  padding-left: 10px; /* Adds some padding inside the input */
+  font-size: 14px; /* Adjusts font size for readability */
+  transition: border-color 0.3s ease; /* Smooth transition for focus state */
+}
+
+/* Focus state for search bar */
+.search-bar input:focus {
+  border-color: #1E99FF; /* Change border color on focus */
+  box-shadow: 0 0 5px rgba(30, 153, 255, 0.5); /* Add a subtle glow */
+}
+
+@media (max-width: 767px){
+  .search-bar {
+    padding-top: -40px; /* Remove additional padding */
+  }
+  .search-bar input {
+    top: 52px; /* Move 50px above its current position */
+    width: 100%; /* Make input responsive */
+    max-width: 200px; /* Limit the max width */
+    left: 16px; /* Align to center */
+    margin-left:-300px;
+  }
+  }
+
+ @media (min-width: 768px) and (max-width: 1024px){
+  .search-bar {
+    padding-top: -40px; /* Remove additional padding */
+  }
+  .search-bar input {
+    top: 40px; /* Move 50px above its current position */
+    width: 100%; /* Make input responsive */
+    max-width: 300px; /* Limit the max width */
+    left: 34px; /* Align to center */
+  }
+  }
+  
+

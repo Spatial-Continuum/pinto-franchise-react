@@ -1,0 +1,38 @@
+import React,{useEffect,useState} from "react";
+import ShowFlexWithoutImage from "../../../../GeneralComponent/FlexElement/ShowFlexWithoutImage.jsx"
+import { useDispatch, useSelector } from 'react-redux'; 
+import {fetchQuickFilterApi,selectQuickFilterApiData,selectApiLoading,selectApiError} from "../../../../../redux/slices/menu.js"
+
+function QuickFilter(){ 
+    const [viewall,setViewAll] = useState(false) 
+    const dispatch = useDispatch();
+    const filters = useSelector(selectQuickFilterApiData);
+    const loading = useSelector(selectApiLoading);
+    const error = useSelector(selectApiError);  
+     useEffect(() => { 
+        console.log('Dispatching fetchQuickFilterApi in the quick filter');
+        dispatch(fetchQuickFilterApi());
+      }, [dispatch]);
+    return(
+        <div className="mb-8">
+        <div className="flex justify-between items-center mb-4">
+        
+          <h2 className="text-lg font-semibold">Quick filter</h2>
+          <button className="text-orange-500 text-sm" onClick={()=>{navigate("/menu/home-screen/quick-filter" , { state: { filters } });}} >View all</button>
+        </div>
+        <div className="flex gap-4 flex-wrap">
+          {filters.map((filter) => (  
+            <ShowFlexWithoutImage key={filter.quickfilter_id} title={filter.filter_title}  
+            edit={true}/>
+
+            
+          ))}
+          <ShowFlexWithoutImage isAdd={true}  
+          click={()=>{navigate("/menu/home-screen/add-filter-form" , { state: { filters } });}}
+          />
+        </div>
+      </div>
+    )
+
+}
+export default QuickFilter;

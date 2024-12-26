@@ -1,0 +1,83 @@
+/* Styling for the container of the date box */
+.date-box-container {
+  position: relative; /* Use relative positioning */
+  left: 1270px; /* Adjust position for larger screens */
+  top: 83px; /* Position the date box container */
+  width:200px;
+  height:40px;
+  background-color: #F1F5F9;
+  border: 1px solid  #DBEFFF;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  color: #030714;
+  /* Ensure the date box is above other elements */
+}
+
+/* Styling for the date picker input */
+.date-picker {
+  width: 200px; /* Fill the container */
+  height: 40px;
+  cursor: pointer;
+  color: #030714;
+  border-radius: 6px;
+  background-color: #F1F5F9;
+  border: 1px solid #DBEFFF;
+  position: relative;
+  text-align: center;
+}
+
+/* Media Queries */
+
+/* Tablets (768px to 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .date-box-container {
+    position: relative; /* Remove absolute positioning */
+     /* Remove absolute positioning */
+    top: 40px; /* Set some space from the top */
+    left: 0; /* Align with the left edge */
+    margin: -50px auto ; /* Center the dropdown below the cards */
+     /* Increase width for better visibility */
+    width:7%;
+    
+    height: 100%; /* Increase height */
+    max-height: 100px;
+    margin-bottom: 50px;
+    margin-right:-30px;
+  
+    /* Align with the left edge */
+  /* Center the date box below other elements */
+     /* Increase height */
+    
+  }
+
+  .date-picker {
+    font-size: 16px; /* Increase font size for better readability */
+    padding: 12px; /* Adjust padding */
+    height: 100%; /* Increase height */
+    max-height: 100px;
+    width: 150%; /* Increase width for better visibility */
+    max-width:max-content;
+    margin-right: 20px;
+    
+  }
+}
+
+/* Mobile devices (less than 768px) */
+@media (max-width: 767px) {
+  .date-box-container {
+    position: relative; /* Remove absolute positioning */
+    top: 29px; /* Space from the top */
+    left: 0; /* Align with the left edge */
+    width: 100%; /* Make it fill the screen width */
+    max-width: 200px; /* Limit the width for better layout */
+    height: 50%; /* Maintain normal height */
+    margin: -20px 20px; /* Add margin to ensure it's not too close to the edges */
+    justify-items: center;
+    margin-left: 510px;
+    
+  }
+
+  .date-picker {
+    font-size: 14px; /* Keep normal font size */
+    padding: 0px; /* Keep normal padding */
+  }
+}
