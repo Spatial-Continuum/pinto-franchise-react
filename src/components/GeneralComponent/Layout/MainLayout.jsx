@@ -8,7 +8,7 @@ import { useState } from "react";
 
 
 
-const MainLayout = ({ children,headerName }) => {
+const MainLayout = ({ children,headerName,headerClick }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   return (
     <div className="h-screen bg-gray-100">
@@ -18,7 +18,7 @@ const MainLayout = ({ children,headerName }) => {
 
        
         <div className="flex flex-col h-full overflow-hidden">
-          <HeaderBar name={headerName? headerName : ''}/>
+          <HeaderBar name={headerName? headerName : ''} headerClick={headerClick?headerClick:""}/>
           <main className="main-content-scrollable overflow-y-auto flex-1" style={{
             scrollbarWidth: "thin", /* For Firefox */
             scrollbarColor: "#4a5568 #e2e8f0", /* Thumb and track colors */

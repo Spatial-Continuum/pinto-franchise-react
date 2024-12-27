@@ -4,6 +4,7 @@ import Category from './Category/index.jsx'
 
 import SearchInput from '../../../GeneralComponent/SearchBox/SearchInput.jsx'
 import QuickFilter from './QuickFilter/index.jsx'
+import CitySpot from "./CitySpotLight/index.jsx"
 const HomeScreen = () => {
 
     return (
@@ -15,6 +16,7 @@ const HomeScreen = () => {
              
                    <Category/> 
                     <QuickFilter/>
+                    <CitySpot/>
 
                     {/* <div className='mb-8 mt-4'>
                         <ShowCategory />

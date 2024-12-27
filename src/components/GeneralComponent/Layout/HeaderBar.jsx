@@ -10,7 +10,7 @@ const HeaderBar = (props) => {
     {/* Left Side: Logo and Orders Text */}
     <div className="flex items-center">
      
-      <h1 className={`text-lg font-medium ${props.click?"cursor-pointer":""}`} onClick={()=>{props.click? props.click() : ''
+      <h1 className={`text-lg font-medium ${props.click?"cursor-pointer":""}`} onClick={()=>{props.headerClick? props.headerClick() : ''
       }}>{props.name}</h1>
     </div>
   

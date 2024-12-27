@@ -2,7 +2,7 @@ import React,{useState,useEffect} from "react";
 import CategoryCard from "../../../../GeneralComponent/FlexElement/CategoryCard";
 import { useDispatch, useSelector } from 'react-redux';
 import {fetchCategoryApi,selectCategoryApiData,selectApiLoading,selectApiError} from "../../../../../redux/slices/menu.js"
-
+import { useNavigate } from 'react-router-dom'; 
 
 function Category()
 {   
@@ -11,7 +11,7 @@ function Category()
   const categories = useSelector(selectCategoryApiData);
   const loading = useSelector(selectApiLoading);
   const error = useSelector(selectApiError);
-
+  const navigate = useNavigate(); 
   useEffect(() => { 
     console.log('Dispatching fetchCategoryApi');
     dispatch(fetchCategoryApi());
@@ -20,7 +20,7 @@ function Category()
     <div className="mb-8 mt-4">
     <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold">Category</h2>
-              <button className="text-orange-500 text-sm" onClick={()=>{console.log("manage manage home");navigate("/menu/home-screen/manage-screen" , { state: { categories } });}} >View all</button>
+              <button className="text-orange-500 text-sm" onClick={()=>{;navigate("/menu/manage-screen/show-category" , { state: { categories } });}} >View all</button>
             </div>
             <div className="flex flex-row gap-5">  
             

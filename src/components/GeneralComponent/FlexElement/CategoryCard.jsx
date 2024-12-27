@@ -9,7 +9,7 @@ const CategoryCard = ({ image, title,style,imagestyle,bottomtitle,textonimage,Ad
     const navigate = useNavigate();
       if (isAdd) {
         return (
-          <div className={`flex flex-col items-center justify-center p-4 border border ${style? style:"w-40 h-40 hover:border-orange-500"} border-gray-300 rounded-lg cursor-pointer bg-white`}  onClick={()=>{console.log("manage manage home");navigate("/menu/home-screen/add-categoty-form" , { state: { categories } });}}>
+          <div className={`flex flex-col items-center justify-center p-4 border border ${style? style:"w-40 h-40 hover:border-orange-500"} border-gray-300 rounded-lg cursor-pointer bg-white`}  onClick={()=>{console.log("manage manage home");navigate("/menu/manage-screen/categoty-form" , { state: { categories } });}}>
             
             { add?
            
