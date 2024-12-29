@@ -4,7 +4,7 @@ import axios from 'axios'
 
 import { useEffect } from 'react';
 import { ChevronDownIcon } from '@heroicons/react/24/solid'; 
-import Group from "../../../../../assets/images/Group.svg" 
+import Group from "../../../../../assets/images/Group.png" 
 import { useNavigate,useLocation } from 'react-router-dom';
 import { 
     Menu as MenuIcon,
@@ -29,12 +29,11 @@ const AddCategoryForm = () => {
  
   console.log("asdfasdf",singleCategory) 
   const [newCuisine,setNewCuisine] = useState('') 
-  const [isExpanded, setIsExpanded] = useState(true); 
   const [selectedCuisineIds, setSelectedCuisineIds] = useState([]); 
   const [allCategory,setAllCategory] = useState([]) 
   
   const [cuisines, setCuisines] = useState(singleCategory?.cuisines
-    ?.map(sub=>({id:sub.cuisine_id,title:sub.cuisine_title})));   
+    ?.map(sub=>({id:sub.cuisine_id,title:sub.cuisine_title}))||[]);   
   const [showModal, setShowModal] = useState(false); 
   const [type,SetType] = useState('')
   const [newitem, setNewItem] =useState("") 
@@ -46,14 +45,18 @@ const AddCategoryForm = () => {
     subcategories? singleCategory?.
     subcategories : []); // Selected item
   const [loading, setLoading] = useState(false); // Loading state for API
-
+  const [hasUpdated, setHasUpdated] = useState(false);
   let debounceTimeout;
 
 
 
 
   const navigate = useNavigate();
-  const toggleDropdown = () => setFormState((prev) => ({...prev,dropdownOpen:!prev.dropdownOpen})); 
+  const toggleDropdown = () => setFormState((prev) => {
+     console.log("priced priced",prev) 
+     
+   return {...prev,dropdownOpen:!prev.dropdownOpen}
+  }); 
 
 
   
@@ -89,17 +92,21 @@ const AddCategoryForm = () => {
         const data = response.data.data 
         console.log("jsdjflasl",response.data.data) 
         if(type == 'Cuisine'){
-          setCuisines([...cuisines,{cuisine_id:data.cuisine_id,title:data.cuisine_title,value:true}])
+            setCuisines((prevCuisines) => [
+                ...prevCuisines,
+                { cuisine_id: data.cuisine_id, title: data.cuisine_title, value: true },
+              ]);
         }
         console.log(response);  
         setNewItem("")
         setNewImage(null)
         setNewImagePreview(null)  
         SetType('')  
-       
-
+        singleCategory={}
+        console.log("true event")
       })
-      .catch(function (error) {
+      .catch(function (error) { 
+        console.log("error one")
         console.log(error);
       });
     }
@@ -128,7 +135,7 @@ const AddCategoryForm = () => {
     [updatedData[sourceIndex], updatedData[targetIndex]] = [updatedData[targetIndex], updatedData[sourceIndex]];
     setSelectedCategory(updatedData);
   };
-    const subCategoriess = singleCategory?.subcategories?.map(sub=>({id:sub.subcategory_id,title:sub.subcategory_title})) 
+   
     
     const handleSubmit=(e)=>{   
       console.log("sadfsdsds",selectedCuisineIds)
@@ -140,14 +147,18 @@ const AddCategoryForm = () => {
       const cuisine_ids = formState?.allcuisine?.filter(item => item.value === true).map(items=>items.cuisine_id)  
       console.log("reated newly rated items",sub_category_ids,cuisine_ids) 
       formData.append('category_title', formState.title); 
-      formData.append('cuisine_ids',cuisine_ids) 
-      formData.append('subcategory_ids',sub_category_ids)
+      cuisine_ids.forEach(id => formData.append('cuisine_ids[]', id));
+      sub_category_ids.forEach(id => formData.append('subcategory_ids[]', id));
       
       if(formState.image){formData.append('image', formState.image)}
 
-    
-
-      axios.post('http://139.5.189.164/menu/category', formData, {
+       let type = 'post'
+       let api = `${API_URL}/menu/category`
+        if (singleCategory){
+          type = 'put' 
+          api = `${API_URL}/menu/category/${singleCategory?.category_id}`
+        }
+        axios[type](api, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -162,13 +173,25 @@ const AddCategoryForm = () => {
           imagePreview: null,
         }); 
         setSelectedCuisineIds([])
-        setSelectedCategory([])
+        setSelectedCategory([]) 
+        getInfo()
       })
       .catch(function (error) {
         console.log(error);
       });
     } 
-      // Handle image selection
+      // Handle image selection 
+      const handleCacel = ()=>{
+        setFormState({
+          title: "",
+          subCategory: "",
+          selectedCuisines: [],
+          dropdownOpen: false,
+          imagePreview: null,
+        }); 
+        setSelectedCuisineIds([])
+        setSelectedCategory([])
+      }
   const handleFileChange = (e) => {
     const file = e.target.files[0]; 
     console.log("lllllll",file)
@@ -205,7 +228,7 @@ const AddCategoryForm = () => {
   console.log("dddddd4444",selectedCuisineIds) 
   const getInfo = () =>{
     try {
-      axios.get('http://139.5.189.164/menu/subcategory')
+      axios.get(`${API_URL}/menu/subcategory`)
       .then(function (response) {
         
         console.log("deeeddd gweeet",response.data
@@ -220,7 +243,7 @@ const AddCategoryForm = () => {
       console.log('error accured')
     } 
     try {
-      axios.get('http://139.5.189.164/menu/cuisine')
+      axios.get(`${API_URL}/menu/cuisine`)
       .then(function (response) {
         
         console.log("deeeddd gweeet cuisine",response.data
@@ -234,23 +257,45 @@ const AddCategoryForm = () => {
      } catch (error) {
       console.log('error accured')
     }  
-    // in edit case if the category has any cuisine then make it as true 
+    
     let updatedcusisine = [] 
   
-    // if(singleCategory?.cuisines){
-    //   updatedcusisine = allcuisine?.map(item=>{const currentvalue = singleCategory?.cuisines?.some(cuisine=> cuisine.id ==item.id) 
-    //     if(currentvalue){
-    //       return {...item,value:true}
-    //     }else{
-    //       return {...item,value:false}
-    //     }
-    //    })
-    // }
+  
     console.log("sdfasdfasdfasdf",updatedcusisine)
-  }
+  } 
+  const updateCuisines = () => {
+    const updatedCuisines = formState.allcuisine.map((cuisine) => {
+      // Check if cuisine exists in singleCategory.cuisines
+      const isPresent = singleCategory?.cuisines?.some(
+        (singleCuisine) => singleCuisine.cuisine_id === cuisine.cuisine_id
+      );
+  
+      return {
+        ...cuisine,
+        value: isPresent || false,
+      };
+    });
+  
+
+    setFormState((prevState) => ({
+      ...prevState,
+      allcuisine: updatedCuisines,
+    }));
+  };
+  
+ 
+  useEffect(() => {
+    if (formState?.allcuisine?.length > 0 && singleCategory?.cuisines && !hasUpdated) {
+      updateCuisines();
+      setHasUpdated(true);  // Prevent further updates
+    }
+  }, [singleCategory,formState?.allcuisine]); // Ensure this logic runs when dependencies change
+  console.log("asdfasdf222",formState)
   useEffect(()=>{
    
-    getInfo()
+    getInfo() 
+   
+    
   },[])  
 
 
@@ -270,7 +315,7 @@ const AddCategoryForm = () => {
   const fetchSubCategories = async (query) => { 
     console.log("new creat3de tine",query)
     if (!query) {
-      setSubCategories([]); // Clear results if input is empty
+      setSubCategories([]); 
       return;
     }
 
@@ -278,11 +323,11 @@ const AddCategoryForm = () => {
     try { 
     
       const response = await fetch(
-        `http://139.5.189.164/menu/subcategory/by-name?subcategory_title=${query}`
+        `${API_URL}/menu/subcategory/by-name?subcategory_title=${query}`
       );
       const data = await response.json(); 
       console.log("sadfasd",data)
-      setSubCategories(data || []); // Assuming results come in `results`
+      setSubCategories(data || []); 
     } catch (error) {
       console.error("Error fetching subcategories:", error);
     } finally {
@@ -291,13 +336,12 @@ const AddCategoryForm = () => {
   };
   const handleSelect = (item) => {
     setSelectedCategory(previtem=>[...previtem,item]);
-    setSearchTerm(item.subcategory_title); // Set the input to the selected value
-    setSubCategories([]); // Clear the dropdown 
-   
+    setSearchTerm(''); 
+    setSubCategories([]); 
   };
 
 
-
+  console.log("API_URL3322",formState)
     return (  
       <MainLayout headerName={"Edit"} headerClick={() => {
         navigate("/menu/manage-screen/show-category", { state: { categories } });
@@ -321,7 +365,7 @@ const AddCategoryForm = () => {
           />
         </div>
   
-        <div className="mb-6 ml-8 ">
+        <div className="mb-6 ml-8 relative ">
           <label className="block text-sm mb-2">Add sub category</label>
           <input 
             type="text" 
@@ -334,7 +378,7 @@ const AddCategoryForm = () => {
               {/* Dropdown */}
               {loading && <p className="text-gray-400 mt-2">Loading...</p>} 
             {subCategories.length > 0 && (
-        <ul className="border rounded mt-2 shadow-md max-h-48 overflow-auto">
+        <ul className="absolute z-10 top-full border rounded mt-2 shadow-md max-h-48 overflow-auto">
           {subCategories.map((item) => (
             <li
               key={item.subcategory_id}
@@ -353,57 +397,73 @@ const AddCategoryForm = () => {
       )}
           
         </div> 
-        <div className="mb-6 ml-12 ">
-          <label className="block text-sm mb-2 w-40">Select Cuisine</label> 
+        <div className="mb-6 ml-12 relative">
+            <label className="block text-sm mb-2 w-40">Select Cuisine</label> 
          
-       <div className="flex border rounded px-2 py-1 justify-between  bg-white cursor-pointer">
-          <div
-       
-       
-      >
-        {formState?.selectedCuisines?.length > 0
-          ? formState?.selectedCuisines[0]
-          : "Select Cuisine"} 
-           
-      </div>  
-      <div>
-      <ChevronDownIcon
-       onClick={toggleDropdown}
-          className={`h-4 w-4 transform transition-transform m-2 duration-200 ${
-            formState.dropdownOpen ? "rotate-180" : ""
-          }`}
-        />
-      </div> 
-      </div>
-      {formState.dropdownOpen && (
-        <div className="relative  border bg-white shadow-lg mt-1 w-40 rounded">
-          <div className="p-2">
-            {formState?.allcuisine?.map((cuisine) => (
-              <div
-                key={cuisine?.cuisine_id}
-                className="flex items-center space-x-2 mb-1"
-              >
-                <input
-                  type="checkbox"
-                   
-                  onChange={(e) => handleCheckboxChange(e,cuisine)}
-                />
-                <label>{cuisine?.cuisine_title}</label>
+            <div className="flex border rounded px-2 py-1 justify-between  bg-white cursor-pointer">
+                  <div>
+                    {formState?.selectedCuisines?.length > 0
+                    ? formState?.selectedCuisines[0]
+                    : "Select Cuisine"} 
+                  
+                </div>  
+                <div>
+                  <ChevronDownIcon
+                  onClick={toggleDropdown}
+                      className={`h-4 w-4 transform transition-transform m-2 duration-200 ${
+                        formState.dropdownOpen ? "rotate-180" : ""
+                      }`}
+                    />
+              </div> 
+            </div>
+            {formState.dropdownOpen && (
+              <div className="absolute  top-full z-10 border bg-white shadow-lg mt-1 w-40 rounded">
+                <div className="p-2">
+                  {formState?.allcuisine?.map((cuisine) => ( 
+                    
+                    <div
+                      key={cuisine?.cuisine_id}
+                      className="flex items-center space-x-2 mb-1"
+                    > 
+                    {console.log("asfasd",cuisine)}
+                      <input
+                        type="checkbox"
+                        checked={cuisine.value} 
+                        onChange={(e) => handleCheckboxChange(e,cuisine)}
+                      />
+                      <label>{cuisine?.cuisine_title}</label>
+                    </div>
+                  ))}
+                  <hr className="my-2" />
+                  
+                  
+        <label onClick={()=>{SetType("Cuisine"),setShowModal(true)}} >Add new cuisine</label>
+                  
+                </div>
               </div>
-            ))}
-            <hr className="my-2" />
-            
-            
-  <label onClick={()=>{SetType("Cuisine"),setShowModal(true)}} >Add new cuisine</label>
-            
+            )} 
+             <div className="absolute z-9 flex flex-wrap mt-2 space-x-2">
+        {formState?.allcuisine?.filter((cuisine)=>cuisine.value == true).map((cuisine) => (
+          <div
+            key={cuisine.cuisine_id}
+            className="px-2 py-1 bg-gray-200 rounded-full flex items-center"
+          >
+            {cuisine.cuisine_title}
+            <button
+              className="ml-2 text-red-500"
+              onClick={() => handleRemoveCuisine(cuisine)}
+            >
+              &times;
+            </button>
           </div>
-        </div>
-      )}
+        ))}
+      </div>
         </div> 
+           
         </div>
        
   
-        <div className="border border-dashed border-gray-300 rounded-lg p-8 w-64 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50"> 
+        <div className="border border-dashed border-gray-300 rounded-lg p-8 w-56 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50"> 
           
       {/* Upload icon */} 
       <input
@@ -473,7 +533,7 @@ const AddCategoryForm = () => {
 
   
   <button type="submit"  className="bg-blue-600 text-white px-4 py-2 rounded-lg" onClick={handleSubmit}>Add Category</button> 
-  <button type="reset" className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg">Cancel</button>
+  <button type="reset" className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg" onClick={handleCacel}>Cancel</button>
 </div>
       </div> 
       </form>
@@ -484,7 +544,7 @@ const AddCategoryForm = () => {
                 <div className="bg-white rounded-lg p-6 w-96">
                   <div className="flex justify-between items-center mb-4">
                     <h2 className="text-lg font-bold">Add New {type}</h2>
-                    <button onClick={()=>{showModal(false)}}>&times;</button>
+                    <button  onClick={()=>{handleCancel()}}>&times;</button>
                   </div>
       
                   {/* Cuisine Title Input */}

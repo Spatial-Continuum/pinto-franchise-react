@@ -2,9 +2,10 @@ import React,{useEffect,useState} from "react";
 import ShowFlexWithoutImage from "../../../../GeneralComponent/FlexElement/ShowFlexWithoutImage.jsx"
 import { useDispatch, useSelector } from 'react-redux'; 
 import {fetchQuickFilterApi,selectQuickFilterApiData,selectApiLoading,selectApiError} from "../../../../../redux/slices/menu.js"
-
+import { useLocation,useNavigate } from 'react-router-dom'; 
 function QuickFilter(){ 
-    const [viewall,setViewAll] = useState(false) 
+  
+    const navigate = useNavigate(); 
     const dispatch = useDispatch();
     const filters = useSelector(selectQuickFilterApiData);
     const loading = useSelector(selectApiLoading);
@@ -18,7 +19,7 @@ function QuickFilter(){
         <div className="flex justify-between items-center mb-4">
         
           <h2 className="text-lg font-semibold">Quick filter</h2>
-          <button className="text-orange-500 text-sm" onClick={()=>{navigate("/menu/home-screen/quick-filter" , { state: { filters } });}} >View all</button>
+          <button className="text-orange-500 text-sm" onClick={()=>{navigate("/menu/manage-screen/show-quick-filter" , { state: { filters } });}} >View all</button>
         </div>
         <div className="flex gap-4 flex-wrap">
           {filters.map((filter) => (  

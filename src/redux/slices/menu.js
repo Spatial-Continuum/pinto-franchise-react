@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { API_URL } from "../../globalImport.js"
 export const fetchCategoryApi = createAsyncThunk('api/fetchFirstApi', async ( _,{ rejectWithValue }) => { 
   console.log("asdfasdfasdf",`${API_URL}/menu/category`)
     try {

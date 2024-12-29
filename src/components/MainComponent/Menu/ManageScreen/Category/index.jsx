@@ -28,7 +28,10 @@ function Category()
                 
                 <CategoryCard key={category.category_id} {...category}
                 imagestyle={"w-24 h-24  text-center "}
-                title= {category.category_title}/>
+                title= {category.category_title} 
+               
+              onEdit={()=>{navigate("/menu/manage-screen/categoty-form" , { state: { category,categories } })}} 
+                />
               ))}
               <CategoryCard add={true} isAdd={true} categories={categories} />
             </div> 
