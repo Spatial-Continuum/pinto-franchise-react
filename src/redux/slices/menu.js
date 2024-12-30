@@ -38,7 +38,15 @@ export const fetchCategoryApi = createAsyncThunk('api/fetchFirstApi', async ( _,
         return rejectWithValue(error.response?.data || error.message);
       }
     }); 
-
+    export const fetchCuisineApi = createAsyncThunk('api/fetchCuisine', async ( _,{ rejectWithValue }) => { 
+  
+      try {
+        const response = await axios.get(`${API_URL}/menu/cuisine`); // Replace with your first API URL
+        return response.data;
+      } catch (error) {
+        return rejectWithValue(error.response?.data || error.message);
+      }
+    });
 
   const menuSlice = createSlice({
     name: 'api',
@@ -46,6 +54,7 @@ export const fetchCategoryApi = createAsyncThunk('api/fetchFirstApi', async ( _,
       fetchCategoryApi: [],
       fetchQuickFilter:[],
       fetchSpotCity:[],
+      fetchCuisine:[],
       loading: false,
       error: null,
     },
@@ -94,13 +103,26 @@ export const fetchCategoryApi = createAsyncThunk('api/fetchFirstApi', async ( _,
           state.error = action.payload;
         })
         
-        
+        .addCase(fetchCuisineApi.pending, (state) => {
+          state.loading = true;
+          state.error = null;
+        })
+        .addCase(fetchCuisineApi.fulfilled, (state, action) => { 
+          console.log('Fetched data:', action.payload);
+          state.loading = false;
+          state.fetchCuisine = action.payload;
+        })
+        .addCase(fetchCuisineApi.rejected, (state, action) => {
+          state.loading = false;
+          state.error = action.payload;
+        })
     },
   });
   
   export const selectCategoryApiData = (state) => state.menu.fetchCategoryApi; 
   export const selectQuickFilterApiData = (state) => state.menu.fetchQuickFilter;
   export const selectCitySpotData = (state)=> state.menu.fetchSpotCity;
+  export const selectCuisine = (state)=> state.menu.fetchCuisine;
   export const selectApiLoading = (state) => state.menu.loading;
   export const selectApiError = (state) => state.menu.error;
   
