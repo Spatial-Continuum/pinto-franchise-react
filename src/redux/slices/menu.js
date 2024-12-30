@@ -37,7 +37,8 @@ export const fetchCategoryApi = createAsyncThunk('api/fetchFirstApi', async ( _,
       } catch (error) {
         return rejectWithValue(error.response?.data || error.message);
       }
-    });
+    }); 
+
 
   const menuSlice = createSlice({
     name: 'api',
@@ -99,7 +100,7 @@ export const fetchCategoryApi = createAsyncThunk('api/fetchFirstApi', async ( _,
   
   export const selectCategoryApiData = (state) => state.menu.fetchCategoryApi; 
   export const selectQuickFilterApiData = (state) => state.menu.fetchQuickFilter;
-  export const selectCitySpotData = (state)=> state.menu.fetchQuickFilter;
+  export const selectCitySpotData = (state)=> state.menu.fetchSpotCity;
   export const selectApiLoading = (state) => state.menu.loading;
   export const selectApiError = (state) => state.menu.error;
   

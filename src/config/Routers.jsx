@@ -6,6 +6,7 @@ const ShowCategory = React.lazy(()=>import('../components/MainComponent/Menu/Man
 const CategoryForm = React.lazy(()=>import("../components/MainComponent/Menu/ManageScreen/Category/CategoryForm.jsx"))
 const ShowQuickFilter = React.lazy(()=>import("../components/MainComponent/Menu/ManageScreen/QuickFilter/showQuickFilter.jsx"))
 const QuickFilterForm = React.lazy(()=>import("../components/MainComponent/Menu/ManageScreen/QuickFilter/QuickFilterForm.jsx"))
+const ShowCitySpot = React.lazy(()=>import("../components/MainComponent/Menu/ManageScreen/CitySpotLight/showCitySpotLight.jsx"))
 const Routers =(props)=>{ 
   return(
     <Routes>
@@ -45,6 +46,13 @@ const Routers =(props)=>{
         </Suspense> 
 }
    /> 
+   <Route path='/menu/manage-screen/show-city-sopts'  
+    element={
+        <Suspense fallback={ <div className="text-center m-t-15">Loading...</div>}>
+          <ShowCitySpot />
+        </Suspense> 
+}
+   />
     {/* <Route path="/homescreen/authenticstyle" element={<ManageScreen />} /> */}
 </Routes>
   )

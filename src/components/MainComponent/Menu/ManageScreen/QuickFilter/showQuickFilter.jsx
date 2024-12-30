@@ -14,7 +14,6 @@ import {
         const navigate = useNavigate(); 
         const [filters, setFilters] = useState(location?.state?.filters|| []) 
     console.log("filters_filters",filters)
-    const [categories, setCategories] = useState([]) 
     const [categoryname, setCategoryName] =useState('')
  
     return(
@@ -55,6 +54,7 @@ import {
                key ={filter.quickfilter_id}
                title={filter.filter_title}  
                setSub={()=>setCategoryName(filter.filter_title)} 
+               onEdit={()=>{navigate("/menu/manage-screen/quick-filter-form" , { state: { filters,filter } });}}
                edit = {true}
                 />
               ))}

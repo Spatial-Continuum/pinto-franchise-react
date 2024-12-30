@@ -60,12 +60,7 @@ const AddCategoryForm = () => {
 
 
   
-  const handleAddCuisine = () => {
-    if (newCuisine.trim() && !cuisines.includes(newCuisine)) {
-      setCuisines((prev) => [...prev, newCuisine]);
-      setNewCuisine("");
-    }
-  }; 
+  
   const handleSubmitModal=(type,e) =>{  
     if(newitem&&newimage ){ 
       e.preventDefault();

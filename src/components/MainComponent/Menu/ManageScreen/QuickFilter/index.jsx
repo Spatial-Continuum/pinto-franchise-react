@@ -24,12 +24,14 @@ function QuickFilter(){
         <div className="flex gap-4 flex-wrap">
           {filters.map((filter) => (  
             <ShowFlexWithoutImage key={filter.quickfilter_id} title={filter.filter_title}  
-            edit={true}/>
+            edit={true} 
+            setSub={()=>{navigate("/menu/manage-screen/quick-filter-form" , { state: { filter,filters } });}}
+            />
 
             
           ))}
           <ShowFlexWithoutImage isAdd={true}  
-          click={()=>{navigate("/menu/home-screen/add-filter-form" , { state: { filters } });}}
+          setSub={()=>{navigate("/menu/manage-screen/quick-filter-form" , { state: { filters } });}}
           />
         </div>
       </div>

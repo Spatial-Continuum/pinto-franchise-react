@@ -33,7 +33,8 @@ function Category()
               onEdit={()=>{navigate("/menu/manage-screen/categoty-form" , { state: { category,categories } })}} 
                 />
               ))}
-              <CategoryCard add={true} isAdd={true} categories={categories} />
+              <CategoryCard add={true} isAdd={true} categories={categories} 
+              onEdit={()=>{navigate("/menu/manage-screen/categoty-form" , { state: { categories } })}} />
             </div> 
             </div>
   )

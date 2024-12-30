@@ -14,8 +14,7 @@ import {
             <> 
             {
         props.isAdd? 
-        <button className="flex items-center gap-2 px-8 py-3 border  border border-orange-300 rounded-lg bg-white" onClick={()=>{{props.setSub?props?.props.setSub(props?.
-          filter_title) : ''}}} >
+        <button className="flex items-center gap-2 px-8 py-3 border  border border-orange-300 rounded-lg bg-white" onClick={()=>{{props.setSub?props.setSub() : ''}}} >
         <PlusCircle className="w-4 h-4  text-orange-500" />
         Add New 
       </button>
@@ -29,7 +28,7 @@ import {
               {props.title}
             </button>
             <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">  
-                {props.edit?   <PenSquare className="w-4 h-4 text-gray-400 hover:text-gray-600 cursor-pointer" onClick={()=>{props.setSub? props.setSub(props.title) : ''}} /> : 
+                {props.edit?   <PenSquare className="w-4 h-4 text-gray-400 hover:text-gray-600 cursor-pointer" onClick={()=>{props.onEdit? props.onEdit() : ''}} /> : 
                 ''
     
                 }

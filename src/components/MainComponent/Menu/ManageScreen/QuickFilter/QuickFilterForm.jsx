@@ -7,18 +7,20 @@ import { useNavigate } from 'react-router-dom';
 import Group from "../../../../../assets/images/Group.png" 
 import MainLayout from '../../../../GeneralComponent/Layout/MainLayout.jsx';
  
-const AddFilterForm = () => { 
-  const singleCategory = location?.state?.category || {}
-  const [filterName,setFilterName]  = useState('')
+const AddFilterForm = () => {  
+  const location = useLocation(); 
+  const filters = location?.state?.filters || [] 
+  const singleFilter = location?.state?.filter || {}
+  const [filterName,setFilterName]  = useState(singleFilter?.filter_title || '')
  const [searchTerm, setSearchTerm] = useState("");
  const [subCategories, setSubCategories] = useState([]);
  const [loading, setLoading] = useState(false); 
-  const [selectedCategory, setSelectedCategory] = useState(singleCategory?.
-     subcategories? singleCategory?.
+  const [selectedCategory, setSelectedCategory] = useState(singleFilter?.
+     subcategories? singleFilter?.
      subcategories : []);
  let debounceTimeout;
   
-
+    console.log("namely namely",singleFilter)
     const handleRemoveItem = (index) => {
         const updatedData = [...selectedCategory];
         updatedData.splice(index, 1);
@@ -89,11 +91,16 @@ const AddFilterForm = () => {
     formData.append('filter_title', filterName); 
     sub_category_ids.forEach(id => formData.append('subcategory_ids[]', id));
     
-   
+     console.log("asdfasdfasda111",sub_category_ids)
 
      let type = 'post'
-     let api = `${API_URL}/menu/quick_filters`
-     
+     let api = `${API_URL}/menu/quick_filters` 
+     console.log("asdfasfasd",singleFilter)
+     if(singleFilter?.quickfilter_id){ 
+      type = 'put' 
+      api = `${API_URL}/menu/quick_filters/${singleFilter?.quickfilter_id}`
+    } 
+    console.log("asdfasdfasfasd",type)
       axios[type](api, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -115,7 +122,9 @@ const AddFilterForm = () => {
     return (  
         <MainLayout 
         headerName={"Back"}
-        headerClick = { ()=>navigate("/menu/manage-screen/show-quick-filter" , { state: { filters } })}
+        headerClick={() => {
+          navigate("/menu/manage-screen/show-quick-filter", { state: { filters } });
+        }}
         >
         <div className='m-6'> 
               <h2 className="text-lg font-semibold"> Add New Quick Filter </h2> 
