@@ -10,7 +10,7 @@ function Cuisine(){
         const dispatch = useDispatch();
         const cuisines = useSelector(selectCuisine);  
         console.log("sfdfasdfsad",cuisines)
-         useEffect(() => { 
+         useEffect(() => {
             console.log('Dispatching fetchQuickFilterApi');
             dispatch(fetchCuisineApi());
           }, [dispatch]);
@@ -23,7 +23,7 @@ function Cuisine(){
           <button className="text-orange-500 text-sm" onClick={()=>{console.log("manage manage home7788");navigate("/menu/home-screen/show-cuisine" , { state: { cuisine } });}} >View all</button>
         </div>
         <div className="flex gap-4 flex-wrap">
-          {cuisines.map((cusine) => (  
+          {cuisines?.length>3 ? cuisines: cuisines?.slice(0, 4).cuisines.map((cusine) => (  
              <CategoryCard image={cusine.image} style="w-32 h-32 mb-3"
              imagestyle="w-32 h-32 border rounded-lg" bottomtitle={cusine.name} />
 
