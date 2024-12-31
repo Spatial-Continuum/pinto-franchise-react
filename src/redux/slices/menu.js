@@ -41,7 +41,7 @@ export const fetchCategoryApi = createAsyncThunk('api/fetchFirstApi', async ( _,
     export const fetchCuisineApi = createAsyncThunk('api/fetchCuisine', async ( _,{ rejectWithValue }) => { 
   
       try {
-        const response = await axios.get(`${API_URL}/menu/cuisine`); // Replace with your first API URL
+        const response = await axios.get(`${API_URL}/menu/cuisine`); 
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response?.data || error.message);

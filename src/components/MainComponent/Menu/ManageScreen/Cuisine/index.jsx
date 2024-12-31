@@ -23,9 +23,9 @@ function Cuisine(){
           <button className="text-orange-500 text-sm" onClick={()=>{console.log("manage manage home7788");navigate("/menu/home-screen/show-cuisine" , { state: { cuisine } });}} >View all</button>
         </div>
         <div className="flex gap-4 flex-wrap">
-          {cuisines?.length>3 ? cuisines: cuisines?.slice(0, 4).cuisines.map((cusine) => (  
-             <CategoryCard image={cusine.image} style="w-32 h-32 mb-3"
-             imagestyle="w-32 h-32 border rounded-lg" bottomtitle={cusine.name} />
+          {cuisines?.slice(0, cuisines.length > 4 ? 4 : cuisines.length).map((cusine) => (  
+             <CategoryCard key={cusine.cuisine_id} image={cusine.image} style="w-32 h-32 mb-3"
+             imagestyle="w-32 h-32 border rounded-lg" bottomtitle={cusine.cuisine_title} />
 
             
           ))}
