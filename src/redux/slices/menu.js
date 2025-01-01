@@ -47,7 +47,15 @@ export const fetchCategoryApi = createAsyncThunk('api/fetchFirstApi', async ( _,
         return rejectWithValue(error.response?.data || error.message);
       }
     });
+    export const fetchSubCategoryApi = createAsyncThunk('api/fetchSubCategory', async ( _,{ rejectWithValue }) => { 
 
+      try {
+        const response = await axios.get(`${API_URL}/menu/subcategory`); // Replace with your first API URL
+        return response.data;
+      } catch (error) {
+        return rejectWithValue(error.response?.data || error.message);
+      }
+    });
   const menuSlice = createSlice({
     name: 'api',
     initialState: {
@@ -55,6 +63,7 @@ export const fetchCategoryApi = createAsyncThunk('api/fetchFirstApi', async ( _,
       fetchQuickFilter:[],
       fetchSpotCity:[],
       fetchCuisine:[],
+      fetchSubCategory:[],
       loading: false,
       error: null,
     },
@@ -116,6 +125,19 @@ export const fetchCategoryApi = createAsyncThunk('api/fetchFirstApi', async ( _,
           state.loading = false;
           state.error = action.payload;
         })
+        .addCase(fetchSubCategoryApi.pending, (state) => {
+          state.loading = true;
+          state.error = null;
+        })
+        .addCase(fetchSubCategoryApi.fulfilled, (state, action) => { 
+          console.log('Fetched data:', action.payload);
+          state.loading = false;
+          state.fetchSubCategory = action.payload;
+        })
+        .addCase(fetchSubCategoryApi.rejected, (state, action) => {
+          state.loading = false;
+          state.error = action.payload;
+        })
     },
   });
   
@@ -123,6 +145,7 @@ export const fetchCategoryApi = createAsyncThunk('api/fetchFirstApi', async ( _,
   export const selectQuickFilterApiData = (state) => state.menu.fetchQuickFilter;
   export const selectCitySpotData = (state)=> state.menu.fetchSpotCity;
   export const selectCuisine = (state)=> state.menu.fetchCuisine;
+  export const selectSubCategory = (state)=> state.menu.fetchSubCategory;
   export const selectApiLoading = (state) => state.menu.loading;
   export const selectApiError = (state) => state.menu.error;
   

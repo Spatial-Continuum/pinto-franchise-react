@@ -24,7 +24,7 @@ function Category()
             </div>
             <div className="flex flex-row gap-5">  
             
-              {viewall&&categories?.length>4? categories: categories?.slice(0, 5).map((category) => ( 
+              {categories?.slice(0, categories.length > 4 ? 4 : categories.length).map((category) => ( 
                 
                 <CategoryCard key={category.category_id} {...category}
                 imagestyle={"w-24 h-24  text-center "}

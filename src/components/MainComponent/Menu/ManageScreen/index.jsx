@@ -5,7 +5,8 @@ import Category from './Category/index.jsx'
 import SearchInput from '../../../GeneralComponent/SearchBox/SearchInput.jsx'
 import QuickFilter from './QuickFilter/index.jsx'
 import CitySpot from "./CitySpotLight/index.jsx"
-import Cuisine from "./Cuisine/index.jsx"
+import Cuisine from "./Cuisine/index.jsx" 
+import SubCategory from './SubCategory/index.jsx'
 const HomeScreen = () => {
 
     return (
@@ -16,6 +17,7 @@ const HomeScreen = () => {
                    <SearchInput/> 
              
                    <Category/> 
+                   <SubCategory/>
                     <QuickFilter/>
                     <CitySpot/>
                     <Cuisine/>

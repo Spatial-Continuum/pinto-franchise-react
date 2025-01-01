@@ -30,8 +30,13 @@ import {
     const location = useLocation();
     const [citySpots, setCitySopts] = useState(location?.state?.citySpots|| []) 
     const [categoryName, setCategoryName]=useState('') 
+    const [singleCategory,setSingleCategory] = useState('')
     const navigate = useNavigate();
+    const handleSubcategory =(singlecity,categories) =>{ 
+      setCategoryName(singlecity?.cityspotlight_id) 
+      setSingleCategory(singlecity)
    
+     }
     return( 
         <MainLayout 
          headerName={"Back"}
@@ -63,7 +68,7 @@ import {
               
               <CategoryCard image={Spot} key ={citySpot.cityspotlight_id}  style="w-54 h-48"
               imagestyle="w-54 h-48 p-2 border rounded-lg" 
-              setSub={()=>setCategoryName(citySpot.cityspotlight_id)}
+              setSub={()=>handleSubcategory(citySpot,citySpots)}
               />
              ))}
            </div >   
@@ -93,24 +98,24 @@ import {
 
                 </div> 
                 <p className="mt-4">Items in the Spotlight</p> 
-                {
-                 <div className="my-8">   
-                  
+                {categoryName && (
+                  <div className="my-8">   
                     <div className="border border-gray-200 rounded-lg">  
-                     <div className="flex flex-wrap gap-4  m-4"> 
-                     {citySpots.map((citySpot) => (
-                    <ShowFlexElements 
-                    category={citySpot}  
-                    topName={true} 
-                    style={"w-36 h-30"}
-                    />
-                   ))}
-                       
-                        </div>
-                    
-                     </div>
-                   </div>
-            }
+                      <div className="flex flex-wrap gap-4 m-4"> 
+                        {singleCategory?.subcategory_detail && (
+                          <ShowFlexElements 
+                            category={singleCategory?.subcategory_detail}  
+                            title={singleCategory?.subcategory_detail?.subcategory_title}
+                            topName={true} 
+                            style="w-36 h-30"
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+            
         
          </div>
 

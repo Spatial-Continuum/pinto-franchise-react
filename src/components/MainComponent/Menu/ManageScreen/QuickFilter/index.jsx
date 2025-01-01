@@ -22,7 +22,7 @@ function QuickFilter(){
           <button className="text-orange-500 text-sm" onClick={()=>{navigate("/menu/manage-screen/show-quick-filter" , { state: { filters } });}} >View all</button>
         </div>
         <div className="flex gap-4 flex-wrap">
-          {filters.map((filter) => (  
+          {filters?.slice(0, filters.length > 4 ? 4 : filters.length).map((filter) => (  
             <ShowFlexWithoutImage key={filter.quickfilter_id} title={filter.filter_title}  
             edit={true} 
             setSub={()=>{navigate("/menu/manage-screen/quick-filter-form" , { state: { filter,filters } });}}
