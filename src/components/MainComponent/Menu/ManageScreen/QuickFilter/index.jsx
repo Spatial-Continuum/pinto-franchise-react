@@ -25,6 +25,7 @@ function QuickFilter(){
           {filters?.slice(0, filters.length > 4 ? 4 : filters.length).map((filter) => (  
             <ShowFlexWithoutImage key={filter.quickfilter_id} title={filter.filter_title}  
             edit={true} 
+            onEdit={()=>{navigate("/menu/manage-screen/quick-filter-form" , { state: { filters,filter } });}}
             setSub={()=>{navigate("/menu/manage-screen/quick-filter-form" , { state: { filter,filters } });}}
             />
 

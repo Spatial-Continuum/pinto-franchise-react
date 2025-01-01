@@ -6,41 +6,41 @@ import MainLayout from '../../../../GeneralComponent/Layout/MainLayout.jsx';
 import { 
     Menu as MenuIcon,
     Search,
+    Upload,
   } from 'lucide-react'; 
  import vector from "../../../../../assets/images/Vector_colorless.png"
- import { 
-    Menu as MenuIcon,
-    Upload,
-  } from 'lucide-react';
+ import axios from 'axios'
 
 function ShowSubCategory(){  
     const location = useLocation(); 
     const navigate = useNavigate(); 
     const [subcategories, setSubCategories] = useState(location?.state?.subcategories|| []) 
-    const [categoryName, setCategoryName]=useState('') 
-    const [singleCategory,setSinlgeCategory] = useState({})
+ 
+     const [singleSubCategory,setSingleSubCategory] = useState({})
     const [allEdit , setAllEdit] = useState(false)
     const [singleEdit,setSingleEdit] =useState(false) 
       const [newitem, setNewItem] =useState("") 
       const [newimage,setNewImage] =useState(null) 
       const [newImagePreview,setNewImagePreview]  =useState(null) 
-      const [searchTerm, setSearchTerm] = useState(""); // Input value
-     const handleSubcategory =(singleCat,subcategories) =>{ 
-      setCategoryName(singleCat.category_title) 
-      setSinlgeCategory(singleCat)
-   
-     }
+      const [searchTerm, setSearchTerm] = useState(""); // Input value  
+      const [showmodal,setShowModal] = useState(false)
+      console.log("akljflajflasd",subcategories)
+     
      const handleEditSubCatgory= (subcategory) =>{ 
         console.log("akjsdfhkjashasdj;d")
-        setSingleEdit(true)
-       
+        setSingleEdit(true) 
+        setShowModal(true)
+        setNewItem(subcategory.subcategory_title) 
+        setNewImage(subcategory.image)
+        setNewImagePreview(subcategory.image) 
+        setSingleSubCategory(subcategory)
      } 
      const handleCancel =() =>{ 
         setNewItem('')
         setNewImage(null) 
         setNewImagePreview(null)
-        SetType('')
-        setSingleEdit(false)
+        setSingleEdit(false) 
+        setShowModal(false)
       } 
       const handleSubmitModal=(e) =>{  
         if(newitem&&newimage ){ 
@@ -49,15 +49,15 @@ function ShowSubCategory(){
         
             formData.append('subcategory_title', newitem); 
           
-        
-        
+            let type = singleEdit? 'put' : 'post'
+            let url_link=  singleEdit? `${API_URL}/menu/subcategory/${singleSubCategory.subcategory_id}` :`${API_URL}/menu/subcategory`
           if(newimage){formData.append('image', newimage)} 
-                let url_link = `${API_URL}/menu/subcategory`
+                
                 if (!url_link) {
                 
                   return; 
                 }
-                axios.post(url_link, formData, {
+                axios[type](url_link, formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
@@ -115,10 +115,10 @@ function ShowSubCategory(){
              Edit
             </button>
             <button 
-              onClick={() =>navigate("/menu/manage-screen/categoty-form" , { state: { subcategories } })}
+              onClick={() =>setShowModal(true)}
               className=" px-2 bg-green-600 text-white rounded-lg "
             >
-              Add category
+              Add sub category
             </button> 
             </div>
           </div>
@@ -128,17 +128,17 @@ function ShowSubCategory(){
           
            <div className="flex flex-wrap gap-5">
              {subcategories.map((subcategory) => (
-                <>
-                 
+             
               <ShowFlexElements 
+              key={subcategory.subcategory_id}
               category={subcategory}  
               topName={true}
               topEdit={allEdit?true :''}
-              handleEditTop={allEdit? handleEditSubCatgory(subcategory) : ''}
+              handleEditTop={allEdit? ()=>{ handleEditSubCatgory(subcategory)}: undefined}
+             
               title={subcategory.subcategory_title}
-              setSub={()=>{handleSubcategory(subcategory,subcategories)}} 
               onEdit={()=>{navigate("/menu/manage-screen/categoty-form" , { state: { subcategory,subcategories } })}} />
-              </>
+              
              ))}
            </div >          
 
@@ -147,8 +147,8 @@ function ShowSubCategory(){
        
 
        </div> 
-          
-       {singleEdit&& 
+          {console.log("aslfjasdfas",singleEdit)}
+       {showmodal&& 
             (
               <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
                 <div className="bg-white rounded-lg p-6 w-96">

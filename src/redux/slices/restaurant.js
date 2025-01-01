@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { API_URL } from '../../globalImport.js';
+
 
 // Async thunk for posting a new restaurant
 export const postNewRestaurant = createAsyncThunk(

@@ -1,14 +1,14 @@
 import { Routes, Route } from "react-router";
 import React, { Suspense } from "react"
 import MainLayout from "../components/GeneralComponent/Layout/MainLayout.jsx"
-import Onboarding from '../pages/Merchant/Onboarding.jsx';
-import MarketingScreen from "../pages/Marketing/MarketingScreen.jsx";
-import DeliveryPartnerSalaried from "../pages/DeliveryPartner/DeliveryPartnerSalaried.jsx";
-import DeliveryPartnerDeliveryBased from "../pages/DeliveryPartner/DeliveryPartnerDeliveryBased.jsx";
-import DeliveryPartnerOnboarding from "../pages/DeliveryPartner/DeliveryPartnerOnboarding.jsx";
-import Restaurants from "../pages/Menu/Restaurants.jsx";
-import AddItem from "../modules/restaurants/AddItem.jsx";
-import Addmenu from "../pages/Menu/Addmenu.jsx";
+// import Onboarding from '../pages/Merchant/Onboarding.jsx';
+// import MarketingScreen from "../pages/Marketing/MarketingScreen.jsx";
+// import DeliveryPartnerSalaried from "../pages/DeliveryPartner/DeliveryPartnerSalaried.jsx";
+// import DeliveryPartnerDeliveryBased from "../pages/DeliveryPartner/DeliveryPartnerDeliveryBased.jsx";
+// import DeliveryPartnerOnboarding from "../pages/DeliveryPartner/DeliveryPartnerOnboarding.jsx";
+// import Restaurants from "../pages/Menu/Restaurants.jsx";
+// import AddItem from "../modules/restaurants/AddItem.jsx";
+// import Addmenu from "../pages/Menu/Addmenu.jsx";
 const ManageScreen = React.lazy(() => import('../components/MainComponent/Menu/index')); 
 const ShowCategory = React.lazy(()=>import('../components/MainComponent/Menu/ManageScreen/Category/ShowCategory.jsx'))
 const CategoryForm = React.lazy(()=>import("../components/MainComponent/Menu/ManageScreen/Category/CategoryForm.jsx"))
@@ -71,7 +71,7 @@ const Routers =(props)=>{
    />
     {/* <Route path="/homescreen/authenticstyle" element={<ManageScreen />} /> */} 
 
-    <Route path='/merchant/onboarding'
+    {/* <Route path='/merchant/onboarding'
         element={
           <Suspense fallback={<div className="text-center m-t-15">Loading...</div>}>
             <Onboarding/>
@@ -138,7 +138,7 @@ const Routers =(props)=>{
             <Addmenu />
           </Suspense>
         }
-        />   
+        />    */}
 
 </Routes>
   )

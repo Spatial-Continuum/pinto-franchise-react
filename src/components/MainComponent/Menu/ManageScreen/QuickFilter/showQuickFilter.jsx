@@ -38,7 +38,7 @@ import {
 
                     </div>
               <button 
-                onClick={()=>{navigate("/menu/manage-screen/quick-filter-form");}}
+                onClick={()=>{navigate("/menu/manage-screen/quick-filter-form" , { state: { filters } });}}
                 className="px-4 py-2 bg-green-600 text-white rounded-lg"
               >
                 Add New Filter
