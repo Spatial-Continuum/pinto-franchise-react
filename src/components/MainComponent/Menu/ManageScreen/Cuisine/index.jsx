@@ -20,7 +20,7 @@ function Cuisine(){
         <div className="flex justify-between items-center mb-4">
         
           <h2 className="text-lg font-semibold">Cuisine</h2>
-          <button className="text-orange-500 text-sm" onClick={()=>{console.log("manage manage home7788");navigate("/menu/home-screen/show-cuisine" , { state: { cuisine } });}} >View all</button>
+          <button className="text-orange-500 text-sm" onClick={()=>{console.log("manage manage home7788");navigate("/menu/manage-screen/show-subcuisine" , { state: { cuisines } });}} >View all</button>
         </div>
         <div className="flex gap-4 flex-wrap">
           {cuisines?.slice(0, cuisines.length > 4 ? 4 : cuisines.length).map((cusine) => (  

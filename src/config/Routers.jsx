@@ -16,6 +16,7 @@ const ShowQuickFilter = React.lazy(()=>import("../components/MainComponent/Menu/
 const QuickFilterForm = React.lazy(()=>import("../components/MainComponent/Menu/ManageScreen/QuickFilter/QuickFilterForm.jsx"))
 const ShowCitySpot = React.lazy(()=>import("../components/MainComponent/Menu/ManageScreen/CitySpotLight/showCitySpotLight.jsx"))
 const ShowSubCategory = React.lazy(()=>import("../components/MainComponent/Menu/ManageScreen/SubCategory/ShowSubCategory.jsx"))
+const ShowCuisine = React.lazy(()=>import("../components/MainComponent/Menu/ManageScreen/Cuisine/ShowCuisine.jsx"))
 const Routers =(props)=>{ 
   return(
     <Routes>
@@ -66,6 +67,13 @@ const Routers =(props)=>{
     element={
         <Suspense fallback={ <div className="text-center m-t-15">Loading...</div>}>
           <ShowSubCategory/>
+        </Suspense> 
+}
+   /> 
+   <Route path='/menu/manage-screen/show-subcuisine'  
+    element={
+        <Suspense fallback={ <div className="text-center m-t-15">Loading...</div>}>
+          <ShowCuisine/>
         </Suspense> 
 }
    />
