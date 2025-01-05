@@ -1,22 +1,30 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect,createContext} from "react";
 import { useDispatch, useSelector } from 'react-redux';  
 import { useNavigate } from 'react-router-dom'; 
 import CategoryCard from "../../../../GeneralComponent/FlexElement/CategoryCard.jsx"
 import {selectCuisine,fetchCuisineApi,selectApiLoading,selectApiError} from "../../../../../redux/slices/menu.js"
-import Editpencil from "../../../../../assets/images/Vector.svg"
-import Spot from "../../../../../assets/images/spotlightbanner.svg"
-function Cuisine(){ 
+import ShowCuisine  from "./ShowCuisine.jsx";
+export const UpdateContext = createContext();
+function Cuisine(){  
+         
          const navigate = useNavigate(); 
         const dispatch = useDispatch();
         const cuisines = useSelector(selectCuisine);  
-        console.log("sfdfasdfsad",cuisines)
+        console.log("sfdfasdfsad",cuisines) 
+        const [updateone,setUpdateOne] = useState(false)
          useEffect(() => {
             console.log('Dispatching fetchQuickFilterApi');
             dispatch(fetchCuisineApi());
-          }, [dispatch]);
+          }, [dispatch,updateone]); 
+         
+         
+         
     return(
-
+   
         <div className="mb-8">
+            <UpdateContext.Provider value={{  setUpdateOne }}>
+            <ShowCuisine />
+        </UpdateContext.Provider>
         <div className="flex justify-between items-center mb-4">
         
           <h2 className="text-lg font-semibold">Cuisine</h2>
@@ -29,10 +37,12 @@ function Cuisine(){
 
             
           ))}
-        <CategoryCard style="w-32 h-32 hover:border-orange-500 " add={true}  isAdd={true}  />
+        <CategoryCard style="w-32 h-32 hover:border-orange-500 " add={true}  isAdd={true}  
+        onEdit={()=>{navigate("/menu/manage-screen/show-subcuisine" , { state: { cuisines,showModal:true} });}} />
+        
         </div>
       </div> 
-
+    
     )
 }
 export default Cuisine;

@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect, useContext} from 'react';
 
 import { useLocation,useNavigate } from 'react-router-dom'; 
 import axios from 'axios'
 import ShowFlexElements from "../../../../GeneralComponent/FlexElement/ShowFlexElement.jsx"
-import MainLayout from '../../../../GeneralComponent/Layout/MainLayout.jsx';
+import MainLayout from '../../../../GeneralComponent/Layout/MainLayout.jsx'; 
+import { UpdateContext } from "./index.jsx"
 import { 
     Menu as MenuIcon,
     Search,
@@ -16,17 +17,34 @@ function ShowCuisine(){
     const location = useLocation(); 
     const navigate = useNavigate(); 
     const [cuisines, setCategories] = useState(location?.state?.cuisines|| []) 
+    const setUpdateOne  = useContext(UpdateContext);
+    console.log("UpdateContext:", setUpdateOne);
+    const propsShowModal = location?.state.showModal || false
     const [categoryName, setCuisineName]=useState('') 
     const [singleCuisine,setSinlgeCuisine] = useState({})
      const [showModal,setShowModal] =useState(false) 
      const [newitem, setNewItem] =useState("") 
        const [newimage,setNewImage] =useState(null) 
        const [newImagePreview,setNewImagePreview]  =useState(null) 
-       const [searchTerm, setSearchTerm] = useState(""); // Input value
+       const [searchTerm, setSearchTerm] = useState(""); // Input value  
+       const getinfo =()=>{
+
+       }
+       useEffect (()=>{
+           if(propsShowModal){
+            setShowModal(true)
+           }
+
+       },[])
   console.log("lkasjfdjlfsa",singleCuisine)
      const handleSubcategory=(singleCat,categories) =>{ 
         setCuisineName(singleCat.cuisine_title) 
-      setSinlgeCuisine(singleCat)
+      setSinlgeCuisine(singleCat) 
+      setNewItem(singleCat.cuisine_title) 
+      setNewImage(singleCat.image)
+      setNewImagePreview(singleCat.image)
+      
+      setShowModal(true)
    
      }
      const handleCancel =() =>{ 
@@ -40,7 +58,7 @@ function ShowCuisine(){
         if(newitem&&newimage ){ 
           e.preventDefault();
           const formData = new FormData(); 
-            let url_link = Object.keys(singleCuisine).length  ? `${API_URL}/menu/cuisine/`  :  `${API_URL}/menu/cuisine` 
+            let url_link = Object.keys(singleCuisine).length  ? `${API_URL}/menu/cuisine/${singleCuisine.cuisine_id}`  :  `${API_URL}/menu/cuisine` 
             let type = Object.keys(singleCuisine).length ? 'put' : 'post' 
             formData.append('cuisine_title', newitem); 
           if(newimage){formData.append('image', newimage)} 
@@ -61,7 +79,9 @@ function ShowCuisine(){
             setNewItem("")
             setNewImage(null)
             setNewImagePreview(null)  
-            singleCategory={}
+            singleCategory={} 
+            setUpdateOne(true) 
+           
             console.log("true event")
           })
           .catch(function (error) { 
@@ -78,7 +98,7 @@ function ShowCuisine(){
          
          <MainLayout 
          headerName={"Back"}
-         headerClick = { ()=>navigate("/menu/manage-screen" , { state: { categories } })}
+         headerClick = { ()=>navigate("/menu/manage-screen" , { state: {cuisines } })}
          >
 
 <div className="p-6">
