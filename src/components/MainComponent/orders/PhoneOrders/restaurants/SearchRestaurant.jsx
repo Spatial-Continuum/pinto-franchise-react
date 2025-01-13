@@ -4,7 +4,7 @@
     import ratingstar from '../../../../../assets/images/ratingstar.svg';
     import { useDispatch, useSelector } from 'react-redux';
     import search from '../../../../../assets/images/prime_search.svg';
-    import { fetchMerchantSearchApi, selectMerchantData, selectMerchnatError, seletMerchantLoading } from '../../../../../redux/slices/merchant';
+    import { fetchMerchantSearchApi, selectMerchantData, selectMerchnatError, selectMerchantLoading } from '../../../../../redux/slices/merchant';
     import { useNavigate } from 'react-router-dom';
 
     const SearchRestaurant = () => {
@@ -12,7 +12,7 @@
         const dispatch = useDispatch()
         const [searchTerm, setSearchTerm] = useState('');
         const restaurants = useSelector(selectMerchantData)
-        const loading = useSelector(seletMerchantLoading)
+        const loading = useSelector(selectMerchantLoading)
 
 
         const handleSearch = (term) => {
