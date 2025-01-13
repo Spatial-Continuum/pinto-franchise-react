@@ -1,0 +1,50 @@
+/* General styling for onboarding-Table */
+.onboarding-Table {
+  position: relative;
+  left: 288px; /* Adjusted to fit after the sidebar */
+  top: 93px;
+  transform: rotate(0deg);
+  width: 80%; /* 80% of the display for larger screens */
+  max-width: 1900px; /* Maximum width for larger screens */
+  height: auto; /* Allow height to adjust based on content */
+  opacity: 100%;
+  border-radius: 12px;
+  background-color: #FFFFFF;
+  border: 1px solid #D7D7D7;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  overflow-x: auto; /* Enables horizontal scrolling */
+  overflow-y: hidden; /* Disable vertical scrolling */
+  display: block; /* Ensure it handles overflow correctly */
+  white-space: nowrap; /* Prevent content from wrapping to preserve column width */
+}
+
+/* Hide scrollbar for WebKit browsers */
+.onboarding-Table::-webkit-scrollbar {
+  display: none;
+}
+
+/* Media Queries */
+
+/* For tablets and larger screens */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .onboarding-Table {
+      left: 282px; /* Aligns the table after the sidebar */
+      width: 80%; /* Makes the table take 80% of the screen */
+      margin-top: 50px; /* Adds margin-top to give some spacing */
+      max-width: 90%; /* Limit the table's maximum width */
+  }
+}
+
+/* For mobile devices */
+@media (max-width: 767px) {
+  .onboarding-Table {
+      left: 0; /* Aligns the table to the left edge */
+      width: 100%; /* Makes the table take full width */
+      margin-top: 20px; /* Reduces margin for mobile */
+      padding: 10px; /* Adds some padding for mobile */
+      white-space: normal; /* Allow content to wrap on mobile */
+      overflow-x: auto; /* Enable horizontal scrolling for wide content */
+      margin-left: 130px;
+      max-width:640px;
+  }
+}

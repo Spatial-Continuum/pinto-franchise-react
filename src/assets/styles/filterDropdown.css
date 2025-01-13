@@ -1,0 +1,75 @@
+/* Style for the container */
+.filter-dropdown-container {
+  position: relative; /* Use relative positioning for flexibility */
+  left: 1082px; /* Adjust position for larger screens */
+  top: 43px; /* Position the dropdown container */
+  width: 168px;
+  height: 40px;
+  background-color: #FFFFFF;
+  border: none;
+  border-radius: 4px;
+  color: #030714;
+}
+
+/* Style for the dropdown */
+.filter-dropdown {
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  width: 100%; /* Fill the container */
+  height: 40px;
+  background-color: #FFFFFF;
+  border: 0.5px solid #A7D7FF;
+  color: #030714;
+}
+
+/* Style for options inside the dropdown */
+.filter-dropdown option {
+  padding: 10px;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Media Queries */
+
+/* Tablets (768px to 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .filter-dropdown-container {
+    position: relative; /* Remove absolute positioning */
+    top: 20px; /* Set some space from the top */
+    left: 0; /* Align with the left edge */
+    margin: -70px auto; /* Center the dropdown below the cards */
+    width: 50%; /* Increase width for better visibility */
+    max-width:max-content;
+    height: 100%; /* Increase height */
+    max-height: 200px;
+    margin-bottom: 50px;
+    margin-right:50px;
+  }
+
+  .filter-dropdown {
+    font-size: 16px; /* Increase font size for better readability */
+    padding: 12px; /* Adjust padding */
+  }
+}
+
+/* Mobile devices (less than 768px) */
+@media (max-width: 767px) {
+  .filter-dropdown-container {
+    position: relative; /* Remove absolute positioning */
+    top: 20px; /* Space from the top */
+    left: 0; /* Align with the left edge */
+    width: 50%; /* Make it fill the screen width */
+    max-width: 152px; /* Limit the width for better layout */
+    height: 100%; /* Maintain normal height */
+    margin: -34px 10px; /* Add margin to ensure it's not too close to the edges */
+    margin-left:350px;
+  }
+
+  .filter-dropdown {
+    font-size: 14px; /* Keep normal font size */
+    padding: 8px; /* Keep normal padding */
+  }
+}
