@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { MagnifyingGlassIcon, CheckCircleIcon, ChevronRightIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import RestaurantService from './RestaurantService';
-import Upload from '../../assets/images/upload.svg';
+import Upload from '../../assets/images/Upload.svg';
 
 const AddAddOn = ({ restaurantId }) => {
     console.log('ifhhi', restaurantId)

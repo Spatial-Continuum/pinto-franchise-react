@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MagnifyingGlassIcon, CheckCircleIcon, ChevronRightIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import RestaurantService from './RestaurantService';
-import upload from '../../assets/images/upload.svg';
+import upload from '../../assets/images/Upload.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllAddonApi, selectGetAllAddonApiData, selectApiError, selectApiLoading } from '../../redux/slices/addons';
 import { selectSelectedRestaurant, getRestaurantById, } from '../../redux/slices/restaurant';

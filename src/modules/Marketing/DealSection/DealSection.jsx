@@ -5,7 +5,7 @@ import image3 from '../../../assets/images/biryani-transformed2.svg';
 import image4 from '../../../assets/images/biryani-transformed3.svg';
 import gala from '../../../assets/images/gala_add.svg';
 import light from '../../../assets/images/Light.svg';
-// import vector from '../../../assets/images/vector.svg';
+import vector from '../../../assets/images/Vector.svg';
 
 const DealSection = () => {
     return (
