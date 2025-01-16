@@ -1,9 +1,10 @@
 import axios from 'axios';
+import Onboarding from '../../pages/Merchant/Onboarding';
 
 //baseUrl
 
 const apiclient = axios.create({
-    baseURL: "http://139.5.189.164/",
+    baseURL: "https://service.pintogroups.in",
     timeout: 10000,
     headers: {
         "Content-Type": "application/json"
@@ -209,6 +210,32 @@ const RestaurantService = {
         } catch (error) {
             console.error(`Error fetching addons for merchant ID ${merchantId}:`, error);
             throw error;
+        }
+    },
+    updateRestaurantSuccess: async (restaurantId) => {
+        try {
+            const response = await apiclient.put(
+               `/restaurant/merchant/${restaurantId}/update-onboarding`,
+               {onboarding_status: "Success"}
+            );
+            return response.data;
+        } catch (error) {
+            console.error(
+                `Error updating onboarding status for restaurant ID ${restaurantId}:`,
+                error)
+        }
+    },
+    updateRestaurantRejected: async (restaurantId) => {
+        try {
+            const response = await apiclient.put(
+               `/restaurant/merchant/${restaurantId}/update-onboarding`,
+               {onboarding_status: "Rejected"}
+            );
+            return response.data;
+        } catch (error) {
+            console.error(
+                `Error updating onboarding status for restaurant ID ${restaurantId}:`,
+                error)
         }
     },
 

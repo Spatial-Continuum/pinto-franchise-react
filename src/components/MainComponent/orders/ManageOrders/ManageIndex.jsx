@@ -38,7 +38,7 @@ const ManageIndex = () => {
             </div>
             <div className='flex flex-row justify-between'>
                 <div>
-                    <SearchBox onSearch={handleSearch} />
+                    <SearchBox placeholder="search by name" onSearch={handleSearch} />
                 </div>
                 <div >
                     <FilterDropdown value={onboarding}

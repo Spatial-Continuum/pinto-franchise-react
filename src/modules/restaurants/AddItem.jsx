@@ -181,7 +181,7 @@ const AddItem = ({ restaurantId, setShowAddItem }) => {
 
     return (
         <div>
-            <div className="w-full bg-gray-100 p-4 border border-gray-300 rounded-lg">
+            <div className="w-full bg-gray-100 p-6 border border-gray-300 rounded-lg">
                 <div className="flex justify-between items-center">
                     <p className="text-start text-gray-800 font-medium">+ Add item</p>
                     <div className='flex flex-row gap-2'>

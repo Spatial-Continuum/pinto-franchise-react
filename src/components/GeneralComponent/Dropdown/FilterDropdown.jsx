@@ -3,9 +3,9 @@ import React from "react";
 
 const FilterDropdown = ({value, onChange, options}) => {
   return (
-    <div className="  bg-slate-600 w-32   h-10 rounded-sm -ml-3">
+    <div className="  w-32   h-10  ">
       
-      <select className="w-32 bg-slate-200  border-[#c5c1c1] border-[2px] rounded-sm h-10"
+      <select className="w-32 bg-[#FFFFFF]  border-[#A7D7FF] border-[1px] rounded-lg h-10 px-2"
         value={value}
         onChange={(e)=>onChange(e.target.value)}
         >

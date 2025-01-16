@@ -25,7 +25,7 @@ const DateBox = () => {
         onSelect={handleDateSelect} // When a day is clicked
         onChange={handleDateChange} // When the value changes
         dateFormat="yyyy-MM-dd"  // Format the date
-        className="  bg-gray-200 border-[1px] border-[#a8a4a4] rounded-sm  h-10 text-center "  // Custom styling for the date picker
+        className="  bg-[#FFFFFF] border-[#A7D7FF] border-[1px] rounded-sm  h-10 text-center "  // Custom styling for the date picker
         placeholderText="Select Date"
       />
 

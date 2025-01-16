@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const MetricsCard = ({ cards , onCardClick }) => {
   return (
-    <div className="lg:flex gap-5 ml-4 my-5 items-start md:grid md:grid-cols-2 md:gap-4">
+    <div className="lg:flex gap-5  mb-12 items-start md:grid md:grid-cols-2 md:gap-4">
       {cards.map((card, index) => (
         <div
           key={index}

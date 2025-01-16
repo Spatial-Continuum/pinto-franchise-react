@@ -10,7 +10,7 @@ const PropsSearchBox = ({ placeholder, img, onSearch }) => {
   return (
     <div className="flex items-center w-80 h-10 bg-slate-100 rounded-lg border border-gray-300 shadow-sm hover:shadow-md transition-shadow">
       {img && (
-        <span className="w-6 h-6 text-gray-500 ml-2 flex items-center">
+        <span className="w-6 h-6 text-gray-500 ml-2 flex items-center justify-center">
           <img src={img} alt="icon" className="w-full h-full object-contain" />
         </span>
       )}  

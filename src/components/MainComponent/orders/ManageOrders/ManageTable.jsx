@@ -121,7 +121,7 @@ const ManageTable = () => {
     };
 
     return (
-        <div className="hide-scrollbar rounded-md gap-5  border-[1px] border-green-600 ml-5 overscroll-x-contain">
+        <div className="hide-scrollbar rounded-md gap-5  border-[1px] border-green-600 overscroll-x-contain ">
             {/* {loading && <div>Loading...</div>}
       {error && <div>Error: {error}</div>} */}
             <DataTable

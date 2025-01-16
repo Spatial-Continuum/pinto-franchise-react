@@ -55,7 +55,7 @@ const M_lovedDishes = () => {
   ];
 
   return (
-    <div className="p-6">
+    <div className="">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold">Most Loved Dishes</h2>

@@ -22,7 +22,7 @@ const Restaurants = () => {
     <div>
       <MainLayout className="bg-[#F8F8F8]">
         <div>
-        <div className='flex justify-between  mx-4 mt-5'>
+        <div className='flex justify-between   mt-5'>
           <SearchBox placeholder="Search Restaurant name" img={search} onSearch={handleSearch}  />
           <button className='bg-orange-500 text-xs text-white rounded-md pl-7 pr-3 py-2'
             >+  ADD ITEM</button>

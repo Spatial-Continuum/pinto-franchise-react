@@ -91,7 +91,7 @@ const SalariedTable = () => {
     };
    
   return (
-    <div className="hide-scrollbar rounded-md gap-5 w-3/4 border-[1px] border-green-600 ml-5">
+    <div className="hide-scrollbar rounded-md gap-5 w-3/4 border-[1px] border-green-600 ">
       <DataTable 
         columns={columns}
         data={salariedData}

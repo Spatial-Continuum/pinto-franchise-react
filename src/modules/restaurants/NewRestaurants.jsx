@@ -71,7 +71,7 @@ const NewRestaurants = ({searchTerm}) => {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="p-6">
+    <div className="mt-8">
       <div className="flex items-center justify-between mb-3">
         <h1 className="text-left text-2xl font-bold">New Restaurants</h1>
         <button

@@ -5,6 +5,8 @@ import SearchBox from "../../components/GeneralComponent/SearchBox/SearchBox";
 import MainLayout from "../../components/GeneralComponent/Layout/MainLayout";
 import DateBox from "../../components/GeneralComponent/Dropdown/DateBox";
 import FilterDropdown from "../../components/GeneralComponent/Dropdown/FilterDropdown";
+
+import search from '../../assets/images/prime_search.svg';
 import OnboardingTable from "../../modules/deliveryPartners/Onboarding/OnboardingTable";
 import { useNavigate } from "react-router-dom";
 import { getRestaurantList, selectRestaurantList, getNewRestaurants, selectAllNewRestaurants ,selectApiError,selectApiLoading } from '../../redux/slices/restaurant'
@@ -42,15 +44,15 @@ const Onboarding = () => {
       <div>
         <div className="">
           <MetricsCard cards={cardsData} onCardClick={handleCardClick}/>
-          <div className=" flex  gap-5 mb-5">
-            {/* Search Box */}
-            <SearchBox onSearch={handleSearch} />
-            {/* Date Box */}
-            <DateBox />
-            {/* Filter Dropdown */}
+          <div className=" flex justify-between gap-5 mb-5">
+            
+            
             <FilterDropdown value={onboarding}
             onChange={(value) => setOnboarding(value)}
             options={filterOptions}/>
+
+            {/* Search Box */}
+            <SearchBox onSearch={handleSearch} img={search} placeholder="search here" />
           </div>
           <div className="mb-44">
             {/* Table below with gap */}
