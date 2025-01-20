@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import RestaurantInfoView from './RestaurantInfoView'
 import UploadingImageView from './UploadingImageView';
 import TypeTimingsView from './TypeTimingsView';
-import editIcon from '../../../assets/images/editIcons.svg';
+import editIcon from '../../../assets/images/editicons.svg';
 import MainLayout from '../../../components/GeneralComponent/Layout/MainLayout';
 import tick from '../../../assets/images/tick.svg';
 import {updateRestaurantDetails, getRestaurantById , selectSelectedRestaurant } from '../../../redux/slices/restaurant';
