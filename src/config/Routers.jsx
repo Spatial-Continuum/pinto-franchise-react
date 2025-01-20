@@ -12,6 +12,7 @@ import Addmenu from '../pages/Menu/Addmenu.jsx'
 import QuickSearch from '../components/MainComponent/Menu/QuickSearch/index.jsx';
 import CustomerDetail from "../components/MainComponent/orders/PhoneOrders/restaurants/CustomerDetail.jsx";
 import ManageMerchant from "../pages/Merchant/ManageMerchant/ManageMerchant.jsx";
+import OnboardingFormView from "../pages/Merchant/MerchantViewForm/OnboardingFormView.jsx";
 const ManageScreen = React.lazy(() => import('../components/MainComponent/Menu/index')); 
 const ShowCategory = React.lazy(()=>import('../components/MainComponent/Menu/ManageScreen/Category/ShowCategory.jsx'))
 const CategoryForm = React.lazy(()=>import("../components/MainComponent/Menu/ManageScreen/Category/CategoryForm.jsx"))
@@ -92,7 +93,13 @@ const Routers =(props)=>{
           </Suspense>
         }
         />
-
+        <Route path="/onboarding-form-view/:restaurantId"
+        element={
+          <Suspense fallback={<div className="text-center m-t-15">Loading...</div>}>
+            <OnboardingFormView />
+          </Suspense>
+        }
+        />
         <Route path='/marketing'
         element={
           <Suspense fallback={<div className="text-center m-t-15">Loading...</div>}>

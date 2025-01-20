@@ -19,10 +19,10 @@ const ManageMerchant = () => {
   const newRestaurants = useSelector(selectAllNewRestaurants)
   const [metrics, setMetrics] = useState([
 
-    { value: 0, label: 'All Merchant', textColor: 'text-blue-600', borderColor: 'border-[#1E99FF]' },
-    { value: 0, label: 'New Merchants' , textColor: 'text-red-600', borderColor: 'border-[#020D6E]' },
-    { value: 75, label: 'Online Restaurants', textColor: 'text-blue-600', borderColor: 'border-[#008B0E]' },
-    { value: 25, label: 'Offline Restaurants', textColor: 'text-red-600', borderColor: 'border-[#FF6B00]' },
+    // { value: 0, label: 'All Merchant', textColor: 'text-blue-600', borderColor: 'border-[#1E99FF]' },
+    // { value: 0, label: 'New Merchants' , textColor: 'text-red-600', borderColor: 'border-[#020D6E]' },
+    // { value: 75, label: 'Online Restaurants', textColor: 'text-blue-600', borderColor: 'border-[#008B0E]' },
+    // { value: 25, label: 'Offline Restaurants', textColor: 'text-red-600', borderColor: 'border-[#FF6B00]' },
   ])
   const dispatch = useDispatch();
   useEffect(() => {
@@ -35,10 +35,10 @@ const ManageMerchant = () => {
     const totalRestaurantCount = totalRestaurants.length;
     const newRestaurantsCount = newRestaurants.length;
     setMetrics([
-      { value: 75, label: 'Online Restaurants', textColor: 'text-blue-600', borderColor: 'border-[#008B0E]' },
-      { value: 25, label: 'Offline Restaurants', textColor: 'text-red-600', borderColor: 'border-[#FF6B00]' },
-      { value: totalRestaurantCount, label: 'All Merchants', textColor: 'text-blue-600', borderColor: 'border-[#1E99FF]' },
-      { value: newRestaurantsCount, label: 'New Merchants', textColor: 'text-red-600', borderColor: 'border-[#020D6E]' },
+      { value: 75, label: 'Online Restaurants', textColor: 'text-[#008B0E]', borderColor: 'border-[#008B0E]' },
+      { value: 25, label: 'Offline Restaurants', textColor: 'text-[#FF6B00]', borderColor: 'border-[#FF6B00]' },
+      { value: totalRestaurantCount, label: 'All Merchants', textColor: 'text-[#1E99FF]', borderColor: 'border-[#1E99FF]' },
+      { value: newRestaurantsCount, label: 'New Merchants', textColor: 'text-[#020D6E]', borderColor: 'border-[#020D6E]' },
     ])
   }, [totalRestaurants, newRestaurants]);
 
@@ -79,7 +79,7 @@ const ManageMerchant = () => {
               options={filterOptions}
             />
           </div>
-          <div className='flex  grid-row-3 '>
+          <div className='flex  grid-row-3 gap-3'>
 
 
             <SearchBox onSearch={handleSearch} img={search} placeholder="search name" />

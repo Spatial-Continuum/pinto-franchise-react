@@ -30,6 +30,22 @@ export const getRestaurantById = createAsyncThunk(
     }
   }
 );
+export const updateRestaurantDetails = createAsyncThunk(
+  'restaurant/updateRestaurantDetails',
+  async (dataToSubmit, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`${API_URL}/restaurant/merchant/${restaurantId}`, dataToSubmit, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+)
+
 //Async for get all restaurant
 export const getRestaurantList = createAsyncThunk(  
   'restaurant/getRestaurantsList',
@@ -152,6 +168,20 @@ const restaurantSlice = createSlice({
         state.error = action.payload;
       })
 
+      .addCase(updateRestaurantDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateRestaurantDetails.fulfilled, (state, action) => {
+        state.loading = false;
+        // Assuming updated data is in action.payload
+        state.selectedRestaurant = action.payload;
+        state.error = null;
+      })
+      .addCase(updateRestaurantDetails.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
 
       
 

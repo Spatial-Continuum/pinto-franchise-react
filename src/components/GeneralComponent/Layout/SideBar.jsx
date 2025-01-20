@@ -36,7 +36,7 @@ const SideBar = ({isExpanded,setIsExpanded}) => {
     const hasSubmenu = submenu && submenu.length > 0;
     // console.log("giuygfffgjhgh",submenu)
     return (
-      <div className={`relative ${text=="Dashboard"? '' : "mb-4"}`}>
+      <div className={`relative text-sm ${text=="Dashboard"? '' : "mb-4"}`}>
         <div 
           className={`flex items-center justify-between cursor-pointer hover:bg-[#2B2954] rounded-lg p-2 ${
             location.pathname === to ? 'bg-[#2B2954]' : ''

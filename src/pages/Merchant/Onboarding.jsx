@@ -24,10 +24,9 @@ const Onboarding = () => {
       { label: 'rejected', value: "Rejected" },
     ]
     const cardsData = [
-        { value: 75, label: 'Active Restaurants', textColor: 'text-blue-600', borderColor: 'border-[#1E99FF]' },
-        { value: '2k', label: 'Total Orders', textColor: 'text-orange-600', borderColor: 'border-[#FF6B00]' },
-        { value: 200, label: 'New Signups', textColor: 'text-green-700', borderColor: 'border-[#008B0E]' },
-        { value: '+', label: 'New Restaurant', textColor: 'text-gray-500', borderColor: 'border-gray-300', route: '/onboardingform' },
+        { value: 75, label: 'Pending Approval', textColor: 'text-[#1E99FF]', borderColor: 'border-[#1E99FF]' },
+        { value: '2k', label: 'Rejected', textColor: 'text-[#FF6B00]', borderColor: 'border-[#FF6B00]' },
+        { value: '+', label: 'Add New Merchant', textColor: 'text-gray-500', borderColor: 'border-gray-300', route: '/onboardingform' },
       ];
 
     const handleCardClick = (card) =>{

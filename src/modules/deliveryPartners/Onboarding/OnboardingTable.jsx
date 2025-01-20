@@ -6,9 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchMerchantListOnboarding, selectMerchantListOnboarding, selectMerchantError, selectMerchantLoading } from "../../../redux/slices/merchant";
 import updateRestaurantSuccess from '../../restaurants/RestaurantService';
 import RestaurantService from '../../restaurants/RestaurantService';
-
+import { useNavigate } from 'react-router-dom';
 const OnboardingTable = ({ onboarding, searchTerm }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const [refresh, setRefresh] = useState(false);
   const merchants = useSelector(selectMerchantListOnboarding);
   const [addressPopup, setAddressPopup] = useState(false)
@@ -69,20 +70,34 @@ const getCurrentDayHours = (openingHours) => {
   return `${CurrentDayHours}`;
 };
 
+const handleShopNameClick = (restaurantId) => {
+  console.log('shop name clicked', restaurantId)
+  navigate(`/onboarding-form-view/${restaurantId}`);
+
+}
+
 
 const columns = [{
   name: "SHOP NAME",
   selector: (row) => row.name,
   sortable: true,
+  cell: (row) => (
+    <button
+      onClick={() => handleShopNameClick(row.restaurant_id)}
+      className="btn btn-link"
+    >
+      {row.name}
+    </button>
+  ),
 },
 
 {
   name: "GSTIN",
-  selector: ""
+  selector: (row) => row.commission_percentage
 },
 {
   name: "FSSAI",
-  selector: ""
+  selector: (row) => row.fssai
 },
 {
   name: "C.P%",

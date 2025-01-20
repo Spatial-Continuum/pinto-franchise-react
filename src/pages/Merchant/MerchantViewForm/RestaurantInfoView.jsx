@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
 
-const RestaurantInfo = ({ formData, onDataChange }) => {
-    const [data, setData] = useState(formData)
+const RestaurantInfoView = ({ restaurantInfo, onDataChange }) => {
+    // const [data, setData] = useState(restaurant || {})
     const [ownerPopup, setOwnerPopup] = useState(false)
     const [validFields, setValidFields] = useState({
         name: true, // Assuming 'name' is a field
@@ -15,16 +15,23 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
         primary_phone: true,
         secondary_phone: true,
         email: true,
-        commission_percentage: true,
-        gstin: true,
+        pinto_commission: true,
+        gst_number: true,
         owner_name: true,
         owner_phone: true,
     });
 
-    useEffect(() => {
-        console.log("Form Data Updated: ", data)
-        onDataChange(data);
-    }, [data])
+    // useEffect(() => {
+    //     if (formData) {
+    //         setData(formData)
+    //     }
+    // }, [])
+
+
+    // useEffect(() => {
+    //     console.log("Form Data Updated: ", data)
+    //     onDataChange(data);
+    // }, [data]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -32,12 +39,12 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
 
         setValidFields((prevState) => ({
             ...prevState,
-            [name]: value.trim() !== '', // Mark as invalid if the field is empty
+            [name]: value.trim() !== '', 
         }));
     }
-    const handleOwnerPopup = () => {
-        setOwnerPopup(true)
-    }
+    // const handleOwnerPopup = () => {
+    //     setOwnerPopup(true)
+    // }
 
     return (
         <div className="p-6">
@@ -61,9 +68,9 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                             id="restaurantName"
                             type="text"
                             name="name"
-                            value={data.name}
+                            value={restaurantInfo?.name || ''}
                             placeholder="Enter restaurant name"
-                            onChange={handleInputChange}
+                            onChange={(e)=>handleInputChange(e)}
                             className={`w-1/2 px-3 py-2 border ${validFields.name ? 'border-gray-300' : 'border-red-500'}rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         />
                     </div>
@@ -74,8 +81,8 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                         <input
                             id="doorNumber"
                             name="door_no"
-                            value={data.door_no}
-                            onChange={handleInputChange}
+                            value={restaurantInfo?.door_no || ''}
+                            onChange={(e)=>handleInputChange(e)}
                             type="text"
                             placeholder="Enter door number"
                             className={`w-full px-3 py-2 border ${validFields.door_no ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
@@ -92,8 +99,8 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                                 id="streetAddress1"
                                 type="text"
                                 name="street_address_1"
-                                value={data.street_address_1 || ''}
-                                onChange={handleInputChange}
+                                value={restaurantInfo?.street_address_1 || ''}
+                                onChange={(e)=>handleInputChange(e)}
                                 placeholder="Enter street address 1"
                                 className={`w-full px-3 py-2 border ${validFields.street_address_1 ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             />
@@ -104,8 +111,8 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                                 id="streetAddress2"
                                 type="text"
                                 name="street_address_2"
-                                value={data.street_address_2 || ''}
-                                onChange={handleInputChange}
+                                value={restaurantInfo?.street_address_2 || ''}
+                                onChange={(e)=>handleInputChange(e)}
                                 placeholder="Enter street address 2"
                                 className={`w-full px-3 py-2 border ${validFields.street_address_2 ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             />
@@ -121,8 +128,8 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                                 id="city"
                                 type="text"
                                 name="city"
-                                value={data.city || ""}
-                                onChange={handleInputChange}
+                                value={restaurantInfo?.city || ""}
+                                onChange={(e)=>handleInputChange(e)}
                                 placeholder="Enter city"
                                 className={`w-full px-3 py-2 border ${validFields.city ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             />
@@ -133,8 +140,8 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                                 id="pincode"
                                 type="text"
                                 name="pincode"
-                                value={data.pincode || ''}
-                                onChange={handleInputChange}
+                                value={restaurantInfo?.pincode || ''}
+                                onChange={(e)=>handleInputChange(e)}
                                 placeholder="Enter pincode"
                                 className={`w-full px-3 py-2 border ${validFields.pincode ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             />
@@ -147,8 +154,8 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                         <input
                             id="landmark"
                             name="landmark"
-                            value={data.landmark || ''}
-                            onChange={handleInputChange}
+                            value={restaurantInfo?.landmark || ''}
+                            onChange={(e)=>handleInputChange(e)}
                             type="text"
                             placeholder="Enter landmark"
                             className={`w-full px-3 py-2 border ${validFields.landmark ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
@@ -180,8 +187,8 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                                 id="mobileNumber"
                                 type="text"
                                 name="primary_phone"
-                                value={data.primary_phone || ''}
-                                onChange={handleInputChange}
+                                value={restaurantInfo?.primary_phone || ''}
+                                onChange={(e)=>handleInputChange(e)}
                                 placeholder="Enter mobile number"
                                 className={`px-3 py-2 border ${validFields.primary_phone ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             />
@@ -193,8 +200,8 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                             <input
                                 id="SecondaryMobileNumber"
                                 name="secondary_phone"
-                                value={data.secondary_phone || ''}
-                                onChange={handleInputChange}
+                                value={restaurantInfo?.secondary_phone || ''}
+                                onChange={(e)=>handleInputChange(e)}
                                 type="text"
                                 placeholder="Enter Secondary Mobile Number"
                                 className={`px-3 py-2 border ${validFields.secondary_phone ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
@@ -206,8 +213,8 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                         <input
                             id="email"
                             name="email"
-                            value={data.value}
-                            onChange={handleInputChange}
+                            value={restaurantInfo?.email || ''}
+                            onChange={(e)=>handleInputChange(e)}
                             type="text"
                             placeholder="Enter email address"
                             className={`w-1/2 px-3 py-2 border ${validFields.email ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-50`}
@@ -224,15 +231,15 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                 <div className="flex gap-6 w-2/10 bg-gray-100 p-4 border border-gray-300 rounded-lg mt-2">
                     {/* Pinto Commission */}
                     <div className="flex flex-col w-full">
-                        <label htmlFor="commission_percentage" className="text-sm text-gray-700 mb-1">Pinto Commission (%)</label>
+                        <label htmlFor="pintoCommission" className="text-sm text-gray-700 mb-1">Pinto Commission (%)</label>
                         <input
                             id="commission_percentage"
-                            type="number"
+                            type="text"
                             name="commission_percentage"
-                            value={data.commission_percentage || ''}
-                            onChange={handleInputChange}
+                            value={restaurantInfo?.commission_percentage || ''}
+                            onChange={(e)=>handleInputChange(e)}
                             placeholder="Enter Pinto Commission"
-                            className={`px-3 py-2 border ${validFields.commission_percentage ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                            className={`px-3 py-2 border ${validFields.pinto_commission ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         />
                     </div>
                 </div>
@@ -246,11 +253,11 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                             type="text"
 
                             name="gstin"
-                            value={data.gstin || ''}
-                            onChange={handleInputChange}
+                            value={restaurantInfo?.gstin || ''}
+                            onChange={(e)=>handleInputChange(e)}
                             placeholder="Enter GSTIN"
                             style={{ textTransform: 'uppercase' }}
-                            className={`px-3 py-2 border ${validFields.gstin ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                            className={`px-3 py-2 border ${validFields.gst_number ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         />
                     </div>
 
@@ -266,25 +273,25 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                             <input
                                 type="number"
                                 name="mobile_no"
-                                value={data.mobile_no || ''}
-                                // onChange={handleInputChange}
+                                value={restaurantInfo?.mobile_no || ''}
+                                onChange={(e)=>handleInputChange(e)}
                                 className={`px-3 py-2 border ${validFields.owner_name ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             />
                         </div>
                         <div className='flex items-center justify-center w-1/4 mt-6'>
                             <button
                                 className='border-[1px] px-4 py-1 text-[#FFFFFF] bg-[#030714] rounded-lg'
-                                onClick={handleOwnerPopup}
+                                // onClick={handleOwnerPopup}
                             >
                                 FIND USER
                             </button>
                         </div>
                     </div>
                 </div>
-                {
+                {/* {
                     ownerPopup &&
-                    <div 
-                    className="relative top-full left-0 w-full bg-[#FFFFFF] border-1px border-[#d6cbcb] justify-center items-center z-50 mt-2"
+                    <div
+                        className="relative top-full left-0 w-full bg-[#FFFFFF] border-1px border-[#d6cbcb] justify-center items-center z-50 mt-2"
                     >
                         <div className='flex flex-col'>
                             <label className='text-green-600'>User Found!!</label>
@@ -299,20 +306,16 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                                     <label>Email : ""</label>
                                 </div>
                             </div>
-                            {/* <button
                             
-                            >
-                                Close
-                            </button> */}
                         </div>
                     </div>
-                }
+                } */}
             </div>
         </div>
     );
 };
 
-export default RestaurantInfo;
+export default RestaurantInfoView;
 
 
 

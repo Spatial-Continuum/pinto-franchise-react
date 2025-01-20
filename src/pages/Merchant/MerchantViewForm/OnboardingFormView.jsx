@@ -1,17 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // Import necessary components and styles
-import RestaurantInfo from '../NewMerchantForm/RestaurantInfo';
-import UploadingImage from '../NewMerchantForm/UploadingImage';
-import RestaurantTypeTimings from '../NewMerchantForm/RestaurantTypeTimings';
+import RestaurantInfoView from './RestaurantInfoView'
+import UploadingImageView from './UploadingImageView';
+import TypeTimingsView from './TypeTimingsView';
+import editIcon from '../../../assets/images/editIcons.svg';
 import MainLayout from '../../../components/GeneralComponent/Layout/MainLayout';
 import tick from '../../../assets/images/tick.svg';
+import {updateRestaurantDetails, getRestaurantById , selectSelectedRestaurant } from '../../../redux/slices/restaurant';
 import '../../../assets/styles/progressNavbar.css';
 import { useSelector, useDispatch } from 'react-redux';
 import roundTick from '../../../assets/images/roundTick.svg';
 import { postNewRestaurant, selectApiError, selectApiLoading } from '../../../redux/slices/restaurant';
 import PdfComp from '../../../PdfComp';
+import { useParams } from 'react-router-dom';
 
-const OnboardingForm = () => {
+const OnboardingFormView = () => {
+    const {restaurantId} = useParams()
+    
+    const restaurantDetails = useSelector(selectSelectedRestaurant)
   const [currentStep, setCurrentStep] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
   const [completedSteps, setCompletedSteps] = useState([]);
@@ -20,44 +26,24 @@ const OnboardingForm = () => {
   const error = useSelector(selectApiError);
   const [extraStore, setExtraStore] = useState("")
   const [extraCuisine, setExtraCuisine] = useState("")
+const [isEditMode, setIsEditMode] = useState(false);
+  const [restaurantInfo, setRestaurantInfo] = useState(null);
 
-  const [formData, setFormData] = useState({
-    restaurantInfo: {
-      name: '',
-      door_no: '',
-      street_address_1: '',
-      street_address_2: '',
-      email: '',
-      city: '',
-      pincode: '',
-      gstin:'',
-      commission_percentage:'',
-      landmark: '',
-      primary_phone: '',
-      secondary_phone: '',
-    },
-    typeTimings: {
-      restaurant_category: '',
-      merchant_type: [],
-      otherStore:"",
-      otherCuisine:"",
-      short_description: '',
-      cuisine_type: [],
-      opening_hours: {
-        Monday: '',
-        Tuesday: '',
-        Wednesday: '',
-        Thursday: '',
-        Friday: '',
-        Saturday: '',
-        Sunday: '',
-      },
-    },
-    image: {
-      image: '',
-      logo: '',
-    },
-  });
+  useEffect(() => {
+    // Fetch restaurant details on component mount
+    dispatch(getRestaurantById(restaurantId));
+    
+      
+  }, [dispatch]);
+
+useEffect(()=>{
+  if (restaurantDetails) {
+    setRestaurantInfo(restaurantDetails);
+  }
+  console.log('detailsda',restaurantDetails);
+},[restaurantDetails ])
+
+ 
 
   const nextStep = () => {
     if (validateStep(currentStep)) {
@@ -88,11 +74,11 @@ const OnboardingForm = () => {
   };
 
   const validateStep = (step) => {
-    if (step === 1 && !formData.restaurantInfo.name) {
+    if (step === 1 && !restaurantInfo.name) {
       alert('Please fill in the restaurant name.');
       return false;
     }
-    if (step === 2 && formData.typeTimings.merchant_type.length === 0) {
+    if (step === 2 && restaurantInfo.merchant_type.length === 0) {
       alert('Please select at least one merchant type.');
       return false;
     }
@@ -100,17 +86,19 @@ const OnboardingForm = () => {
   };
 
   const handleSubmit = async () => {
+    if (isEditMode) {
+        // Update existing restaurant
+        await dispatch(updateRestaurantDetails(formData)).unwrap();
+      } else {
     const dataToSubmit = new FormData();
 
    
     dataToSubmit.append('name', formData.restaurantInfo.name);
-    dataToSubmit.append('short_description', formData.typeTimings.short_description);
+    dataToSubmit.append('short_description', formData.restaurantInfo.short_description);
     dataToSubmit.append('door_no', formData.restaurantInfo.door_no);
     dataToSubmit.append('email', formData.restaurantInfo.email);
     dataToSubmit.append('street_address_1', formData.restaurantInfo.street_address_1);
     dataToSubmit.append('street_address_2', formData.restaurantInfo.street_address_2);
-    dataToSubmit.append('gstin', formData.restaurantInfo.gstin);
-    dataToSubmit.append('commission_percentage', formData.restaurantInfo.commission_percentage);
     dataToSubmit.append('city', formData.restaurantInfo.city);
     dataToSubmit.append('pincode', formData.restaurantInfo.pincode);
     dataToSubmit.append('landmark', formData.restaurantInfo.landmark);
@@ -120,21 +108,21 @@ const OnboardingForm = () => {
 
 
     dataToSubmit.append('restaurant_category', formData.typeTimings.restaurant_category);
-    let merchantTypes = [...formData.typeTimings.merchant_type]
-    if (extraStore) {
-      merchantTypes.push(extraStore); 
-    };
-    let cuisineTypes = [...formData.typeTimings.cuisine_type ]
-    if (extraCuisine) {
-      cuisineTypes.push(extraCuisine); 
-    };
+    // let merchantTypes = [...formData.typeTimings.merchant_type]
+    // if (extraStore) {
+    //   merchantTypes.push(extraStore); 
+    // };
+    // let cuisineTypes = [...formData.typeTimings.cuisine_type ]
+    // if (extraCuisine) {
+    //   cuisineTypes.push(extraCuisine); 
+    // };
   
   
-   console.log("merchanttypesda",merchantTypes)
+   //console.log("merchanttypesda",merchantTypes)
 
 
-    dataToSubmit.append('merchant_type', JSON.stringify(merchantTypes ));
-    dataToSubmit.append('cuisine_type', JSON.stringify(cuisineTypes));
+    dataToSubmit.append('merchant_type', JSON.stringify(formData.typeTimings.merchant_type ));
+    dataToSubmit.append('cuisine_type', JSON.stringify(formData.typeTimings.cuisine_type));
     dataToSubmit.append('opening_hours', JSON.stringify(formData.typeTimings.opening_hours));
 
     if (formData.image.image instanceof File) {
@@ -154,14 +142,15 @@ const OnboardingForm = () => {
 
 
     try {
-      await dispatch(postNewRestaurant(dataToSubmit)).unwrap();
+      await dispatch(updateRestaurantDetails(dataToSubmit)).unwrap();
       setModalVisible(true);
     } catch (error) {
       console.error('Error submiting fomr', error)
     }
 
    
-  };
+}
+}
 
   return (
     <MainLayout>
@@ -172,7 +161,8 @@ const OnboardingForm = () => {
       className={`step-heading relative cursor-pointer  ${currentStep === 1 ? 'active' : completedSteps.includes(1) ? 'completed' : ''}`}
       onClick={() => setCurrentStep(1)}
     >
-      Restaurant Info
+      Restaurant Info 
+    <img src={editIcon} alt="Edit" className="w-4 h-4 cursor-pointer" />
       {completedSteps.includes(1) && <span> <img src={roundTick} alt="Completed" /></span>}
 
       {/* Dynamic Underline for Step 1 */}
@@ -189,6 +179,8 @@ const OnboardingForm = () => {
       onClick={() => setCurrentStep(2)}
     >
       Restaurant Type & Timings
+
+    <img src={editIcon} alt="Edit" className="w-4 h-4 cursor-pointer" />
       {completedSteps.includes(2) && <img src={roundTick} alt="Completed" />}
 
       {/* Dynamic Underline for Step 2 */}
@@ -205,6 +197,8 @@ const OnboardingForm = () => {
       onClick={() => setCurrentStep(3)}
     >
       Upload Image
+
+    <img src={editIcon} alt="Edit" className="w-4 h-4 cursor-pointer" />
       {completedSteps.includes(3) && <img src={roundTick} alt="Completed" />}
 
       {/* Dynamic Underline for Step 3 */}
@@ -217,25 +211,25 @@ const OnboardingForm = () => {
   </div>
 
         {currentStep === 1 && (
-          <RestaurantInfo
-            formData={formData.restaurantInfo}
-            onDataChange={(data) => handleFormDataChange(data, 'restaurantInfo')}
+          <RestaurantInfoView
+            restaurantInfo={restaurantInfo}
+            onDataChange={ handleFormDataChange}
           />
         )}
 
         {currentStep === 2 && (
-          <RestaurantTypeTimings
-            formData={formData.typeTimings}
+          <TypeTimingsView
+          restaurantInfo={restaurantInfo}
             ExtraCuisine={extraCuisine}
             ExtraStore={extraStore}
-            onDataChange={(data) => handleFormDataChange(data, 'typeTimings')}
+            onDataChange={handleFormDataChange}
           />
         )}
 
         {currentStep === 3 && (
-          <UploadingImage
-            formData={formData.image}
-            onDataChange={(data) => handleFormDataChange(data, 'image')}
+          <UploadingImageView
+           restaurantInfo={restaurantInfo}
+            onDataChange={handleFormDataChange}
           />
         )}
 
@@ -289,4 +283,4 @@ const OnboardingForm = () => {
   );
 };
 
-export default OnboardingForm;
+export default OnboardingFormView;

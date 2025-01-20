@@ -1,4 +1,4 @@
-import React, { useState  } from 'react'
+import React, { useState ,useRef } from 'react'
 import DataTable from 'react-data-table-component'
 import { useDispatch, useSelector } from "react-redux";
 import eye from '../../../assets/images/eye.svg';
@@ -7,6 +7,7 @@ import { fetchMerchantListOnboarding, selectMerchantListOnboarding, selectMercha
 import { getMenuByRestaurant, selectMenuCategory } from '../../../redux/slices/restaurant'
 import addon from '../../../assets/images/addonview.svg';
 import { ReceiptSwissFranc } from 'lucide-react';
+import UseOnClickOutside from '../../../components/GeneralComponent/Dropdown/UseOnClickOutside';
 import veg from '../../../assets/images/veg.svg';
 import edit from '../../../assets/images/edit.svg';
 import nonveg from '../../../assets/images/nonveg.svg';
@@ -27,13 +28,14 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
   const [menuSearch, setMenuSearch] = useState('')
   const [addressPopupData, setAddressPopupData] = useState(null)
 
-
+  const popupRef = useRef(); // Define ref for the popup
+  UseOnClickOutside(popupRef, () => setPopupOpen(false)); 
 
   const [selectedMerchant, setSelectedMerchant] = useState(null);
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [addressPopup, setAddressPopup] = useState(false);
   const menuData = useSelector(selectMenuCategory)
-
+  const [selectedMenuTitle , setSelectedMenuTitle] = useState(null)
   const handleMenuPopup = (row) => {
     const { restaurant_id: restaurantId } = row
   
@@ -63,6 +65,11 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
 
   }, [onboarding, dispatch]);
 
+  const handleShopNameClick = (restaurantId) => {
+    console.log('shop name clicked', restaurantId)
+    navigate(`/onboarding-form-view/${restaurantId}`);
+  
+  }
   const filteredMerchants = searchTerm ? merchants.filter((merchant) =>
     merchant.name.toLowerCase().includes(searchTerm.toLowerCase())) : merchants;
 
@@ -72,6 +79,14 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
       item.item_name.toLowerCase().includes(menuSearch.toLowerCase())
     )
     : menuData[0]?.items || [];
+  const handleMenuClick=(menuTitle) =>{
+    setSelectedMenuTitle(menuTitle);
+  }
+  const filteredData = selectedMenuTitle
+  ? filteredItems.filter(
+      (item) => item.menu_title === selectedMenuTitle
+    )
+  : filteredItems;
 
   const handleSearch = (term) => {
     setMenuSearch(term);
@@ -92,16 +107,30 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
   const columns = [
     {
       name: "SHOPNAME",
-      selector: (row) => (<div style={{ display: "flex", alignItems: "center" }}>
-        <img
-          src={row.image}
-          alt={row.logo}
-          style={{ width: "30px", height: "30px", borderRadius: "50%", marginRight: "10px" }}
-        />
-        {row.name}
-      </div>)
-
+      cell: (row) => (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <img
+            src={row.image}
+            alt="shop-logo"
+            style={{
+              width: "30px",
+              height: "30px",
+              borderRadius: "50%",
+              marginRight: "10px",
+              objectFit: "cover",
+            }}
+          />
+          <button
+            onClick={() => handleShopNameClick(row.restaurant_id)}
+           
+           
+          >
+            {row.name}
+          </button>
+        </div>
+      ),
     },
+    
     {
       name: "PHONE NUMBER",
       selector: (row) => row.primary_phone,
@@ -233,6 +262,7 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
           }}
         >
           <div
+          ref={popupRef}
             className="popup"
             style={{
               backgroundColor: "#FAFAFA",
@@ -275,7 +305,8 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
                     }}
                     onMouseEnter={(e) => (e.target.style.backgroundColor = "orange")}
                     onMouseLeave={(e) => (e.target.style.backgroundColor = "#fff")}
-                    onClick={(e) => (e.target.style.backgroundColor = "orange")}
+                    // onClick={(e) => (e.target.style.backgroundColor = "orange")}
+                    onClick={() => handleMenuClick(menu.menu_title)}
                   >
                     {menu.menu_title}
                   </span>
@@ -287,11 +318,11 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
               <Button 
                onClick={()=>handleEdit(selectedMerchant)}
               
-              className='ml-2 px-7 border-[#] border-[#A7D7FF] border-[1px] text-black font-medium '><img src={edit}/> Edit</Button>
+              className='ml-2 px-7  border-[#DBEFFF] bg-[#F1F5F9] border-[1px] text-[#030714] font-medium  '><img  src={edit}/> Edit</Button>
             </div>
 
             {/* Table */}
-            <div style={{ padding: "10px" }}>
+            <div className=''>
               <DataTable
                 columns={[
                   {
@@ -364,32 +395,19 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
                     style: { width: "100px" }, // Set fixed width
                   },
                 ]}
-                data={filteredItems || []}  // Pass your row data here
+                data={filteredData }  // Pass your row data here
                 pagination
                 highlightOnHover
                 fixedHeader
                 striped
+                
                 customStyles={customStyles}
-
+                
                 style={{ width: "100%" }} // Set the overall table width
               />
             </div>
 
-            {/* Close Button */}
-            <button
-              onClick={() => setPopupOpen(false)}
-              style={{
-                marginTop: "20px",
-                padding: "10px 20px",
-                border: "none",
-                backgroundColor: "orange",
-                color: "#fff",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-            >
-              Close
-            </button>
+            
           </div>
         </div>
       )}
