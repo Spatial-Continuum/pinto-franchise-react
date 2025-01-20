@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'; 
 import CategoryCard from "../../../../GeneralComponent/FlexElement/CategoryCard.jsx"
 import {selectCuisine,fetchCuisineApi,selectApiLoading,selectApiError} from "../../../../../redux/slices/menu.js"
-import ShowCuisine  from "./ShowCuisine.jsx";
+
 export const UpdateContext = createContext();
 function Cuisine(){  
          
@@ -17,14 +17,14 @@ function Cuisine(){
             dispatch(fetchCuisineApi());
           }, [dispatch,updateone]); 
          
-         
+       const handleUpdate=(value)=>{
+        setUpdateOne(value)
+       }  
          
     return(
-   
+      
         <div className="mb-8">
-            <UpdateContext.Provider value={{  setUpdateOne }}>
-            <ShowCuisine />
-        </UpdateContext.Provider>
+         
         <div className="flex justify-between items-center mb-4">
         
           <h2 className="text-lg font-semibold">Cuisine</h2>
@@ -42,7 +42,7 @@ function Cuisine(){
         
         </div>
       </div> 
-    
+     
     )
 }
 export default Cuisine;

@@ -25,7 +25,7 @@ import {
         <div className="flex flex-col h-full items-center p-4 "> 
        
           <div className="grid place-item-center object-fit " >  
-          <img src={props.category.image} alt={props. title} />
+          <img src={props?.category?.logo||props?.category?.image} alt={props. title} />
             </div>
           
           {props.bottomName&&

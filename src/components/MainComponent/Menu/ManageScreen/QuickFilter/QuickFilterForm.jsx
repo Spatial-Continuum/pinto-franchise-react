@@ -85,13 +85,9 @@ const AddFilterForm = () => {
   const handleSubmit=(e)=>{   
     
     e.preventDefault();
-    const formData = new FormData(); 
+   
     const sub_category_ids = selectedCategory.map(items=>items.subcategory_id) 
    
-    formData.append('filter_title', filterName); 
-    sub_category_ids.forEach(id => formData.append('subcategory_ids[]', id));
-    
-     console.log("asdfasdfasda111",sub_category_ids)
 
      let type = 'post'
      let api = `${API_URL}/menu/quick_filters` 
@@ -101,9 +97,9 @@ const AddFilterForm = () => {
       api = `${API_URL}/menu/quick_filters/${singleFilter?.quickfilter_id}`
     } 
     console.log("asdfasdfasfasd",type)
-      axios[type](api, formData, {
+      axios[type](api, {filter_title:filterName,subcategory_ids: sub_category_ids}, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        'Content-Type': 'application/json',
       },
     })
     .then(function (response) {

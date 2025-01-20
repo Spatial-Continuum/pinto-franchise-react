@@ -9,6 +9,8 @@ import CategoryCard from '../../../../GeneralComponent/FlexElement/CategoryCard.
 import { useNavigate } from 'react-router-dom';  
 import Spot from"../../../../../assets/images/spotlightbanner.svg"  
 import MainLayout from '../../../../GeneralComponent/Layout/MainLayout.jsx';
+import { useDispatch} from 'react-redux';
+import {fetchCitySpotApi} from "../../../../../redux/slices/menu.js"
 import { 
     Menu as MenuIcon,
     Search,
@@ -32,11 +34,17 @@ import {
     const [categoryName, setCategoryName]=useState('') 
     const [singleCategory,setSingleCategory] = useState('')
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const handleSubcategory =(singlecity,categories) =>{ 
       setCategoryName(singlecity?.cityspotlight_id) 
       setSingleCategory(singlecity)
    
-     }
+     } 
+     console.log("kjisdahflaksd",citySpots)
+     useEffect(() => { 
+                 console.log('Dispatching fetchQuickFilterApi');
+                 dispatch(fetchCitySpotApi());
+               }, [dispatch]);
     return( 
         <MainLayout 
          headerName={"Back"}
@@ -64,13 +72,13 @@ import {
             <div className="mb-8">
            
            <div className="flex flex-wrap gap-5">
-             {citySpots.map((citySpot) => (
+             {citySpots[0]&&
               
-              <CategoryCard image={Spot} key ={citySpot.cityspotlight_id}  style="w-54 h-48"
+              <CategoryCard image={Spot}  style="w-54 h-48"
               imagestyle="w-54 h-48 p-2 border rounded-lg" 
-              setSub={()=>handleSubcategory(citySpot,citySpots)}
+              setSub={()=>handleSubcategory(citySpots)}
               />
-             ))}
+             }
            </div >   
            
            
@@ -98,22 +106,24 @@ import {
 
                 </div> 
                 <p className="mt-4">Items in the Spotlight</p> 
-                {categoryName && (
+              
                   <div className="my-8">   
                     <div className="border border-gray-200 rounded-lg">  
                       <div className="flex flex-wrap gap-4 m-4"> 
-                        {singleCategory?.subcategory_detail && (
+                        {citySpots?.map((citysopt)=>(
                           <ShowFlexElements 
-                            category={singleCategory?.subcategory_detail}  
-                            title={singleCategory?.subcategory_detail?.subcategory_title}
-                            topName={true} 
-                            style="w-36 h-30"
-                          />
-                        )}
+                          category={citysopt?.subcategory_detail}  
+                          title={citysopt?.subcategory_detail?.subcategory_title}
+                          topName={true} 
+                          style="w-36 h-30"
+                        />
+                        )) 
+                          
+                        }
                       </div>
                     </div>
                   </div>
-                )}
+                
 
             
         

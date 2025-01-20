@@ -12,28 +12,28 @@ import {
     Upload,
   } from 'lucide-react'; 
  
-const AddCategoryForm = () => {  
+const QuickRestaurantForm = () => {  
   const location = useLocation(); 
-  const categories = location?.state?.categories || [] 
-  const singleCategory = location?.state?.category || {}  
+  const resturants = location?.state?.restaurants || [] 
+  const singleRestaurant = location?.state?.restaurant || {}  
   const edit = location?.state.edit || false
   console.log("peadasdfasdf",location)
   const [formState, setFormState] = useState({
-    title: singleCategory?.category_title || "",
-    image: singleCategory?.image || null,
+    title: singleRestaurant?.category_title || "",
+    image: singleRestaurant?.image || null,
     allcuisine: [],
     selectedCuisines: [],
     dropdownOpen: false,
-    imagePreview: singleCategory?.image || null, 
+    imagePreview: singleRestaurant?.image || null, 
   }); 
   console.log("asdfklasdfladsflasd;",formState)
  
-  console.log("asdfasdf",singleCategory) 
+  console.log("asdfasdf",singleRestaurant) 
   const [newCuisine,setNewCuisine] = useState('') 
   const [selectedCuisineIds, setSelectedCuisineIds] = useState([]); 
   const [allCategory,setAllCategory] = useState([]) 
   
-  const [cuisines, setCuisines] = useState(singleCategory?.cuisines
+  const [cuisines, setCuisines] = useState(singleRestaurant?.cuisines
     ?.map(sub=>({id:sub.cuisine_id,title:sub.cuisine_title}))||[]);   
   const [showModal, setShowModal] = useState(false); 
   const [type,SetType] = useState('')
@@ -42,8 +42,8 @@ const AddCategoryForm = () => {
   const [newImagePreview,setNewImagePreview]  =useState(null) 
   const [searchTerm, setSearchTerm] = useState(""); // Input value
   const [subCategories, setSubCategories] = useState([]); // API results
-  const [selectedCategory, setSelectedCategory] = useState(singleCategory?.
-    subcategories? singleCategory?.
+  const [selectedCategory, setSelectedCategory] = useState(singleRestaurant?.
+    subcategories? singleRestaurant?.
     subcategories : []); // Selected item
   const [loading, setLoading] = useState(false); // Loading state for API
   const [hasUpdated, setHasUpdated] = useState(false);
@@ -98,7 +98,7 @@ const AddCategoryForm = () => {
         setNewImage(null)
         setNewImagePreview(null)  
         SetType('')  
-        singleCategory={}
+        singleRestaurant={}
         console.log("true event")
       })
       .catch(function (error) { 
@@ -150,9 +150,9 @@ const AddCategoryForm = () => {
 
        let type = 'post'
        let api = `${API_URL}/menu/category`
-        if (singleCategory && edit){
+        if (singleRestaurant && edit){
           type = 'put' 
-          api = `${API_URL}/menu/category/${singleCategory?.category_id}`
+          api = `${API_URL}/menu/category/${singleRestaurant?.category_id}`
         }
         axios[type](api, formData, {
         headers: {
@@ -261,8 +261,8 @@ const AddCategoryForm = () => {
   } 
   const updateCuisines = () => {
     const updatedCuisines = formState.allcuisine.map((cuisine) => {
-      // Check if cuisine exists in singleCategory.cuisines
-      const isPresent = singleCategory?.cuisines?.some(
+      // Check if cuisine exists in singleRestaurant.cuisines
+      const isPresent = singleRestaurant?.cuisines?.some(
         (singleCuisine) => singleCuisine.cuisine_id === cuisine.cuisine_id
       );
   
@@ -281,11 +281,11 @@ const AddCategoryForm = () => {
   
  
   useEffect(() => {
-    if (formState?.allcuisine?.length > 0 && singleCategory?.cuisines && !hasUpdated) {
+    if (formState?.allcuisine?.length > 0 && singleRestaurant?.cuisines && !hasUpdated) {
       updateCuisines();
       setHasUpdated(true);  // Prevent further updates
     }
-  }, [singleCategory,formState?.allcuisine]); // Ensure this logic runs when dependencies change
+  }, [singleRestaurant,formState?.allcuisine]); // Ensure this logic runs when dependencies change
   console.log("asdfasdf222",formState)
   useEffect(()=>{
    
@@ -340,16 +340,16 @@ const AddCategoryForm = () => {
   console.log("API_URL3322",formState)
     return (  
       <MainLayout headerName={"Edit"} headerClick={() => {
-        navigate("/menu/manage-screen/show-category", { state: { categories } });
+        navigate("/menu/manage-screen/show-category", { state: { resturants } });
       }}>
 
 <div className='m-6'> 
-              <h2 className="text-lg font-semibold"> Add Category</h2> 
+              <h2 className="text-lg font-semibold"> Add Quick filter-Restaurant</h2> 
               <form onSubmit={handleSubmit}>
              <div className="p-6 border rounded-lg m-2">
         <div className="flex ">
         <div className="mb-6">
-          <label className="block text-sm mb-2">Add category title</label>
+          <label className="block text-sm mb-2">Add filter title</label>
           <input 
              id ="title"
             type="text" 
@@ -362,7 +362,7 @@ const AddCategoryForm = () => {
         </div>
   
         <div className="mb-6 ml-8 relative ">
-          <label className="block text-sm mb-2">Add sub category</label>
+          <label className="block text-sm mb-2">Add restsurant</label>
           <input 
             type="text" 
             placeholder="Enter to add" 
@@ -393,112 +393,12 @@ const AddCategoryForm = () => {
       )}
           
         </div> 
-        <div className="mb-6 ml-12 relative">
-            <label className="block text-sm mb-2 w-40">Select Cuisine</label> 
-         
-            <div className="flex border rounded px-2 py-1 justify-between  bg-white cursor-pointer">
-                  <div>
-                    {formState?.selectedCuisines?.length > 0
-                    ? formState?.selectedCuisines[0]
-                    : "Select Cuisine"} 
-                  
-                </div>  
-                <div>
-                  <ChevronDownIcon
-                  onClick={toggleDropdown}
-                      className={`h-4 w-4 transform transition-transform m-2 duration-200 ${
-                        formState.dropdownOpen ? "rotate-180" : ""
-                      }`}
-                    />
-              </div> 
-            </div>
-            {formState.dropdownOpen && (
-              <div className="absolute  top-full z-2 border bg-white shadow-lg mt-1 w-40 rounded">
-                <div className="p-2">
-                  {formState?.allcuisine?.map((cuisine) => ( 
-                    
-                    <div
-                      key={cuisine?.cuisine_id}
-                      className="flex items-center space-x-2 mb-1"
-                    > 
-                    {console.log("asfasd",cuisine)}
-                      <input
-                        type="checkbox"
-                        checked={cuisine.value} 
-                        onChange={(e) => handleCheckboxChange(e,cuisine)}
-                      />
-                      <label>{cuisine?.cuisine_title}</label>
-                    </div>
-                  ))}
-                  <hr className="my-2" />
-                  
-                  
-        <label onClick={()=>{SetType("Cuisine"),setShowModal(true)}} >Add new cuisine</label>
-                  
-                </div>
-              </div>
-            )} 
-            {!formState.dropdownOpen &&
-             (<div className="relative flex flex-wrap mt-2 space-x-2">
-        {formState?.allcuisine?.filter((cuisine)=>cuisine.value == true).map((cuisine) => (
-          <div
-            key={cuisine.cuisine_id}
-            className="px-2 py-1 bg-gray-200 rounded-full flex items-center"
-          >
-            {cuisine.cuisine_title}
-            <button
-              className="ml-2 text-red-500"
-              onClick={() => handleRemoveCuisine(cuisine)}
-            >
-              &times;
-            </button>
-          </div>
-        ))}
-      </div>)
-          }
-        </div> 
+       
            
         </div>
        
   
-        <div className="border border-dashed border-gray-300 rounded-lg p-8 w-56 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50"> 
-          
-      {/* Upload icon */} 
-      <input
-        type="file"
-        id="Choose image"
-        name="Choose image"
-        onChange={handleFileChange} 
-        accept="image/png"
-        style={{display: "none"}} // Hides the file input
-      /> 
-      {
-        !formState.image ? <Upload className="w-8 h-8 text-gray-400 mb-2" onClick={()=>{document.getElementById('Choose image').click()}}/> :""
-      }
-     
-      
-      {/* File input */}
-    
-
-      {/* Preview the image if it's uploaded */}
-      {formState.imagePreview || formState.image? (
-        <div className="flex flex-col items-center">
-          <img
-            src={formState.imagePreview}
-            alt="Preview"
-            className="w-32 h-32 object-fit rounded-lg mb-2"
-          />
-          <button
-            onClick={handleRemoveImage}
-            className="bg-red-500 text-white px-4 py-1 rounded-lg"
-          >
-            Remove Image
-          </button>
-        </div>
-      ) : (
-        <span className="text-sm text-gray-500">No image selected</span>
-      )}
-    </div>
+       
   
         <div>
           <label className="block text-sm mt-6 mb-4">Add Sub category</label>
@@ -621,4 +521,4 @@ const AddCategoryForm = () => {
       </MainLayout>
     );
   }; 
-export default AddCategoryForm;
+export default QuickRestaurantForm;

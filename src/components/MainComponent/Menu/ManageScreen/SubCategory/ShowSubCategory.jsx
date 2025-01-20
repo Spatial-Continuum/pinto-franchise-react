@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 
 import { useLocation,useNavigate } from 'react-router-dom'; 
 import ShowFlexElements from "../../../../GeneralComponent/FlexElement/ShowFlexElement.jsx"
@@ -10,22 +10,33 @@ import {
   } from 'lucide-react'; 
  import vector from "../../../../../assets/images/Vector_colorless.png"
  import axios from 'axios'
-
+ import {fetchSubCategoryApi} from "../../../../../redux/slices/menu.js"
 function ShowSubCategory(){  
     const location = useLocation(); 
     const navigate = useNavigate(); 
     const [subcategories, setSubCategories] = useState(location?.state?.subcategories|| []) 
- 
+   
      const [singleSubCategory,setSingleSubCategory] = useState({})
     const [allEdit , setAllEdit] = useState(false)
     const [singleEdit,setSingleEdit] =useState(false) 
       const [newitem, setNewItem] =useState("") 
       const [newimage,setNewImage] =useState(null) 
+      const propsShowModal = location?.state.showModal || false
       const [newImagePreview,setNewImagePreview]  =useState(null) 
       const [searchTerm, setSearchTerm] = useState(""); // Input value  
       const [showmodal,setShowModal] = useState(false)
       console.log("akljflajflasd",subcategories)
-     
+        useEffect (()=>{
+                if(propsShowModal){
+                 setShowModal(true)
+                } 
+               
+            },[])
+      
+     useEffect(() => { 
+        console.log('Dispatching fetchSubCategoryApi');
+        dispatch(fetchSubCategoryApi());
+      }, [dispatch]);
      const handleEditSubCatgory= (subcategory) =>{ 
         console.log("akjsdfhkjashasdj;d")
         setSingleEdit(true) 

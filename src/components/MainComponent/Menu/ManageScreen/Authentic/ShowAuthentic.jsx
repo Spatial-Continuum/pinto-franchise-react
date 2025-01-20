@@ -2,26 +2,26 @@ import React, {useState,useEffect} from 'react';
 
 import { useLocation,useNavigate } from 'react-router-dom'; 
 import { useDispatch} from 'react-redux';
-import ShowFlexElements from "../../../../GeneralComponent/FlexElement/ShowFlexElement.jsx"
+import CategoryCard from "../../../../GeneralComponent/FlexElement/CategoryCard.jsx"
 import MainLayout from '../../../../GeneralComponent/Layout/MainLayout.jsx';
 import { 
     Menu as MenuIcon,
     Search,
   } from 'lucide-react'; 
  
-  import {fetchCategoryApi,selectCategoryApiData,selectApiLoading,selectApiError} from "../../../../../redux/slices/menu.js"
+  import {fetchAuthenticateApi,selectAutheticate,selectApiLoading,selectApiError} from "../../../../../redux/slices/menu.js"
 
-function ShowCategory(){  
+function ShowAuthentic(){  
     const location = useLocation(); 
     const navigate = useNavigate(); 
     const dispatch = useDispatch();
-    const [categories, setCategories] = useState(location?.state?.categories|| []) 
+    const [Authentic, setAuthentic] = useState(location?.state?.Authentic|| []) 
     const [categoryName, setCategoryName]=useState('') 
     const [singleCategory,setSinlgeCategory] = useState({})
   
      useEffect(() => { 
-         console.log('Dispatching fetchCategoryApi');
-         dispatch(fetchCategoryApi()).then((response) => {
+         console.log('Dispatching fetchAuthenticateApi');
+         dispatch(fetchAuthenticateApi()).then((response) => {
           if (response && response.payload) {
             setCategories(response.payload); // Updates cuisines
           }
@@ -46,7 +46,7 @@ function ShowCategory(){
          
          <div>   
              <div className="relative mb-8"> 
-             <h2 className="text-lg font-semibold">Category</h2> 
+             <h2 className="text-lg font-semibold"> Authentic Style of cooking</h2> 
              <div className="flex justify-between items-center">
               <div> 
               <input
@@ -57,10 +57,10 @@ function ShowCategory(){
           <Search className="w-5 h-5 absolute left-3 top-10 text-gray-400" />
               </div>
             <button 
-              onClick={() =>navigate("/menu/manage-screen/categoty-form" , { state: { categories } })}
+              onClick={() =>navigate("/menu/manage-screen/show-authentic" , { state: { Authentic } })}
               className="px-4 py-2 bg-green-600 text-white rounded-lg"
             >
-              Add category
+             Add 
             </button>
           </div>
            
@@ -68,18 +68,24 @@ function ShowCategory(){
             <div className="mb-8">
           
            <div className="flex flex-wrap gap-5">
-             {categories.map((category) => (
-              <ShowFlexElements 
-              category={category}  
-              bottomName={true}
-              edit={true} 
-              title={category.category_title}
-              setSub={()=>{handleSubcategory(category,categories)}} 
-              onEdit={()=>{navigate("/menu/manage-screen/categoty-form" , { state: { category,categories,edit:true } })}} />
-             ))}
+             {Authentic.map((authentic) => (
+              <CategoryCard key={authentic.authentic_id} {...authentic}
+              style="w-56 h-50" imagestyle="w-56 h-28 border rounded-t-lg" 
+             
+              title= {authentic.authentic_title} 
+              AdditonalText={
+                <div className="p-2"> <h5 className="text-sm bold">{authentic.name}</h5>
+                <p style={{fontSize:"10px"}}>{authentic.short_description
+                }</p>
+                </div>
+             }
+            onEdit={()=>{navigate("/menu/manage-screen/categoty-form" , { state: { category,categories } })}} 
+              />
+            ))}
+             
            </div >   
 
-           {categoryName? 
+           {/* {categoryName? 
                 <div className="my-8">   
                 <h2 className="text-lg font-semibold">Sub Categories in {categoryName} </h2>  
                    <div className="border border-gray-200 rounded-lg">  
@@ -100,7 +106,7 @@ function ShowCategory(){
            : ''
 
            }
-       
+        */}
            
          
            
@@ -117,4 +123,4 @@ function ShowCategory(){
   
 
 }
-export default ShowCategory
+export default ShowAuthentic

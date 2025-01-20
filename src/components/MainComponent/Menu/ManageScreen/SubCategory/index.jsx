@@ -16,7 +16,7 @@ function SubCategory()
   useEffect(() => { 
     console.log('Dispatching fetchSubCategoryApi');
     dispatch(fetchSubCategoryApi());
-  }, [dispatch]);
+  }, []);
   return(
     <div className="mb-8 mt-4">
     <div className="flex justify-between items-center mb-4">
@@ -32,15 +32,15 @@ function SubCategory()
             
               {subcategories?.slice(0, subcategories.length > 4 ? 4 : subcategories.length).map((subcategory) => ( 
                 
-                <CategoryCard key={subcategory.subcategory_id} {...subcategory}
+                <CategoryCard key={subcategory.subcategory_id} {...subcategory} image = {subcategory.image}
                 imagestyle={"w-24 h-24  text-center "}
                 title= {subcategory.subcategory_title} 
                
-              onEdit={()=>{navigate("/menu/manage-screen/categoty-form" , { state: { subcategories } })}} 
+              // onEdit={()=>{navigate("/menu/manage-screen/categoty-form" , { state: { subcategories } })}} 
                 />
               ))}
               <CategoryCard add={true} isAdd={true} subcategories={subcategories} 
-              onEdit={()=>{navigate("/menu/manage-screen/categoty-form" , { state: { subcategories } })}} />
+              onEdit={()=>{navigate("/menu/manage-screen/show-subcategory" ,{ state: { subcategories,showModal:true} });}} />
             </div> 
             </div>
   )
