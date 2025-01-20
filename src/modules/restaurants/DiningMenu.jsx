@@ -188,15 +188,16 @@ const DiningMenu = ({ restaurantId }) => {
                                         <div key={category.menu_category_id} className=''>
                                             {/* Category Button */}
                                             <div className="text-md text-start px-4 bg-[#FFFFFF] font-normal  py-3 justify-between text-black rounded-md flex items-center">
-                                                <div className="flex cursor-pointer flex-row items-center">
+                                                <div className="flex cursor-pointer flex-row items-center"
+                                                onClick={() => handleCategoryClick(category.menu_category_id)}>
                                                     <div className='cursor-pointer'
-                                                        onClick={() => handleCategoryClick(category.menu_category_id)}
+                                                        
                                                     >
                                                         {category.menu_title}
 
                                                     </div>
                                                     {/* Dropdown Arrow */}
-                                                    <div>
+                                                    <div  >
                                                         <ChevronDownIcon
                                                             className={`h-3 w-3 mt-1 ml-4 transition-transform duration-200 ${openCategories.includes(category.menu_category_id)
                                                                 ? 'rotate-180'
