@@ -212,6 +212,7 @@ return (
   <MainLayout>
     <div className="mb-36">
       {/* Progress Navbar */}
+      <div className="flex justify-between ">
       <div className="progress-navbar flex gap-6 mx-5 my-4">
         <div
           className={`step-heading relative cursor-pointer  ${currentStep === 1 ? 'active' : completedSteps.includes(1) ? 'completed' : ''}`}
@@ -260,6 +261,28 @@ return (
             className={` underline-offset-8  h-2 rounded-xl bg-orange-500 transition-all duration-300 ${currentStep === 3 || completedSteps.includes(3) ? 'w-full' : 'w-0'
               }`}
           ></div>
+        </div>
+        
+      </div>
+      <div className='flex flex-row justify-end my-4 gap-2 '>
+          <div>
+            <button
+              onClick={() => setIsEditable(false)}
+              className="w-32 h-8 rounded-lg border-[1px] border-[#4A4E56] bg-[#ADADAD] bg-opacity-15 text-[#4A4E56] transition-all duration-300 "
+            >
+              cancel
+            </button>
+          </div>
+          <div>
+            <button
+              onClick={handleSubmit}
+              className="w-32 h-8 rounded-lg border-[1px] border-[#008BFF] bg-[#008BFF] text-[#FFFFFF] transition-all duration-300 "
+              
+            >
+              Submit
+            </button>
+          
+          </div>
         </div>
       </div>
 
