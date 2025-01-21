@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 
-const RestaurantInfoView = ({ restaurantInfo, onDataChange }) => {
+const RestaurantInfoView = ({ formData, onDataChange, isEditable }) => {
     // const [data, setData] = useState(restaurant || {})
     const [ownerPopup, setOwnerPopup] = useState(false)
     const [validFields, setValidFields] = useState({
@@ -35,7 +35,9 @@ const RestaurantInfoView = ({ restaurantInfo, onDataChange }) => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setData((prev) => ({ ...prev, [name]: value }))
+      onDataChange((prev)=>({
+        ...prev, [name]:value,
+      }));
 
         setValidFields((prevState) => ({
             ...prevState,
@@ -68,8 +70,9 @@ const RestaurantInfoView = ({ restaurantInfo, onDataChange }) => {
                             id="restaurantName"
                             type="text"
                             name="name"
-                            value={restaurantInfo?.name || ''}
+                            value={formData?.name || ''}
                             placeholder="Enter restaurant name"
+                            disabled={!isEditable}
                             onChange={(e)=>handleInputChange(e)}
                             className={`w-1/2 px-3 py-2 border ${validFields.name ? 'border-gray-300' : 'border-red-500'}rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         />
@@ -81,10 +84,11 @@ const RestaurantInfoView = ({ restaurantInfo, onDataChange }) => {
                         <input
                             id="doorNumber"
                             name="door_no"
-                            value={restaurantInfo?.door_no || ''}
+                            value={formData?.door_no || ''}
                             onChange={(e)=>handleInputChange(e)}
                             type="text"
                             placeholder="Enter door number"
+                            disabled={!isEditable}
                             className={`w-full px-3 py-2 border ${validFields.door_no ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         />
                     </div>
@@ -99,9 +103,10 @@ const RestaurantInfoView = ({ restaurantInfo, onDataChange }) => {
                                 id="streetAddress1"
                                 type="text"
                                 name="street_address_1"
-                                value={restaurantInfo?.street_address_1 || ''}
+                                value={formData?.street_address_1 || ''}
                                 onChange={(e)=>handleInputChange(e)}
                                 placeholder="Enter street address 1"
+                                disabled={!isEditable}
                                 className={`w-full px-3 py-2 border ${validFields.street_address_1 ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             />
                         </div>
@@ -111,9 +116,10 @@ const RestaurantInfoView = ({ restaurantInfo, onDataChange }) => {
                                 id="streetAddress2"
                                 type="text"
                                 name="street_address_2"
-                                value={restaurantInfo?.street_address_2 || ''}
+                                value={formData?.street_address_2 || ''}
                                 onChange={(e)=>handleInputChange(e)}
                                 placeholder="Enter street address 2"
+                                disabled={!isEditable}
                                 className={`w-full px-3 py-2 border ${validFields.street_address_2 ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             />
                         </div>
@@ -128,8 +134,9 @@ const RestaurantInfoView = ({ restaurantInfo, onDataChange }) => {
                                 id="city"
                                 type="text"
                                 name="city"
-                                value={restaurantInfo?.city || ""}
+                                value={formData?.city || ""}
                                 onChange={(e)=>handleInputChange(e)}
+                                disabled={!isEditable}
                                 placeholder="Enter city"
                                 className={`w-full px-3 py-2 border ${validFields.city ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             />
@@ -140,8 +147,9 @@ const RestaurantInfoView = ({ restaurantInfo, onDataChange }) => {
                                 id="pincode"
                                 type="text"
                                 name="pincode"
-                                value={restaurantInfo?.pincode || ''}
+                                value={formData?.pincode || ''}
                                 onChange={(e)=>handleInputChange(e)}
+                                disabled={!isEditable}
                                 placeholder="Enter pincode"
                                 className={`w-full px-3 py-2 border ${validFields.pincode ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             />
@@ -154,8 +162,9 @@ const RestaurantInfoView = ({ restaurantInfo, onDataChange }) => {
                         <input
                             id="landmark"
                             name="landmark"
-                            value={restaurantInfo?.landmark || ''}
+                            value={formData?.landmark || ''}
                             onChange={(e)=>handleInputChange(e)}
+                            disabled={!isEditable}
                             type="text"
                             placeholder="Enter landmark"
                             className={`w-full px-3 py-2 border ${validFields.landmark ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
@@ -187,8 +196,9 @@ const RestaurantInfoView = ({ restaurantInfo, onDataChange }) => {
                                 id="mobileNumber"
                                 type="text"
                                 name="primary_phone"
-                                value={restaurantInfo?.primary_phone || ''}
+                                value={formData?.primary_phone || ''}
                                 onChange={(e)=>handleInputChange(e)}
+                                disabled={!isEditable}
                                 placeholder="Enter mobile number"
                                 className={`px-3 py-2 border ${validFields.primary_phone ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             />
@@ -200,8 +210,9 @@ const RestaurantInfoView = ({ restaurantInfo, onDataChange }) => {
                             <input
                                 id="SecondaryMobileNumber"
                                 name="secondary_phone"
-                                value={restaurantInfo?.secondary_phone || ''}
+                                value={formData?.secondary_phone || ''}
                                 onChange={(e)=>handleInputChange(e)}
+                                disabled={!isEditable}
                                 type="text"
                                 placeholder="Enter Secondary Mobile Number"
                                 className={`px-3 py-2 border ${validFields.secondary_phone ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
@@ -213,8 +224,9 @@ const RestaurantInfoView = ({ restaurantInfo, onDataChange }) => {
                         <input
                             id="email"
                             name="email"
-                            value={restaurantInfo?.email || ''}
+                            value={formData?.email || ''}
                             onChange={(e)=>handleInputChange(e)}
+                            disabled={!isEditable}
                             type="text"
                             placeholder="Enter email address"
                             className={`w-1/2 px-3 py-2 border ${validFields.email ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-50`}
@@ -236,8 +248,9 @@ const RestaurantInfoView = ({ restaurantInfo, onDataChange }) => {
                             id="commission_percentage"
                             type="text"
                             name="commission_percentage"
-                            value={restaurantInfo?.commission_percentage || ''}
+                            value={formData?.commission_percentage || ''}
                             onChange={(e)=>handleInputChange(e)}
+                            disabled={!isEditable}
                             placeholder="Enter Pinto Commission"
                             className={`px-3 py-2 border ${validFields.pinto_commission ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         />
@@ -253,9 +266,10 @@ const RestaurantInfoView = ({ restaurantInfo, onDataChange }) => {
                             type="text"
 
                             name="gstin"
-                            value={restaurantInfo?.gstin || ''}
+                            value={formData?.gstin || ''}
                             onChange={(e)=>handleInputChange(e)}
                             placeholder="Enter GSTIN"
+                            disabled={!isEditable}
                             style={{ textTransform: 'uppercase' }}
                             className={`px-3 py-2 border ${validFields.gst_number ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         />
@@ -273,8 +287,9 @@ const RestaurantInfoView = ({ restaurantInfo, onDataChange }) => {
                             <input
                                 type="number"
                                 name="mobile_no"
-                                value={restaurantInfo?.mobile_no || ''}
+                                value={formData?.mobile_no || ''}
                                 onChange={(e)=>handleInputChange(e)}
+                                disabled={!isEditable}
                                 className={`px-3 py-2 border ${validFields.owner_name ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             />
                         </div>
@@ -282,6 +297,7 @@ const RestaurantInfoView = ({ restaurantInfo, onDataChange }) => {
                             <button
                                 className='border-[1px] px-4 py-1 text-[#FFFFFF] bg-[#030714] rounded-lg'
                                 // onClick={handleOwnerPopup}
+                                disabled={!isEditable}
                             >
                                 FIND USER
                             </button>
@@ -311,6 +327,10 @@ const RestaurantInfoView = ({ restaurantInfo, onDataChange }) => {
                     </div>
                 } */}
             </div>
+            {/* <button
+            onClick={}>
+                save
+            </button> */}
         </div>
     );
 };

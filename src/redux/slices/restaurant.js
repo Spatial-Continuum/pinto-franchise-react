@@ -32,7 +32,7 @@ export const getRestaurantById = createAsyncThunk(
 );
 export const updateRestaurantDetails = createAsyncThunk(
   'restaurant/updateRestaurantDetails',
-  async (dataToSubmit, { rejectWithValue }) => {
+  async (restaurantId, dataToSubmit, { rejectWithValue }) => {
     try {
       const response = await axios.put(`${API_URL}/restaurant/merchant/${restaurantId}`, dataToSubmit, {
       headers: {
@@ -103,7 +103,7 @@ const restaurantSlice = createSlice({
     selectedRestaurant: [],
     restaurantList:[],
     allNewRestaurants:[],
-    
+    updatedRestaurant:null,
     menuCategory:[],
     loading: false,
     error: null,
@@ -175,7 +175,7 @@ const restaurantSlice = createSlice({
       .addCase(updateRestaurantDetails.fulfilled, (state, action) => {
         state.loading = false;
         // Assuming updated data is in action.payload
-        state.selectedRestaurant = action.payload;
+        state.updatedRestaurant = action.payload;
         state.error = null;
       })
       .addCase(updateRestaurantDetails.rejected, (state, action) => {
@@ -205,6 +205,8 @@ export const selectRestaurantData = (state) => state.restaurant.restaurantData;
 
 
 export const selectSelectedRestaurant = (state) => state.restaurant.selectedRestaurant;
+export const selectUpdatedRestaurant = (state) => state.restaurant.updatedRestaurant;
+
 export const selectAllNewRestaurants = (state) => state.restaurant.allNewRestaurants;
 
 export const selectMenuCategory = (state) => state.restaurant.menuCategory;

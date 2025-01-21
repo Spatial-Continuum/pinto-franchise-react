@@ -2,35 +2,76 @@ import { Switch } from 'antd';
 import React from 'react';
 import { useState, useEffect } from 'react';
 
-const TypeTimingsView = ({ restaurantInfo, ExtraCuisine, ExtraStore, onDataChange }) => {
+const TypeTimingsView = ({ formData, onDataChange, isEditable }) => {
+   const [data, setData] = useState({
+           ...formData,
+           opening_hours: formData.opening_hours || {  // Add default object
+               Monday: '',
+               Tuesday: '',
+               Wednesday: '',
+               Thursday: '',
+               Friday: '',
+               Saturday: '',
+               Sunday: '',
+           },
+       })
+
+    const [customStore, setCustomStore] = useState('');
+    const [customCuisine, setCustomCuisine] = useState('');
+
    
-
-    // const [customStore, setCustomStore] = useState('');
-    // const [customCuisine, setCustomCuisine] = useState('');
-
-    // useEffect(() => {
-    //     if (formData) {
-    //       setData({
-    //         restaurant_category: formData.restaurant_category || '',
-    //         merchant_type: formData.merchant_type || [],
-    //         cuisine_type: formData.cuisine_type || [],
-    //         opening_hours: formData.opening_hours || '',
-    //         customStore: ExtraStore || '',
-    //         customCuisine: ExtraCuisine || '',
-    //       });
-    //     }
-    //   }, [formData, ExtraCuisine, ExtraStore]);
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-
-        setData((prev) => ({
-            ...prev, [name] :value}))
-        onDataChange({...data, [name]: value})
-        }
+    useEffect(() => {
+            console.log("Form Data Updated: ", data);
+            onDataChange({...data, customStore, customCuisine
+            });
             
+        }, [data, customStore, customCuisine]);
+    
 
-                
+    const   handleInputChange = (e, day) => {
+        const { name, value, type, checked } = e.target;
+
+        setData((prev) => {
+            if (type === 'checkbox') {
+                if (value === 'Others') {
+                    if (name === 'merchant_type') {
+                        return {
+                            ...prev,
+                            otherStore: checked ? value : {customStore},
+                            // merchant_type: checked ? [] : prev.merchant_type,
+                        };
+                    } else if (name === 'cuisine_type') {
+                        return {
+                            ...prev,
+                            otherCuisine: checked ? value : '{customCuisine}',
+                            // cuisine_type: checked ? [] : prev.cuisine_type,
+                        };
+                    }
+                }
+
+                const updatedValues = prev[name] || [];
+                if (checked) {
+                    return { ...prev, [name]: [...updatedValues, value] };
+                } else {
+                    return { ...prev, [name]: updatedValues.filter((item) => item !== value) };
+                }
+            }
+            // Handle other input types
+            else if (type === "radio") {
+                return { ...prev, [name]: value };
+            } else if (name === "start_time" || name === "end_time") {
+                return {
+                    ...prev,
+                    [day]: {
+                        ...prev[day],
+                        [name]: value,
+                    },
+                };
+            } else {
+                return { ...prev, [name]: value };
+            }
+        });
+    };     
     const handleCustomInputChange = (e) => {
         const { name, value } = e.target;
 
@@ -40,6 +81,9 @@ const TypeTimingsView = ({ restaurantInfo, ExtraCuisine, ExtraStore, onDataChang
             setCustomCuisine(value);
         }
     };
+
+                
+    
 
     return (
         <div className="p-6 space-y-8 bg-gray-100 rounded-lg border border-gray-300">
@@ -52,7 +96,8 @@ const TypeTimingsView = ({ restaurantInfo, ExtraCuisine, ExtraStore, onDataChang
                             <input
                                 type="radio"
                                 name="restaurant_category"
-                                checked={restaurantInfo?.restaurant_category === 'Both'}
+                                checked={formData?.restaurant_category === 'Both'}
+                                disabled={!isEditable}
                                 onChange={handleInputChange}
                                 value="Both"
                             />
@@ -62,7 +107,8 @@ const TypeTimingsView = ({ restaurantInfo, ExtraCuisine, ExtraStore, onDataChang
                             <input
                                 type="radio"
                                 name="restaurant_category"
-                                checked={restaurantInfo?.restaurant_category === 'Delivery'}
+                                checked={formData?.restaurant_category === 'Delivery'}
+                                disabled={!isEditable}
                                 onChange={handleInputChange}
                                 value="Delivery"
                             />
@@ -72,7 +118,8 @@ const TypeTimingsView = ({ restaurantInfo, ExtraCuisine, ExtraStore, onDataChang
                             <input
                                 type="radio"
                                 name="restaurant_category"
-                                checked={restaurantInfo?.restaurant_category === 'Dine-in'}
+                                checked={formData?.restaurant_category === 'Dine-in'}
+                                disabled={!isEditable}
                                 onChange={handleInputChange}
                                 value="Dine-in"
                             />
@@ -91,7 +138,8 @@ const TypeTimingsView = ({ restaurantInfo, ExtraCuisine, ExtraStore, onDataChang
                             <input
                                 type="checkbox"
                                 name="merchant_type"
-                                checked={restaurantInfo.merchant_type?.includes(store) || false}  // Default to false if undefined
+                                checked={formData.merchant_type?.includes(store) || false}  // Default to false if undefined
+                                disabled={!isEditable}
                                 onChange={handleInputChange}
                                 value={store}
                             />
@@ -104,22 +152,24 @@ const TypeTimingsView = ({ restaurantInfo, ExtraCuisine, ExtraStore, onDataChang
                         <input
                             type="checkbox"
                             name='merchant_type'
-                            checked={restaurantInfo.merchant_type?.includes('Others') || false}
+                            checked={formData.otherStore === 'Others' || false}
                             onChange={handleInputChange}
+                            disabled={!isEditable}
                             value="Others"
                         />
-                        <span className="text-gray-700">Others</span>
+                        <span className="text-gray-700"></span>
                     </label>
 
                     {/* Input for 'Others' */}
-                    {restaurantInfo.merchant_type?.includes('Others') && (
-                        <div className="w-full mt-4 border-b border-teal-500 py-2">
+                    {formData.otherStore === "Others" && (
+                        <div className="w-full mt-4 border-b border-teal-500 py-2 ">
                             <input
-                                className="appearance-none bg-transparent border-none w-full text-gray-700 py-1 px-2 leading-tight focus:outline-none"
+                                className="appearance-none bg-transparent border-none w-full text-gray-700  py-1 px-2 leading-tight focus:outline-none"
                                 type="text"
                                 placeholder="Enter Custom Store Type"
                                 name="custom_store"
-                                value={restaurantInfo.customStore || ''}
+                                value={customStore }
+                                disabled={!isEditable}
                                 onChange={handleCustomInputChange}
                                 aria-label="Custom Store Type"
                             />
@@ -136,7 +186,8 @@ const TypeTimingsView = ({ restaurantInfo, ExtraCuisine, ExtraStore, onDataChang
                     className="w-4/6 h-24 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter description here..."
                     name="short_description"
-                    value={restaurantInfo.short_description || ''}  // Default to empty string if undefined
+                    disabled={!isEditable}
+                    value={formData?.short_description || ''}  // Default to empty string if undefined
                     onChange={handleInputChange}
                 />
             </div>
@@ -150,8 +201,9 @@ const TypeTimingsView = ({ restaurantInfo, ExtraCuisine, ExtraStore, onDataChang
                             <input
                                 type="checkbox"
                                 name="cuisine_type"
-                                checked={restaurantInfo.cuisine_type?.includes(cuisine) || false}  // Default to false if undefined
+                                checked={formData.cuisine_type?.includes(cuisine) || false}  // Default to false if undefined
                                 onChange={handleInputChange}
+                                disabled={!isEditable}
                                 value={cuisine}
                             />
                             <span className="text-gray-700">{cuisine}</span>
@@ -163,22 +215,24 @@ const TypeTimingsView = ({ restaurantInfo, ExtraCuisine, ExtraStore, onDataChang
                         <input
                             type="checkbox"
                             name="cuisine_type"
-                            checked={restaurantInfo.cuisine_type?.includes('Others') || false}
+                            checked={formData.otherCuisine ==='Others' || false}
                             onChange={handleInputChange}
+                            disabled={!isEditable}
                             value="Others"
                         />
                         <span className="text-gray-700">Others</span>
                     </label>
 
                     {/* Input for 'Others' */}
-                    {restaurantInfo.cuisine_type?.includes('Others') && (
+                    {formData.otherCuisine==='Others' && (
                         <div className="w-full mt-4 border-b border-teal-500 py-2">
                             <input
                                 className="appearance-none bg-transparent border-none w-full text-gray-700 py-1 px-2 leading-tight focus:outline-none"
                                 type="text"
                                 placeholder="Enter Custom Store Type"
                                 name="custom_cuisine"
-                                value={restaurantInfo.customCuisine || ''}
+                                disabled={!isEditable}
+                                value={customCuisine}
                                 onChange={handleCustomInputChange}
                                 aria-label="Custom Cuisine Type"
                             />
@@ -188,7 +242,7 @@ const TypeTimingsView = ({ restaurantInfo, ExtraCuisine, ExtraStore, onDataChang
                 </div>
             </div>
 
-            {restaurantInfo.opening_hours && Object.keys(restaurantInfo.opening_hours).length > 0 ? (
+            {formData.opening_hours && Object.keys(formData.opening_hours).length > 0 ? (
                 <div>
                     <h2 className="font-medium text-gray-800 mb-4">Restaurant Operating Hours</h2>
                     <div className="w-8/12 bg-white p-4 rounded-lg border border-gray-300">
@@ -204,12 +258,13 @@ const TypeTimingsView = ({ restaurantInfo, ExtraCuisine, ExtraStore, onDataChang
 
                             {/* Table Body */}
                             <tbody>
-                                {Object.keys(restaurantInfo.opening_hours).map((day) => (
+                                {Object.keys(formData.opening_hours).map((day) => (
                                     <tr key={day} className="hover:bg-gray-100">
                                         <td className="py-2">{day}</td>
                                         <td className="py-2">
                                             <Switch
-                                                checked={restaurantInfo.opening_hours[day] !== ''}
+                                                checked={formData.opening_hours[day] !== ''}
+                                                disabled={!isEditable}
                                                 onChange={(checked) => {
                                                     // When the switch is toggled, either set the value to empty or set a default time
                                                     setData((prev) => ({
@@ -226,9 +281,10 @@ const TypeTimingsView = ({ restaurantInfo, ExtraCuisine, ExtraStore, onDataChang
                                             <input
                                                 type="text"
                                                 placeholder="e.g., 9:00 AM - 5:00 PM or Closed"
-                                                value={restaurantInfo.opening_hours[day] || ''}
+                                                value={formData.opening_hours[day] || ''}
                                                 onChange={(e) => handleOpeningHoursChange(day, e.target.value)}
-                                                disabled={restaurantInfo.opening_hours[day] === ''}  
+                                                disabled={formData.opening_hours[day] === ''}  
+                                                
                                                 className="border border-gray-300 rounded-md px-2 py-1 "
                                             />
                                         </td>

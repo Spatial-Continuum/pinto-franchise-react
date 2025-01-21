@@ -238,7 +238,19 @@ const RestaurantService = {
                 error)
         }
     },
-
+    updateRestaurant: async (restaurantId, dataToSubmit) => {
+        try {
+          const response = await apiclient.put(`/restaurant/merchant/${restaurantId}`, dataToSubmit, {
+            headers: {
+              'Content-Type': 'multipart/form-data',  // Required for form-data submission
+            },
+          });
+          return response.data;
+        } catch (error) {
+          console.error(`Error updating restaurant with ID ${restaurantId}:`, error);
+          throw error;
+        }
+      },
 
 
 
