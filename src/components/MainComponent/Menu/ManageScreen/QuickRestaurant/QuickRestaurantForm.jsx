@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import MainLayout from '../../../../GeneralComponent/Layout/MainLayout';
 import axios from 'axios'
-
+import { useDispatch, useSelector } from 'react-redux'; 
 import { useEffect } from 'react';
 import { ChevronDownIcon } from '@heroicons/react/24/solid'; 
 import Group from "../../../../../assets/images/Group.png" 
@@ -11,25 +11,21 @@ import {
  
     Upload,
   } from 'lucide-react'; 
- 
+  import {fetchQuickRestaurantApi,selectQuickRestaurant,selectApiLoading,selectApiError} from "../../../../../redux/slices/menu.js"
 const QuickRestaurantForm = () => {  
   const location = useLocation(); 
+  const dispatch = useDispatch();
   const resturants = location?.state?.restaurants || [] 
   const singleRestaurant = location?.state?.restaurant || {}  
   const edit = location?.state.edit || false
-  console.log("peadasdfasdf",location)
   const [formState, setFormState] = useState({
-    title: singleRestaurant?.category_title || "",
+    title: singleRestaurant?.name || "",
     image: singleRestaurant?.image || null,
-    allcuisine: [],
-    selectedCuisines: [],
     dropdownOpen: false,
     imagePreview: singleRestaurant?.image || null, 
   }); 
-  console.log("asdfklasdfladsflasd;",formState)
  
-  console.log("asdfasdf",singleRestaurant) 
-  const [newCuisine,setNewCuisine] = useState('') 
+  const qrestaurants = useSelector(selectQuickRestaurant);
   const [selectedCuisineIds, setSelectedCuisineIds] = useState([]); 
   const [allCategory,setAllCategory] = useState([]) 
   
@@ -41,8 +37,8 @@ const QuickRestaurantForm = () => {
   const [newimage,setNewImage] =useState(null) 
   const [newImagePreview,setNewImagePreview]  =useState(null) 
   const [searchTerm, setSearchTerm] = useState(""); // Input value
-  const [subCategories, setSubCategories] = useState([]); // API results
-  const [selectedCategory, setSelectedCategory] = useState(singleRestaurant?.
+  const [restaurants, setRestaurant] = useState([]); // API results
+  const [selectedRestaurant, setSelectedRestaurant] = useState(singleRestaurant?.
     subcategories? singleRestaurant?.
     subcategories : []); // Selected item
   const [loading, setLoading] = useState(false); // Loading state for API
@@ -127,9 +123,9 @@ const QuickRestaurantForm = () => {
   const handleDrop = (event, targetIndex) => {
     event.preventDefault();
     const sourceIndex = event.dataTransfer.getData('index');
-    const updatedData = [...selectedCategory];
+    const updatedData = [...selectedRestaurant];
     [updatedData[sourceIndex], updatedData[targetIndex]] = [updatedData[targetIndex], updatedData[sourceIndex]];
-    setSelectedCategory(updatedData);
+    setSelectedRestaurant(updatedData);
   };
    
     
@@ -137,19 +133,15 @@ const QuickRestaurantForm = () => {
       console.log("sadfsdsds",selectedCuisineIds)
       e.preventDefault();
       const formData = new FormData(); 
-      console.log("asfdasdf",selectedCategory)
-      const sub_category_ids = selectedCategory.map(items=>items.subcategory_id) 
-      console.log("asdfasdfasd",formState)
-      const cuisine_ids = formState?.allcuisine?.filter(item => item.value === true).map(items=>items.cuisine_id)  
-      console.log("reated newly rated items",sub_category_ids,cuisine_ids) 
-      formData.append('category_title', formState.title); 
-      cuisine_ids.forEach(id => formData.append('cuisine_ids', id));
-      sub_category_ids.forEach(id => formData.append('subcategory_ids', id));
+      const restaurant_ids = selectedRestaurant.map(items=>items.restaurant_id) 
       
-      if(formState.image){formData.append('image', formState.image)}
+      formData.append('filter_name', formState.title); 
+      // restaurant_ids.forEach(id => formData.append('restaurant_ids', id));
+      formData.append('restaurant_id', restaurant_ids);
+      // if(formState.image){formData.append('image', formState.image)}
 
        let type = 'post'
-       let api = `${API_URL}/menu/category`
+       let api = `${API_URL}/restaurant/menu/quickfilterrestaurant`
         if (singleRestaurant && edit){
           type = 'put' 
           api = `${API_URL}/menu/category/${singleRestaurant?.category_id}`
@@ -163,13 +155,10 @@ const QuickRestaurantForm = () => {
         console.log(response);  
         setFormState({
           title: "",
-          subCategory: "",
-          selectedCuisines: [],
           dropdownOpen: false,
           imagePreview: null,
         }); 
-        setSelectedCuisineIds([])
-        setSelectedCategory([]) 
+        setSelectedRestaurant([]) 
         getInfo()
       })
       .catch(function (error) {
@@ -186,7 +175,7 @@ const QuickRestaurantForm = () => {
           imagePreview: null,
         }); 
         setSelectedCuisineIds([])
-        setSelectedCategory([])
+        setSelectedRestaurant([])
       }
   const handleFileChange = (e) => {
     const file = e.target.files[0]; 
@@ -200,9 +189,9 @@ const QuickRestaurantForm = () => {
     }
   }; 
   const handleRemoveItem = (index) => {
-    const updatedData = [...selectedCategory];
+    const updatedData = [...selectedRestaurant];
     updatedData.splice(index, 1);
-    setSelectedCategory(updatedData);
+    setSelectedRestaurant(updatedData);
   };
   const handleCheckboxChange = (e,value) => { 
     console.log("uuuuu223423423",e,value) 
@@ -223,61 +212,10 @@ const QuickRestaurantForm = () => {
   }; 
   console.log("dddddd4444",selectedCuisineIds) 
   const getInfo = () =>{
-    try {
-      axios.get(`${API_URL}/menu/subcategory`)
-      .then(function (response) {
-        
-        console.log("deeeddd gweeet",response.data
-        ); 
-        setAllCategory(response.data) 
-        console.log("allsubcatetfgt",allCategory); 
-      })
-      .catch(function (error) {
-        console.log(error);
-      });  
-     } catch (error) {
-      console.log('error accured')
-    } 
-    try {
-      axios.get(`${API_URL}/menu/cuisine`)
-      .then(function (response) {
-        
-        console.log("deeeddd gweeet cuisine",response.data
-        ); 
-       setFormState(items=>({...items,allcuisine:response.data})) 
-       console.log("asdfakjsdfkjasdfhkjasd",formState)
-      })
-      .catch(function (error) {
-        console.log(error);
-      });  
-     } catch (error) {
-      console.log('error accured')
-    }  
-    
-    let updatedcusisine = [] 
-  
-  
-    console.log("sdfasdfasdfasdf",updatedcusisine)
+   
+   dispatch(fetchQuickRestaurantApi());
   } 
-  const updateCuisines = () => {
-    const updatedCuisines = formState.allcuisine.map((cuisine) => {
-      // Check if cuisine exists in singleRestaurant.cuisines
-      const isPresent = singleRestaurant?.cuisines?.some(
-        (singleCuisine) => singleCuisine.cuisine_id === cuisine.cuisine_id
-      );
   
-      return {
-        ...cuisine,
-        value: isPresent || false,
-      };
-    });
-  
-
-    setFormState((prevState) => ({
-      ...prevState,
-      allcuisine: updatedCuisines,
-    }));
-  };
   
  
   useEffect(() => {
@@ -311,7 +249,7 @@ const QuickRestaurantForm = () => {
   const fetchSubCategories = async (query) => { 
     console.log("new creat3de tine",query)
     if (!query) {
-      setSubCategories([]); 
+      setRestaurant([]); 
       return;
     }
 
@@ -319,11 +257,11 @@ const QuickRestaurantForm = () => {
     try { 
     
       const response = await fetch(
-        `${API_URL}/menu/subcategory/by-name?subcategory_title=${query}`
+        `${API_URL}/restaurant/merchant/search?name=${query}`
       );
       const data = await response.json(); 
       console.log("sadfasd",data)
-      setSubCategories(data || []); 
+      setRestaurant(data || []); 
     } catch (error) {
       console.error("Error fetching subcategories:", error);
     } finally {
@@ -331,16 +269,16 @@ const QuickRestaurantForm = () => {
     }
   };
   const handleSelect = (item) => {
-    setSelectedCategory(previtem=>[...previtem,item]);
+    setSelectedRestaurant(previtem=>[...previtem,item]);
     setSearchTerm(''); 
-    setSubCategories([]); 
+    setRestaurant([]); 
   };
 
 
   console.log("API_URL3322",formState)
     return (  
       <MainLayout headerName={"Edit"} headerClick={() => {
-        navigate("/menu/manage-screen/show-category", { state: { resturants } });
+        navigate("/menu/manage-screen/show-quick-restaurant", { state: { restaurants:qrestaurants } });
       }}>
 
 <div className='m-6'> 
@@ -373,21 +311,21 @@ const QuickRestaurantForm = () => {
           />  
               {/* Dropdown */}
               {loading && <p className="text-gray-400 mt-2">Loading...</p>} 
-            {subCategories.length > 0 && (
+            {restaurants.length > 0 && (
         <ul className="absolute z-2 top-full border rounded mt-2 shadow-md max-h-48 overflow-auto">
-          {subCategories.map((item) => (
+          {restaurants.map((item) => (
             <li
-              key={item.subcategory_id}
+              key={item.restaurant_id}
               className="p-2 cursor-pointer hover:bg-gray-100"
               onClick={() => handleSelect(item)}
             >
-              {item.subcategory_title
+              {item.name
               }
             </li>
           ))}
         
           <li className="p-2 text-blue-500 cursor-pointer" onClick={()=>{SetType("SubCategory"),setShowModal(true)}}>
-            Add new Sub category
+            Add new Restaurant
           </li>
         </ul>
       )}
@@ -401,15 +339,15 @@ const QuickRestaurantForm = () => {
        
   
         <div>
-          <label className="block text-sm mt-6 mb-4">Add Sub category</label>
+          <label className="block text-sm mt-6 mb-4">Selected Restaurant</label>
          
          
 
            <div className="grid grid-cols-4 gap-4">
-            {console.log("lonmg timedi",selectedCategory)}
-          { selectedCategory?.map((item, index) => (
+            {console.log("lonmg timedi",selectedRestaurant)}
+          { selectedRestaurant?.map((item, index) => (
         <div
-          key={item?.subcategory_id}
+          key={item?.restaurant_id}
           
           draggable
           onDragStart={(event) => handleDragStart(event, index)}
@@ -418,10 +356,10 @@ const QuickRestaurantForm = () => {
         >  
          <div style={{ display: 'flex', alignItems: 'center' }}>
             <span className="ml-2"><img src={Group} /></span>
-            <span className="ml-2">{item?.subcategory_title}</span>
+            <span className="ml-2">{item?.name}</span>
             <span className="ml-2" onClick={()=>handleRemoveItem(index)}>x</span>
         </div>
-          <img src={item?.image} alt={item?.subcategory_title} className="border w-44 h-40"/>
+          <img src={item?.image} alt={item?.name} className="border w-44 h-40"/>
           
         </div>
       ))}
@@ -430,7 +368,7 @@ const QuickRestaurantForm = () => {
         <div className="flex flex-row items-end space-x-4 m-8">
 
   
-  <button type="submit"  className="bg-blue-600 text-white px-4 py-2 rounded-lg" onClick={handleSubmit}>Add Category</button> 
+  <button type="submit"  className="bg-blue-600 text-white px-4 py-2 rounded-lg" onClick={handleSubmit}>Add Quick Filter</button> 
   <button type="reset" className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg" onClick={handleCacel}>Cancel</button>
 </div>
       </div> 
