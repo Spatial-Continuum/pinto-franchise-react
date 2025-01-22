@@ -93,6 +93,18 @@ export const getAllRestaurantPending = createAsyncThunk('restaurant/getAllRestau
 })
 
 
+export const searchRestaurantByName = createAsyncThunk(
+  'restaurant/searchRestaurantByName',
+  async (searchTerm, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${API_URL}/restaurant/merchant/search?name=${searchTerm}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
 
 
 // Slice name
@@ -104,11 +116,16 @@ const restaurantSlice = createSlice({
     restaurantList:[],
     allNewRestaurants:[],
     updatedRestaurant:null,
+    searchNameResults: [], 
     menuCategory:[],
     loading: false,
     error: null,
   },
-  reducers: {},
+  reducers: {
+    resetRestaurants(state) {
+      state.searchNameResults = [];
+  },
+  },
   extraReducers: (builder) => {
     builder
       
@@ -197,12 +214,24 @@ const restaurantSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      .addCase(searchRestaurantByName.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(searchRestaurantByName.fulfilled, (state, action) => {
+        state.loading = false;
+        state.searchNameResults = action.payload;  // Store search results
+      })
+      .addCase(searchRestaurantByName.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 
 
 export const selectRestaurantData = (state) => state.restaurant.restaurantData;
-
+export const selectSearchResults = (state) => state.restaurant.searchNameResults;
 
 export const selectSelectedRestaurant = (state) => state.restaurant.selectedRestaurant;
 export const selectUpdatedRestaurant = (state) => state.restaurant.updatedRestaurant;
@@ -216,6 +245,8 @@ export const selectRestaurantList = (state) => state.restaurant.restaurantList;
 export const selectApiLoading = (state) => state.restaurant.loading; 
 export const selectApiError = (state) => state.restaurant.error;
 
+
+export const { resetRestaurants } = restaurantSlice.actions;
 
 
 export default restaurantSlice.reducer;

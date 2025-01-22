@@ -1,7 +1,9 @@
 
 import React from "react";
-
+import { useState } from "react";
+import SubcategoryPopup from "./SubcategoryPopup";
 const M_lovedDishes = () => {
+  const [subcategoryModal , setSubcategoryModal] = useState(false)
   const dishes = [
     {
       image: "https://via.placeholder.com/100",
@@ -59,12 +61,12 @@ const M_lovedDishes = () => {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold">Most Loved Dishes</h2>
-        <button className="text-orange-500 font-medium text-sm hover:underline">
-          View All
-        </button>
+         <button className='bg-orange-500  text-white  px-4 py-2 rounded-lg font-medium'
+         onClick={()=>setSubcategoryModal(true)}
+         >+NEW DISH</button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-4 gap-6">
         {dishes.map((dish, index) => (
           <div
             key={index}
@@ -91,6 +93,11 @@ const M_lovedDishes = () => {
           </div>
         ))}
       </div>
+
+      {subcategoryModal && 
+      <div>
+        <SubcategoryPopup onClose={()=>setSubcategoryModal(false)}/>
+        </div>}
     </div>
   );
 };

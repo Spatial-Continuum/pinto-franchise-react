@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import rating from '../../../../assets/images/rating.svg';
+import RestaurantPopup from "./RestaurantPopup";
 const M_lovedRestaurant = () => {
+  const [restaurantPopup, setRestaurantPopup] = useState(false)
   const restaurants = [
     {
       image: "https://via.placeholder.com/100",
@@ -72,7 +74,9 @@ const M_lovedRestaurant = () => {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold">Most Loved Restaurants</h2>
-        <button className="text-white bg-orange-500 px-4 py-2 rounded-lg font-medium hover:bg-orange-600">
+        <button className="text-white bg-orange-500 px-4 py-2 rounded-lg font-medium hover:bg-orange-600"
+        onClick={()=>setRestaurantPopup(true)}
+        >
           + Restaurant
         </button>
       </div>
@@ -80,7 +84,7 @@ const M_lovedRestaurant = () => {
       {/* Sub-header */}
       <div className="flex justify-between items-center mb-4 text-sm text-gray-500">
         <p>{restaurants.length} Restaurants</p>
-        <button className="text-orange-500 hover:underline">View All</button>
+        
       </div>
 
       {/* Grid of Cards */}
@@ -113,6 +117,10 @@ const M_lovedRestaurant = () => {
           </div>
         ))}
       </div>
+      {restaurantPopup && 
+      <div>
+        <RestaurantPopup onClose={()=>setRestaurantPopup(false)}/>
+        </div>}
     </div>
   );
 };

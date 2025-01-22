@@ -12,8 +12,8 @@ const index = () => {
         <div>
             <MainLayout>
                 <div className='flex justify-between items-center mb-6' >
-                    <SearchBox img={search} placeholder="search Restaurant name,Id,menu,item" />
-                    <button className='bg-orange-500  text-white  px-4 py-2 rounded-lg font-medium'>+NEW DISH</button>
+                    {/* <SearchBox img={search} placeholder="search Restaurant name,Id,menu,item" /> */}
+                   
                 </div>
                 <div className='mb-6'>
                     <M_lovedDishes />
