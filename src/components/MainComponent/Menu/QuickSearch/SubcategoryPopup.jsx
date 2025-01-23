@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import SearchBox from '../../../GeneralComponent/SearchBox/SearchBox';
 import RestaurantService from '../../../../modules/restaurants/RestaurantService';
 import search from '../../../../assets/images/prime_search.svg'
-
+import { addNewMostLovedDishes, selectNewDish, selectApiError, selectApiLoading } from '../../../../redux/slices/dishes';
 const SubcategoryPopup = ({ onClose }) => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [subCategories, setSubCategories] = useState([])
-    const [selectedSubCategories, setSelectedSubCategories] = useState([]);
+    const [subCategories, setSubCategories] = useState(null)
+    const [selectedSubcategory, setSelectedSubcategory] = useState([]);
     const [loading, setLoading] = useState(false);
 
     // Fetch restaurants based on search input
@@ -34,10 +34,16 @@ const SubcategoryPopup = ({ onClose }) => {
 
     // Handle restaurant selection
     const handleSelectSubcategory = (subcategory) => {
-        setSelectedSubCategories((prev) => [...prev, subcategory]);
+        setSelectedSubcategory(subcategory);
         setSearchTerm('');
         setSubCategories([]); // Hide the dropdown
     };
+    const handleAddDishes=()=>{
+        if(selectedSubcategory){
+            dispatchEvent(addNewMostLovedDishes({subcategoryId: selectedSubcategory.subcategory_id}))
+            onClose()
+        }
+    }
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
@@ -86,37 +92,38 @@ const SubcategoryPopup = ({ onClose }) => {
 
 
                 {/* Selected Restaurants Display */}
-                {selectedSubCategories.length > 0 && (
+                {selectedSubcategory && (
                     <div className="mt-4">
                         <h3 className="text-lg font-semibold mb-2">Selected Subcategory </h3>
-                        <ul className="space-y-1">
-                            {selectedSubCategories.map((subcategory) => (
+                        
+                            
                                 <div
-                                    key={subcategory.subcategory_id}
+                                    key={selectedSubcategory.subcategory_id}
                                     className="flex items-center border border-gray-200 rounded-lg p-3 mb-2 shadow-sm hover:bg-gray-100 cursor-pointer"
 
                                 >
                                     {/* Left: Subcategory Image */}
                                     <img
-                                        src={subcategory.image || '/placeholder-image.png'}
-                                        alt={subcategory.subcategory_title}
+                                        src={selectedSubcategory.image || '/placeholder-image.png'}
+                                        alt={selectedSubcategory.subcategory_title}
                                         className="w-16 h-16 rounded-lg object-cover mr-4"
                                     />
 
                                     {/* Right: Subcategory Details */}
                                     <div className="flex-grow">
-                                        <h3 className="text-lg font-semibold text-gray-800">{subcategory.subcategory_title}</h3>
+                                        <h3 className="text-lg font-semibold text-gray-800">{selectedSubcategory.subcategory_title}</h3>
                                         <p className="text-sm text-gray-600"> items:</p>
                                         <p className="text-sm text-gray-600"> restaurants:</p>
                                     </div>
 
                                 </div>
 
-                            ))}
-                        </ul>
+                            
+                        
                         <div className='flex justify-end flex-row gap-4 my-5'>
                             <button className='px-9 py-1 border-[#C0C0C0] border-[1px] bg-[#FFFFFF] text-[#464E5B] rounded-md' >Clear</button>
-                            <button className='px-9 py-1 border-[#2D5FDD] border-[1px] bg-[#2D5FDD] text-[#FFFFFF] rounded-md'>Add</button>
+                            <button className='px-9 py-1 border-[#2D5FDD] border-[1px] bg-[#2D5FDD] text-[#FFFFFF] rounded-md'
+                            onClick={handleAddDishes}>Add</button>
                         </div>
                     </div>
                 )}

@@ -1,60 +1,24 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import SubcategoryPopup from "./SubcategoryPopup";
+import { useDispatch, useSelector } from "react-redux";
+import { getMostLovedDishes, selectMostLovedDishes, selectApiError, selectApiLoading } from "../../../../redux/slices/dishes";
 const M_lovedDishes = () => {
   const [subcategoryModal , setSubcategoryModal] = useState(false)
-  const dishes = [
-    {
-      image: "https://via.placeholder.com/100",
-      name: "Spaghetti Bolognese",
-      quantity: "2",
-      cuisine: "Italian",
-      items: "5",
-    },
-    {
-      image: "https://via.placeholder.com/100",
-      name: "Chicken Curry",
-      quantity: "3",
-      cuisine: "Indian",
-      items: "6",
-    },
-    {
-      image: "https://via.placeholder.com/100",
-      name: "Sushi Platter",
-      quantity: "1",
-      cuisine: "Japanese",
-      items: "4",
-    },
-    {
-      image: "https://via.placeholder.com/100",
-      name: "Tacos",
-      quantity: "4",
-      cuisine: "Mexican",
-      items: "8",
-    },
-    {
-        image: "https://via.placeholder.com/100",
-        name: "Chicken Curry",
-        quantity: "3",
-        cuisine: "Indian",
-        items: "6",
-      },
-      {
-        image: "https://via.placeholder.com/100",
-        name: "Sushi Platter",
-        quantity: "1",
-        cuisine: "Japanese",
-        items: "4",
-      },
-      {
-        image: "https://via.placeholder.com/100",
-        name: "Tacos",
-        quantity: "4",
-        cuisine: "Mexican",
-        items: "8",
-      },
-  ];
+  const dispatch = useDispatch();
+  const mostLovedDishes = useSelector(selectMostLovedDishes)
+  const loading = useSelector(selectApiLoading)
+  const error = useSelector(selectApiError)
+
+  useEffect(()=>{
+    dispatch(getMostLovedDishes());
+
+  },[dispatch])
+
+
+
+
 
   return (
     <div className="">
@@ -66,8 +30,14 @@ const M_lovedDishes = () => {
          >+NEW DISH</button>
       </div>
 
+
+      {loading && <p className="text-center text-gray-500">Loading dishes...</p>}
+      {error && <p className="text-center text-red-500">Error: {error}</p>}
+      
+      {/* List of dishes */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-4 gap-6">
-        {dishes.map((dish, index) => (
+        {mostLovedDishes?.length > 0 ?(
+        mostLovedDishes.map((dish, index) => (
           <div
             key={index}
             className="border border-gray-200 rounded-lg shadow-sm p-4 bg-white flex flex-col justify-between"
@@ -91,7 +61,10 @@ const M_lovedDishes = () => {
               <p>Items: {dish.items}</p>
             </div>
           </div>
-        ))}
+        ))
+        ):(
+          !loading && <p className="text-center text-gray-500 col-span-full">No dishes found.</p>
+        )}
       </div>
 
       {subcategoryModal && 

@@ -1,8 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import DataTable from 'react-data-table-component'
 import addon from '../../../assets/images/addonview.svg';
+import OnboardPopup from '../DeliveryPartnerPopups/OnboardPopup';
 
 const OnboardingVerifiedTable = () => {
+  const [onboardPopup,setOnboardPopup] = useState(false)
+  const handleClose = ()=>{
+    setOnboardPopup(false)
+  }
     const dummyData=[  {
         name: "Jane Smith",
         dob: "1990-05-15",
@@ -12,6 +17,8 @@ const OnboardingVerifiedTable = () => {
         
       }
       ]
+
+      
       const columns =[
         {
           name:"NAME",
@@ -53,6 +60,7 @@ const OnboardingVerifiedTable = () => {
           name:"ACTION",
           cell: () => (
             <button className='border-[0.5px] rounded-lg px-2 py-1 border-[#424242] text-[#424242] bg-[#F1F1F1]'
+            onClick={()=>setOnboardPopup(true)}
             >
               On Board
             </button>
@@ -86,11 +94,14 @@ const OnboardingVerifiedTable = () => {
             columns={columns}
             data={dummyData}
             highlightOnHover
-            fixedHeader
+            // fixedHeader
             striped
             customStyles={customStyles}
           />
         </div>
+
+        {onboardPopup && 
+        <OnboardPopup onClose={handleClose}/>}
         </>
       )
     }

@@ -1,8 +1,11 @@
 import React from 'react'
 import DataTable from 'react-data-table-component'
+import ReviewPopup from '../DeliveryPartnerPopups/ReviewPopup'
+
+import { useState } from'react'
 
 const OnboardingPendingTable = () => {
-
+const [verifyPopup, setVerifyPopup] =useState(false)
 
 const dummyData=[  {
     name: "Jane Smith",
@@ -13,6 +16,10 @@ const dummyData=[  {
     
   }
   ]
+
+  const handleClose=() => {
+    setVerifyPopup(false)
+  }
   const columns =[
     {
       name:"NAME",
@@ -43,6 +50,7 @@ const dummyData=[  {
       name:"ACTION",
       cell: () => (
         <button className='border-[1px] rounded-lg px-2 py border-[#FF00C7] text-[#FF00C7] bg-[#FFFFFF]'
+        onClick={()=>setVerifyPopup(true)}
         >
           VERIFY
         </button>
@@ -76,11 +84,16 @@ const dummyData=[  {
         columns={columns}
         data={dummyData}
         highlightOnHover
-        fixedHeader
+        // fixedHeader
         striped
         customStyles={customStyles}
       />
     </div>
+
+    {
+      verifyPopup &&
+      <ReviewPopup onClose={handleClose}/>
+    }
     </>
   )
 }

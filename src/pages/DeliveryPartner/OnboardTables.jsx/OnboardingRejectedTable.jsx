@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import DataTable from 'react-data-table-component'
+import RejectionReviewPopup from '../DeliveryPartnerPopups/RejectionReviewPopup'
 
 const OnboardingRejectedTable = () => {
+  const [rejectReviewPopup, setRejectReviewPopup] = useState(false)
     const dummyData=[  {
         name: "Jane Smith",
         dob: "1990-05-15",
@@ -41,12 +43,17 @@ const OnboardingRejectedTable = () => {
         {
           name:"ACTION",
           cell: () => (
-            <button className='border-[0.5px] rounded-lg px-2 py-1 border-[#424242] text-[#424242] bg-[#F1F1F1]'>
+            <button className='border-[0.5px] rounded-lg px-2 py-1 border-[#424242] text-[#424242] bg-[#F1F1F1]'
+            onClick={()=>setRejectReviewPopup(true)}>
               Review
             </button>
           ),
         }
       ]
+
+      const handleClose=() => {
+        setRejectReviewPopup(false)
+      }
     
       const customStyles = {
         rows: {
@@ -74,11 +81,15 @@ const OnboardingRejectedTable = () => {
             columns={columns}
             data={dummyData}
             highlightOnHover
-            fixedHeader
+            //fixedHeader
             striped
             customStyles={customStyles}
           />
         </div>
+        {
+          rejectReviewPopup &&
+          <RejectionReviewPopup onClose={handleClose} />
+        }
         </>
       )
     }
