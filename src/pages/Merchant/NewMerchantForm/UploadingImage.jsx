@@ -74,7 +74,7 @@ const UploadingImage = ({ formData, onDataChange }) => {
 
   //  
   return (
-    <div className="p-5">
+    <div className="p-5 ">
       <div className="flex flex-row gap-11">
         {/* Restaurant Image Upload */}
         <div className="flex flex-col">

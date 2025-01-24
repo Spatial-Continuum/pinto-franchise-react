@@ -82,7 +82,7 @@ const RestaurantTypeTimings = ({ formData, ExtraCuisine, ExtraStore, onDataChang
     };
 
     return (
-        <div className="p-6 space-y-8 bg-gray-100 rounded-lg border border-gray-300">
+        <div className="p-6 space-y-8 bg-[#FFFFFF] rounded-lg ">
             {/* Restaurant Category */}
             <div>
                 <h2 className="font-medium text-gray-800 mb-4">Restaurant Category</h2>
@@ -148,7 +148,7 @@ const RestaurantTypeTimings = ({ formData, ExtraCuisine, ExtraStore, onDataChang
                             onChange={handleInputChange}
                             value="Others"
                         />
-                        <span className="text-gray-700">Others</span>
+                        <span className="text-gray-700"></span>
                     </label>
 
                     {/* Input for 'Others' */}
@@ -179,6 +179,7 @@ const RestaurantTypeTimings = ({ formData, ExtraCuisine, ExtraStore, onDataChang
                     value={formData.short_description || ''}  // Default to empty string if undefined
                     onChange={handleInputChange}
                 />
+                <p className='text-[12px] text-[#667085] ml-2 -mt-2'>should not exceed 20 words</p>
             </div>
 
             {/* Types of Cuisines */}
@@ -207,7 +208,7 @@ const RestaurantTypeTimings = ({ formData, ExtraCuisine, ExtraStore, onDataChang
                             onChange={handleInputChange}
                             value="Others"
                         />
-                        <span className="text-gray-700">Others</span>
+                        <span className="text-gray-700"></span>
                     </label>
 
                     {/* Input for 'Others' */}

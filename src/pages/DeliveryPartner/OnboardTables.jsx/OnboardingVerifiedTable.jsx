@@ -3,7 +3,7 @@ import DataTable from 'react-data-table-component'
 import addon from '../../../assets/images/addonview.svg';
 import OnboardPopup from '../DeliveryPartnerPopups/OnboardPopup';
 
-const OnboardingVerifiedTable = () => {
+const OnboardingVerifiedTable = ({searchTerm}) => {
   const [onboardPopup,setOnboardPopup] = useState(false)
   const handleClose = ()=>{
     setOnboardPopup(false)
@@ -17,7 +17,12 @@ const OnboardingVerifiedTable = () => {
         
       }
       ]
-
+      const filteredData = searchTerm? dummyData.filter((item)=>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.dob.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.phoneNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.appliedOn.toLowerCase().includes(searchTerm.toLowerCase())):dummyData
       
       const columns =[
         {
@@ -92,7 +97,7 @@ const OnboardingVerifiedTable = () => {
           <DataTable
     
             columns={columns}
-            data={dummyData}
+            data={filteredData}
             highlightOnHover
             // fixedHeader
             striped

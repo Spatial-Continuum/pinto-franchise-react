@@ -4,7 +4,7 @@ import ReviewPopup from '../DeliveryPartnerPopups/ReviewPopup'
 
 import { useState } from'react'
 
-const OnboardingPendingTable = () => {
+const OnboardingPendingTable = ({searchTerm}) => {
 const [verifyPopup, setVerifyPopup] =useState(false)
 
 const dummyData=[  {
@@ -16,6 +16,14 @@ const dummyData=[  {
     
   }
   ]
+  const filteredData = searchTerm? dummyData.filter((item)=>
+  item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  item.dob.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  item.phoneNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  item.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  item.appliedOn.toLowerCase().includes(searchTerm.toLowerCase())):dummyData
+
+
 
   const handleClose=() => {
     setVerifyPopup(false)
@@ -82,7 +90,7 @@ const dummyData=[  {
       <DataTable
 
         columns={columns}
-        data={dummyData}
+        data={filteredData}
         highlightOnHover
         // fixedHeader
         striped

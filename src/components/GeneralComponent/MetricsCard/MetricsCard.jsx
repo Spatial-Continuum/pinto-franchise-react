@@ -13,7 +13,7 @@ const MetricsCard = ({ cards , onCardClick }) => {
           onClick={()=>onCardClick(card)}
         >
           <h1 className="text-2xl font-bold">{card.value}</h1>
-          <p className="text-gray-600">{card.label}</p>
+          <p className="text-[#030714]">{card.label}</p>
         </div>
       ))}
     </div>

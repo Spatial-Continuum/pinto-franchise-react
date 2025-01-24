@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import DataTable from 'react-data-table-component'
 import RejectionReviewPopup from '../DeliveryPartnerPopups/RejectionReviewPopup'
 
-const OnboardingRejectedTable = () => {
+const OnboardingRejectedTable = ({searchTerm}) => {
   const [rejectReviewPopup, setRejectReviewPopup] = useState(false)
     const dummyData=[  {
         name: "Jane Smith",
@@ -14,6 +14,13 @@ const OnboardingRejectedTable = () => {
         
       }
       ]
+
+      const filteredData = searchTerm? dummyData.filter((item)=>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.dob.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.phoneNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.appliedOn.toLowerCase().includes(searchTerm.toLowerCase())):dummyData
       const columns =[
         {
           name:"NAME",
@@ -79,7 +86,7 @@ const OnboardingRejectedTable = () => {
           <DataTable
     
             columns={columns}
-            data={dummyData}
+            data={filteredData}
             highlightOnHover
             //fixedHeader
             striped

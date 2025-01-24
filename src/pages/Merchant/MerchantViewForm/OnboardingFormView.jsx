@@ -213,9 +213,10 @@ return (
     <div className="mb-36">
       {/* Progress Navbar */}
       <div className="flex justify-between ">
-      <div className="progress-navbar flex gap-6 mx-5 my-4">
+      <div className="progress-navbar flex gap-6 mx-5 my-4 relative">
+      <hr className="absolute top-8 left-0 w-2/4  border-[#E6E6E6] border-[1px]" />
         <div
-          className={`step-heading relative cursor-pointer  ${currentStep === 1 ? 'active' : completedSteps.includes(1) ? 'completed' : ''}`}
+          className={`step-heading relative cursor-pointer text-lg ${currentStep === 1 ? 'active' : completedSteps.includes(1) ? 'completed' : ''}`}
           onClick={() => setCurrentStep(1)}
         >
           Restaurant Info
@@ -224,14 +225,14 @@ return (
 
           {/* Dynamic Underline for Step 1 */}
           <div
-            className={`underline-offset-8  h-2 rounded-xl bg-orange-500 transition-all duration-300 ${currentStep === 1 || (completedSteps.includes(1) && currentStep !== 1) ? 'w-full' : 'w-0'
+            className={`underline-offset-8  h-1 rounded-xl bg-orange-500 transition-all duration-300 ${currentStep === 1 || (completedSteps.includes(1) && currentStep !== 1) ? 'w-full' : 'w-0'
               }`}
           ></div>
         </div>
 
         {/* Step 2: Restaurant Type & Timings */}
         <div
-          className={`step-heading relative cursor-pointer ${currentStep === 2 ? 'active' : completedSteps.includes(2) ? 'completed' : ''}`}
+          className={`step-heading relative cursor-pointer text-lg ${currentStep === 2 ? 'active' : completedSteps.includes(2) ? 'completed' : ''}`}
           onClick={() => setCurrentStep(2)}
         >
           Restaurant Type & Timings
@@ -241,14 +242,14 @@ return (
 
           {/* Dynamic Underline for Step 2 */}
           <div
-            className={`underline-offset-8  h-2 rounded-xl bg-orange-500 transition-all duration-300 ${currentStep === 2 || completedSteps.includes(2) ? 'w-full' : 'w-0'
+            className={`underline-offset-8  h-1 rounded-xl bg-orange-500 transition-all duration-300 ${currentStep === 2 || completedSteps.includes(2) ? 'w-full' : 'w-0'
               }`}
           ></div>
         </div>
 
         {/* Step 3: Upload Image */}
         <div
-          className={`step-heading relative cursor-pointer ${currentStep === 3 ? 'active' : completedSteps.includes(3) ? 'completed' : ''}`}
+          className={`step-heading relative cursor-pointer  text-lg ${currentStep === 3 ? 'active' : completedSteps.includes(3) ? 'completed' : ''}`}
           onClick={() => setCurrentStep(3)}
         >
           Upload Image
@@ -258,7 +259,7 @@ return (
 
           {/* Dynamic Underline for Step 3 */}
           <div
-            className={` underline-offset-8  h-2 rounded-xl bg-orange-500 transition-all duration-300 ${currentStep === 3 || completedSteps.includes(3) ? 'w-full' : 'w-0'
+            className={` underline-offset-8  h-1 rounded-xl bg-orange-500 transition-all duration-300 ${currentStep === 3 || completedSteps.includes(3) ? 'w-full' : 'w-0'
               }`}
           ></div>
         </div>

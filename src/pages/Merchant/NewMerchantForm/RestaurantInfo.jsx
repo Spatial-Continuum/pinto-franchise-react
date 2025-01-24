@@ -40,13 +40,13 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
     }
 
     return (
-        <div className="p-6">
+        <div className="p-6 ">
             <div className='flex justify-between '>
                 <div className='w-4/6'>
                     <h2 className="text-lg font-medium text-gray-800 mb-4">Restaurant Name & Address</h2>
                 </div>
-                <div className='w-1/3'>
-                    <h2 className="text-lg font-medium mr-96 text-gray-800 mb-4">Restaurant Location</h2>
+                <div className='w-2/6 '>
+                    <h2 className="text-lg font-medium  text-gray-800 mb-4">Restaurant Location</h2>
                 </div>
             </div>
 
