@@ -35,6 +35,7 @@ const OnboardingForm = () => {
       landmark: '',
       primary_phone: '',
       secondary_phone: '',
+      owner:''
     },
     typeTimings: {
       restaurant_category: '',
@@ -56,6 +57,7 @@ const OnboardingForm = () => {
     image: {
       image: '',
       logo: '',
+      fssaiCertificate:'',
     },
   });
 
@@ -102,7 +104,7 @@ const OnboardingForm = () => {
   const handleSubmit = async () => {
     const dataToSubmit = new FormData();
 
-   
+   console.log("alldata",formData)
     dataToSubmit.append('name', formData.restaurantInfo.name);
     dataToSubmit.append('short_description', formData.typeTimings.short_description);
     dataToSubmit.append('door_no', formData.restaurantInfo.door_no);
@@ -117,6 +119,7 @@ const OnboardingForm = () => {
     dataToSubmit.append('primary_phone', formData.restaurantInfo.primary_phone);
     dataToSubmit.append('secondary_phone', formData.restaurantInfo.secondary_phone);
     dataToSubmit.append('email', formData.restaurantInfo.email);
+    dataToSubmit.append('owner', formData.restaurantInfo.owner);
 
 
     dataToSubmit.append('restaurant_category', formData.typeTimings.restaurant_category);
@@ -137,19 +140,32 @@ const OnboardingForm = () => {
     dataToSubmit.append('cuisine_type', JSON.stringify(cuisineTypes));
     dataToSubmit.append('opening_hours', JSON.stringify(formData.typeTimings.opening_hours));
 
-    if (formData.image.image instanceof File) {
-      dataToSubmit.append('image', formData.image.image );
+    const imagefrom = formData.image.image.image
+    const imagelogo = formData.image.image.logo
+    const fassai = formData.image.image.fssaiCertificate
+    if (imagefrom) {
+      dataToSubmit.append('image', imagefrom );
     }
-    if (formData.image.logo instanceof File) {
-      dataToSubmit.append('logo', formData.image.logo);
+    if (imagelogo) {
+      dataToSubmit.append('logo', imagelogo);
     }
+    if(fassai ) {
+      dataToSubmit.append('fassai', fassai)}
 
+   
    
     dataToSubmit.append('latitude', "12.971598");
     dataToSubmit.append('longitude', "77.594566");
     // console.log('Form Data submitted:', formData);
     for (const [key, value] of dataToSubmit.entries()) {
-      console.log(`${key}: ${value}`);
+      if (value instanceof File) {
+        console.log(`${key}:`);
+        console.log(`  File Name: ${value.name}`);
+        console.log(`  File Type: ${value.type}`);
+        console.log(`  File Size: ${value.size} bytes`);
+      } else {
+        console.log(`${key}: ${value}`);
+      }
     }
 
 
@@ -236,7 +252,7 @@ const OnboardingForm = () => {
 
         {currentStep === 3 && (
           <UploadingImage
-            formData={formData.image}
+            formData={formData}
             onDataChange={(data) => handleFormDataChange(data, 'image')}
           />
         )}

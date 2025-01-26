@@ -108,11 +108,11 @@ const RestaurantService = {
     },
     createItemNew: async (itemData) => {
         try {
-            const response = await apiclient.post('/restaurant/item', itemData,{
+            const response = await apiclient.post('/restaurant/item', itemData, {
                 headers: {
                     'Content-Type': 'multipart/form-data', // Ensure JSON is sent
                 },
-            
+
             });
             return response.data;
         } catch (error) {
@@ -179,7 +179,7 @@ const RestaurantService = {
             // Make a GET request with query params
             console.log("Restarantid", restaurantId);
             const response = await apiclient.get(`/restaurant/menucategory?restaurant_id=${restaurantId}`);
-            
+
             // Return the response data
             return response.data;
         } catch (error) {
@@ -189,7 +189,7 @@ const RestaurantService = {
     },
     createAddon: async (restaurantId, addonData) => {
         try {
-            
+
             const response = await apiclient.post(
                 `/restaurant/merchant/addons/${restaurantId}`,
                 addonData
@@ -215,8 +215,8 @@ const RestaurantService = {
     updateRestaurantSuccess: async (restaurantId) => {
         try {
             const response = await apiclient.put(
-               `/restaurant/merchant/${restaurantId}/update-onboarding`,
-               {onboarding_status: "Success"}
+                `/restaurant/merchant/${restaurantId}/update-onboarding`,
+                { onboarding_status: "Success" }
             );
             return response.data;
         } catch (error) {
@@ -228,8 +228,8 @@ const RestaurantService = {
     updateRestaurantRejected: async (restaurantId) => {
         try {
             const response = await apiclient.put(
-               `/restaurant/merchant/${restaurantId}/update-onboarding`,
-               {onboarding_status: "Rejected"}
+                `/restaurant/merchant/${restaurantId}/update-onboarding`,
+                { onboarding_status: "Rejected" }
             );
             return response.data;
         } catch (error) {
@@ -240,17 +240,43 @@ const RestaurantService = {
     },
     updateRestaurant: async (restaurantId, dataToSubmit) => {
         try {
-          const response = await apiclient.put(`/restaurant/merchant/${restaurantId}`, dataToSubmit, {
-            headers: {
-              'Content-Type': 'multipart/form-data',  // Required for form-data submission
-            },
-          });
-          return response.data;
+            const response = await apiclient.put(`/restaurant/merchant/${restaurantId}`, dataToSubmit, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',  // Required for form-data submission
+                },
+            });
+            return response.data;
         } catch (error) {
-          console.error(`Error updating restaurant with ID ${restaurantId}:`, error);
-          throw error;
+            console.error(`Error updating restaurant with ID ${restaurantId}:`, error);
+            throw error;
         }
-      },
+    },
+
+    getUserByPhone: async (phoneNumber) => {
+        try {
+            const response = await apiclient.get(`/users/user-by-number/?phone=${phoneNumber}`);
+            return response.data;
+        } catch (error) {
+            console.error(`Error fetching user by phone number ${phoneNumber}:`, error);
+            throw error;
+        }
+    },
+    createUser : async (userDetails)=>{
+        try {
+            const response = await apiclient.post(`users/manage-user`, userDetails, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',  // Required for form-data submission
+                },
+            })
+            return response.data
+
+        }catch(error){
+            console.error(`Error creating user :`, error)
+            throw error;
+        }
+    }
+
+
 
 
 

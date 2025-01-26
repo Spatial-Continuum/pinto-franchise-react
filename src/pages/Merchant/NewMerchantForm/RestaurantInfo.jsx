@@ -1,9 +1,22 @@
 import React, { useEffect, useState } from 'react';
+import RestaurantService from '../../../modules/restaurants/RestaurantService';
+//import { set } from 'react-datepicker/dist/date_utils';
 
 
 const RestaurantInfo = ({ formData, onDataChange }) => {
     const [data, setData] = useState(formData)
+    const [ownerDetail, setOwnerDetail] = useState()
+    const [createUserPopup, setCreateUserPopup] = useState(false)
+    const [message, setMessage] =useState(false)
+    const [newUserDetails, setNewUserDetails] = useState({
+        username: '',
+        email: '',
+        phone: '',
+        role: 'restaurant_owner',
+        
+    })
     const [ownerPopup, setOwnerPopup] = useState(false)
+    const [phoneNo, setPhoneNo] = useState()
     const [validFields, setValidFields] = useState({
         name: true, // Assuming 'name' is a field
         pincode: true,
@@ -26,7 +39,41 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
         onDataChange(data);
     }, [data])
 
+    // get user details
+    const handleOwnerSearch = async () => {
+
+        if (!phoneNo) {
+            console.error("Phone number is required");
+            return;
+        }
+
+        try {
+            const userData = await RestaurantService.getUserByPhone(phoneNo);
+
+            if(userData){
+                setOwnerDetail(userData);
+                setOwnerPopup(true);
+                setData((prev) => ({ ...prev, owner: userData.user_id }));
+                setCreateUserPopup(false)
+            }else{
+                setOwnerDetail(null)
+                setOwnerPopup(false)
+                setData((prev)=>({...prev, owner:null}))
+            }
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+            setOwnerDetail(false);
+            setCreateUserPopup(true)
+        }
+    };
+    //  const ownerValidation =()=>{
+    //     if (!userData)
+    //  }
     const handleInputChange = (e) => {
+        e.preventDefault();
+        // try{
+        //     e.target.value >= 0 
+        // }
         const { name, value } = e.target;
         setData((prev) => ({ ...prev, [name]: value }))
 
@@ -35,8 +82,35 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
             [name]: value.trim() !== '', // Mark as invalid if the field is empty
         }));
     }
-    const handleOwnerPopup = () => {
-        setOwnerPopup(true)
+    const handleUserDetailsChange = (e) => {
+        const { name, value } = e.target;
+        setNewUserDetails((prev) => ({ ...prev, [name]: value }));
+
+    }
+    const handleCreateUser = async () => {
+        const userDetails = new FormData()
+        userDetails.append('username', newUserDetails.username)
+        userDetails.append('email', newUserDetails.email)
+        userDetails.append('phone', newUserDetails.phone)
+        userDetails.append('role', newUserDetails.role)
+    
+
+        for (const [key, value] of userDetails.entries()) {
+            console.log(`${key}: ${value}`);
+          }
+      
+      
+        try {
+            const response = await RestaurantService.createUser(userDetails)
+            console.log("User created successfully:", response.user.user_id);
+            setData((prev)=>({...prev, owner:response.user.user_id}))
+            setCreateUserPopup(false)
+            setMessage(true)
+
+        } catch (error) {
+            console.error("Error creating user:", error);
+        }
+
     }
 
     return (
@@ -230,7 +304,7 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                             type="number"
                             name="commission_percentage"
                             value={data.commission_percentage || ''}
-                            onChange={handleInputChange}
+                            onChange={(e)=>handleInputChange(e)}
                             placeholder="Enter Pinto Commission"
                             className={`px-3 py-2 border ${validFields.commission_percentage ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         />
@@ -259,22 +333,22 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
             {/* Restaurant Owner Details */}
             <h2 className="font-medium text-gray-800 mt-6">Restaurant Owner Details</h2>
             <div className="w-2/3 bg-gray-100 p-4 border border-gray-300 rounded-lg mt-2">
-                <div className="flex flex-row space-x-4 w-1/2">
-                    <div className='flex flex-row w-full'>
-                        <div className='flex flex-col w-3/4'>
+                <div className="flex flex-row space-x-4 w-1/2 ">
+                    <div className='flex justify-start gap-0 w-full  '>
+                        <div className='flex flex-col w-full'>
                             <label>Mobile no</label>
                             <input
                                 type="number"
                                 name="mobile_no"
-                                value={data.mobile_no || ''}
-                                // onChange={handleInputChange}
-                                className={`px-3 py-2 border ${validFields.owner_name ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                value={phoneNo}
+                                onChange={(e) => setPhoneNo(e.target.value)}
+                                className={`px-3 py-2  border ${validFields.owner_name ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             />
                         </div>
-                        <div className='flex items-center justify-center w-1/4 mt-6'>
+                        <div className='flex w-1/2 items-center justify-center  mt-6'>
                             <button
-                                className='border-[1px] px-4 py-1 text-[#FFFFFF] bg-[#030714] rounded-lg'
-                                onClick={handleOwnerPopup}
+                                className='border-[1px] px-2        py-1 text-[#FFFFFF] bg-[#030714] rounded-md'
+                                onClick={handleOwnerSearch}
                             >
                                 FIND USER
                             </button>
@@ -282,29 +356,102 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                     </div>
                 </div>
                 {
-                    ownerPopup &&
-                    <div 
-                    className="relative top-full left-0 w-full bg-[#FFFFFF] border-1px border-[#d6cbcb] justify-center items-center z-50 mt-2"
+                    ownerPopup && ownerDetail ? (
+                    <div
+                        className="z-5  top-full left-0 w-96 bg-[#FFFFFF] border-1px rounded-lg border-[#d6cbcb] justify-center items-center z-50 mt-10"
                     >
-                        <div className='flex flex-col'>
-                            <label className='text-green-600'>User Found!!</label>
+                        <div className='flex p-3 flex-col'>
+                            <label className='text-green-600 mb-3 '>User Found!!</label>
                             <div className='grid grid-cols-1'>
                                 <div>
-                                    <label>Name : ""</label>
+                                    <label>Name : {ownerDetail.username}</label>
                                 </div>
                                 <div>
-                                    <label>Phone :" "</label>
+                                    <label>Phone :{ownerDetail.phone}</label>
                                 </div>
                                 <div>
-                                    <label>Email : ""</label>
+                                    <label>Email : {ownerDetail.email}</label>
                                 </div>
                             </div>
-                            {/* <button
                             
-                            >
-                                Close
-                            </button> */}
                         </div>
+                    </div>
+
+                    ): null}
+                  {  createUserPopup  ?
+                    (
+                        <div className="z-5 top-full left-0 w-4/6 bg-[#FFFFFF] border-1px rounded-lg border-[#d6cbcb] justify-center items-center z-50 mt-10">
+                        <div className='flex p-3 flex-col'>
+                            <label className='text-red-600 mb-4'>User Not Found!!</label>
+                            <div className='flex grid-cols-2 gap-5'>
+                                {/* Owner Name Input */}
+                                <div className='flex flex-col mb-4'>
+                                    <label className='text-sm font-medium text-gray-700'>Owner Name</label>
+                                    <input
+                                        type="text"
+                                        name="username"
+                                        placeholder="Enter Owner Name"
+                                        value={newUserDetails.username}
+                                        onChange={handleUserDetailsChange}
+                                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
+                                </div>
+
+                                {/* Mobile No Input */}
+                                <div className='flex flex-col mb-4'>
+                                    <label className='text-sm font-medium text-gray-700'>Mobile No</label>
+                                    <input
+                                        type="text"
+                                        name="phone"
+                                        placeholder="Enter Mobile No"
+                                        value={newUserDetails.phone}
+                                        onChange={handleUserDetailsChange}
+                                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
+                                </div>
+                                </div>
+                                <div className='flex grid-cols-2 gap-5'>
+                            {/* Email Input */}
+                            <div className='flex flex-col mb-4'>
+                                <label className='text-sm font-medium text-gray-700'>Email Id</label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="email"
+                                    value={newUserDetails.email}
+                                    onChange={handleUserDetailsChange}
+                                    className="px-3 py-2 border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+
+                            <div className='flex flex-col mb-4'>
+                                {/* <label className='text-sm font-medium text-gray-700'>Password</label>
+                                <input
+                                    type="password"
+                                    name="password"
+                                    placeholder="password"
+                                    value={newUserDetails.password}
+                                    onChange={handleUserDetailsChange}
+                                    className="px-3 py-2 border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                /> */}
+                            </div>
+                            </div>
+                            {/* Create User Button */}
+                            <button
+                                className="px-4 py-2 bg-blue-600 text-white rounded-lg w-2/6 hover:bg-blue-700"
+                                onClick={handleCreateUser}
+                            >
+                                Create User
+                            </button>
+                        </div>
+                    </div>
+                    ) :null
+                    
+                }
+                {
+                    message && 
+                    <div className='left-0 w-4/6 justify-center items-center z-50'>
+                        <p className='text-xs text-green-600 font-medium '>User created Successfully!</p>
                     </div>
                 }
             </div>

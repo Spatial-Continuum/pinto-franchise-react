@@ -53,6 +53,7 @@ const UploadingImageView = ({ formData, onDataChange ,isEditable}) => {
               ...prevData.image,
               [`${type}`]: file,  // Store the actual file
             };
+            
             return { image: updatedImageData };
           });
         };

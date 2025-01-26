@@ -9,10 +9,10 @@ const UploadingImage = ({ formData, onDataChange }) => {
   // Initialize state for image and logo file objects and their previews
   const [data, setData] = useState({
     image: {
-      image: formData?.image?.image || null,
+      image: formData?.image?.image || '' ,
 
-      logo: formData?.image?.logo || null,
-
+      logo: formData?.image?.logo || '' ,
+      fssaiCertificate: formData?.image?.fssaiCertificate || '' ,
     }
   });
   const [previews, setPreviews] = useState({
@@ -25,7 +25,10 @@ const UploadingImage = ({ formData, onDataChange }) => {
   useEffect(() => {
     // Whenever data is updated, call onDataChange to propagate the changes
     onDataChange(data);
-  }, [data]);
+    console.log('onDataChange', data);
+  }, [data ]);
+
+  const [message , setMessage] = useState("")
 
   const handleFileChange = (event, type) => {
     const file = event.target.files[0];
@@ -40,33 +43,45 @@ const UploadingImage = ({ formData, onDataChange }) => {
             [`${type}Preview`]: reader.result, // Store the preview URL
           }));
 
-          setData((prevData) => {
-            const updatedImageData = {
-              ...prevData.image,
-              [`${type}`]: file,  // Store the actual file
-            };
-            return { image: updatedImageData };
-          });
+          // setData((prevData) => {
+          //   const updatedImageData = {
+          //     ...prevData.image,
+          //     [`${type}`]: file,  // Store the actual file
+          //   };
+          //   return { image: updatedImageData };
+          // });
+
+          setData((prevData) =>({
+            ...prevData,
+            image:{...prevData.image, [type]:file},
+          }))
         };
         reader.readAsDataURL(file);  // Read the file as Data URL for preview
       } else if (file.type === 'application/pdf' && type === 'fssaiCertificate') {
         // Handling PDF files (only for FSSAI certification)
         console.log(`${type} PDF file selected:`, file);
-
+        const url = URL.createObjectURL(file);
+        // setPreviews((prev)=>({
+        //   ...prev,
+        //   fssaiPreview: url,
+        // }))
         setPreviews((prevPreviews) => ({
           ...prevPreviews,
-          [`${type}Preview`]: 'PDF file uploaded', // Set a placeholder message for PDF
+          fssaiPreview: "pdf selected", // Set a placeholder message for PDF
         }));
-
-        setData((prevData) => {
-          const updatedImageData = {
-            ...prevData.image,
-            [`${type}`]: file,  // Store the actual PDF file
-          };
-          return { image: updatedImageData };
-        });
+        // setData((prevData) => {
+        //   const updatedImageData = {
+        //     ...prevData.image,
+        //     [`${type}`]: file,  // Store the actual PDF file
+        //   };
+        //   return { image: updatedImageData };
+        // });
+        setData((prevData)=>({
+          ...prevData,
+          image:{...prevData.image, fssaiCertificate:file},
+        }))
       } else {
-        console.log(`No valid ${type} file selected`);
+       setMessage("Invalid file type selected.")
       }
     }
   };
@@ -96,6 +111,7 @@ const UploadingImage = ({ formData, onDataChange }) => {
                   </label>
                   <input
                     type="file"
+                    name="image"
                     id="upload-image"
                     className="hidden"
                     accept="image/*"
@@ -129,6 +145,7 @@ const UploadingImage = ({ formData, onDataChange }) => {
                   </label>
                   <input
                     type="file"
+                    name="logo"
                     id="upload-logo"
                     className="hidden"
                     accept="image/*"
@@ -158,9 +175,10 @@ const UploadingImage = ({ formData, onDataChange }) => {
                   </label>
                   <input
                     type="file"
+                    name="fssaiCertificate"
                     id="upload-pdf"
                     className="hidden"
-                    accept=".pdf"
+                    accept="application/pdf"
                     onChange={(e) => handleFileChange(e, 'fssaiCertificate')} // Handle logo file selection
                   />
                 </>
@@ -174,7 +192,7 @@ const UploadingImage = ({ formData, onDataChange }) => {
 
 
       </div>
-      {data.image.fssaiCertificate && <PdfComp file={data.image.fssaiCertificate} />}
+      {message && <div className="mt-4 text-red-500 text-xs">{message}</div>}
 
     </div>
   );
