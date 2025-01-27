@@ -81,6 +81,11 @@ const RestaurantTypeTimings = ({ formData, ExtraCuisine, ExtraStore, onDataChang
         }
     };
 
+    const handleOpeningHoursChange = (day, value) => {
+        setData((prev) => ({...prev, opening_hours: {...prev.opening_hours, [day]: value } }));
+        onDataChange({...data, opening_hours:{...data.opening_hours, [day]:value,}})
+    };
+
     return (
         <div className="p-6 space-y-8 bg-[#FFFFFF] rounded-lg ">
             {/* Restaurant Category */}

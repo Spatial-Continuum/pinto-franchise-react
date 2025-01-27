@@ -82,6 +82,24 @@ const TypeTimingsView = ({ formData, onDataChange, isEditable }) => {
         }
     };
 
+
+    const handleOpeningHoursChange = (day, value) => {
+        setData((prevData) => ({
+          ...prevData,
+          opening_hours: {
+            ...prevData.opening_hours,
+            [day]: value,
+          },
+        }));
+        onDataChange({
+          ...data,
+          opening_hours: {
+            ...data.opening_hours,
+            [day]: value,
+          },
+        });
+      };
+
                 
     
 

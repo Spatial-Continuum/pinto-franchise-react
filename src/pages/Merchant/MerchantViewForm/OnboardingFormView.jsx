@@ -181,6 +181,9 @@ let merchantTypes = [...formData.merchant_type]
     if (formData.image instanceof File) {
       dataToSubmit.append('image', formData.image );
     }
+    if (formData.fassai){
+      dataToSubmit.append('fassai', formData.fassai);
+    }
     if (formData.logo instanceof File) {
       dataToSubmit.append('logo', formData.logo);
     }
