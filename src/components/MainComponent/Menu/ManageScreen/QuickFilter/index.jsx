@@ -18,7 +18,7 @@ function QuickFilter(){
         <div className="mb-8">
         <div className="flex justify-between items-center mb-4">
         
-          <h2 className="text-lg font-semibold">Quick filter</h2>
+          <h2 className="text-lg font-semibold">Quick filter - Menu</h2>
           <button className="text-orange-500 text-sm" onClick={()=>{navigate("/menu/manage-screen/show-quick-filter" , { state: { filters } });}} >View all</button>
         </div>
         <div className="flex gap-4 flex-wrap">
