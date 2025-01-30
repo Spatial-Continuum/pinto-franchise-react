@@ -53,6 +53,7 @@ export const getRestaurantList = createAsyncThunk(
     try{
       const response = await axios.get(`${API_URL}/restaurant/merchant`);
       return response.data;
+      console.log(response.data)
     }catch(error){
       return rejectWithValue(error.response?.data || error.message);
     }
@@ -64,7 +65,9 @@ export const getMenuByRestaurant = createAsyncThunk(
   async (restaurantId, { rejectWithValue }) =>{
     try{
       const response = await axios.get(`${API_URL}/restaurant/menucategory?restaurant_id=${restaurantId}`);
+      console.log('itemapi',response.data)
       return response.data;
+      
     }catch(error){
       return rejectWithValue(error.response?.data || error.message);
     }  
@@ -92,6 +95,24 @@ export const getAllRestaurantPending = createAsyncThunk('restaurant/getAllRestau
   }
 })
 
+export const getAllRestaurantRejected = createAsyncThunk('restaurant/getAllRestaurantRejected', async(_, { rejectWithValue }) =>{
+  try{
+    const response = await axios.get(`${API_URL}/restaurant/merchant/list?onboarding=Rejected`);
+    return response.data
+  }catch(error){
+    return rejectWithValue(error.response?.data || error.message);
+  }
+})
+
+
+export const getAllRestaurantSuccess = createAsyncThunk('restaurant/getAllRestaurantSuccess', async(_, { rejectWithValue }) =>{
+  try{
+    const response = await axios.get(`${API_URL}/restaurant/merchant/list?onboarding=Success`);
+    return response.data
+  }catch(error){
+    return rejectWithValue(error.response?.data || error.message);
+  }
+})
 
 export const searchRestaurantByName = createAsyncThunk(
   'restaurant/searchRestaurantByName',
@@ -115,7 +136,10 @@ const restaurantSlice = createSlice({
     selectedRestaurant: [],
     restaurantList:[],
     allNewRestaurants:[],
+    pendingRestaurants:[],
     updatedRestaurant:null,
+    successRestaurants: [],
+    rejectedRestaurants:[],
     searchNameResults: [], 
     menuCategory:[],
     loading: false,
@@ -129,6 +153,18 @@ const restaurantSlice = createSlice({
   extraReducers: (builder) => {
     builder
       
+      .addCase(getAllRestaurantSuccess.pending,(state)=>{
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAllRestaurantSuccess.fulfilled, (state, action) => {
+        state.loading = false;
+        state.successRestaurants = action.payload;
+      })
+      .addCase(getAllRestaurantSuccess.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
       .addCase(postNewRestaurant.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -142,7 +178,31 @@ const restaurantSlice = createSlice({
         state.error = action.payload;
       })
 
+      .addCase(getAllRestaurantPending.pending, (state, action) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAllRestaurantPending.fulfilled, (state, action) => {
+        state.loading = false;
+        state.pendingRestaurants = action.payload;
+      })
+      .addCase(getAllRestaurantPending.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
 
+      .addCase(getAllRestaurantRejected.pending, (state, action) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAllRestaurantRejected.fulfilled, (state, action) => {
+        state.loading = false;
+        state.rejectedRestaurants = action.payload;
+      })
+      .addCase(getAllRestaurantRejected.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
 
       .addCase(getRestaurantById.pending, (state) => {
         state.loading = true;
@@ -239,8 +299,9 @@ export const selectUpdatedRestaurant = (state) => state.restaurant.updatedRestau
 export const selectAllNewRestaurants = (state) => state.restaurant.allNewRestaurants;
 
 export const selectMenuCategory = (state) => state.restaurant.menuCategory;
-
-
+export const selectRejectedRestaurants = (state) => state.restaurant.rejectedRestaurants;
+export const selectSuccessRestaurants =(state)=> state.restaurant.successRestaurants  
+export const selectPendingRestaurants = (state)=>state.restaurant.pendingRestaurants;
 export const selectRestaurantList = (state) => state.restaurant.restaurantList;
 export const selectApiLoading = (state) => state.restaurant.loading; 
 export const selectApiError = (state) => state.restaurant.error;

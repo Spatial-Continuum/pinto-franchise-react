@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { MagnifyingGlassIcon, CheckCircleIcon, ChevronRightIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import RestaurantService from './RestaurantService';
 import upload from '../../assets/images/Upload.svg';
+import veg from '../../assets/images/vegicon.svg';
+import nonveg from '../../assets/images/nonvegicon.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllAddonApi, selectGetAllAddonApiData, selectApiError, selectApiLoading } from '../../redux/slices/addons';
 import { selectSelectedRestaurant, getRestaurantById, } from '../../redux/slices/restaurant';
-const AddItem = ({ restaurantId, setShowAddItem }) => {
+
+const AddItem = ({ restaurantId, setShowAddItem, setRefresh, setAddMenuPopup }) => {
 
     const dispatch = useDispatch();
     const loading = useSelector(selectApiLoading);
@@ -16,8 +19,9 @@ const AddItem = ({ restaurantId, setShowAddItem }) => {
     const [categories, setCategories] = useState([]);
     const [subcategories, setSubcategories] = useState([]);
 
-    const [commissionPercentage, setCommissionPercentage] = useState([]);
+    const [commissionPercentage, setCommissionPercentage] = useState(null);
     const [itemImage, setItemImage] = useState(null)
+    const [refresh1, setRefresh1] = useState(false)
     const [previewItemImage, setPreviewItemImage] = useState(null)
     const [foodType, setFoodType] = useState(''); // Stores the selected food type
     const [subCategoryTitle, setSubCategoryTitle] = useState('');
@@ -55,20 +59,31 @@ const AddItem = ({ restaurantId, setShowAddItem }) => {
         if (restaurantId) {
             fetchCategories();
         }
-    }, [dispatch, restaurantId]);
+    }, [dispatch,refresh1, restaurantId]);
 
     const basePrices = formData.basePrice
 
-    const sellingPrice = basePrices + (basePrices * (commissionPercentage / 100));
+    let sellingPrice = parseInt( basePrices + ((basePrices * commissionPercentage )/100))
+    
     const handleChange = (e) => {
 
         const { name, value } = e.target;
+        if (value === "addNewMenu") {
+            setAddMenuPopup(true);
+        } else {
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
         }));
     };
+}
 
+const handleRemoveAddon = (addonId) => {
+    setFormData({
+        ...formData,
+        selectedAddons: formData.selectedAddons.filter((id) => id !== addonId),
+    });
+}
     const handleFoodTypeSelect = (type) => {
         setFoodType(type);
     };
@@ -116,7 +131,9 @@ const AddItem = ({ restaurantId, setShowAddItem }) => {
         try {
             console.log("forming data is ", postData)
             const response = await RestaurantService.createItemNew(postData); // API call to post the data
-            console.log('Item added successfully:', response);
+            setRefresh1(!refresh1)
+            setRefresh(true)
+            setShowAddItem(false);
         } catch (error) {
             console.error('Error adding item:', error);
         }
@@ -153,12 +170,14 @@ const AddItem = ({ restaurantId, setShowAddItem }) => {
     //     }
     // }
     const handleSubcategorySearch = async (e) => {
-
         try {
-            setSubCategoryTitle(e)
+            setSubCategoryTitle(e);
+            if (e.trim() === '') {
+                setSubcategories([]); // Clear dropdown if input is empty
+                return;
+            }
             const response = await RestaurantService.searchSubcategory(e);
-            setSubcategories(response)
-
+            setSubcategories(response);
         } catch (error) {
             console.error("Error searching subcategories:", error);
         }
@@ -180,7 +199,7 @@ const AddItem = ({ restaurantId, setShowAddItem }) => {
 
 
     return (
-        <div>
+        <div >
             <div className="w-full bg-gray-100 p-6 border border-gray-300 rounded-lg">
                 <div className="flex justify-between items-center">
                     <p className="text-start text-gray-800 font-medium">+ Add item</p>
@@ -229,14 +248,16 @@ const AddItem = ({ restaurantId, setShowAddItem }) => {
                                     name="menuCategory"
                                     value={formData.menuCategory}
                                     onChange={handleChange}
-                                    className="px-3 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="px-3 py-2 border cursor-pointer border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
-                                    <option value="">Select category</option>
+                                    <option className="cursor-pointer"  value="">Select category</option>
                                     {categories.map((category) => (
                                         <option key={category.menu_category_id} value={category.menu_category_id}>
                                             {category.menu_title}
                                         </option>
+                                        
                                     ))}
+                                     <option className='text-[#014E8D] cursor-pointer p-3 mt-2' value="addNewMenu">Add a New Menu</option>
                                 </select>
                             </div>
                         </div>
@@ -256,12 +277,15 @@ const AddItem = ({ restaurantId, setShowAddItem }) => {
                                     value={subCategoryTitle}
                                     placeholder="Search subcategory"
                                     onChange={(e) => handleSubcategorySearch(e.target.value)}
-                                    onBlur={() => setTimeout(() => setSubcategories([]), 200)} // Clear dropdown after input loses focus
+                                    onBlur={() =>{
+                                        if (dropdownRef.current && !dropdownRef.current.contains(e.relatedTarget)) {
+                                            setTimeout(() => setSubcategories([]), 50);
+                                        }}} // Clear dropdown after input loses focus
                                     className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                                 {/* Dropdown list for search results */}
                                 {subcategories.length > 0 && (
-                                    <ul className="absolute z-10 bg-white mt-2 border border-gray-300 rounded-md max-h-40 overflow-y-auto w-full">
+                                    <ul className=" bg-white mt-2 border border-gray-300 rounded-md max-h-40 overflow-y-auto w-full">
                                         {subcategories.map((sub) => (
                                             <li
                                                 key={sub.subcategory_id}
@@ -279,7 +303,7 @@ const AddItem = ({ restaurantId, setShowAddItem }) => {
                                 )}
                             </div>
                             {/* mealtype */}
-                            <div className="flex flex-col w-1/2">
+                            {/* <div className="flex flex-col w-1/2">
                                 <label htmlFor="mealType" className="text-sm font-xs text-gray-700 mb-1">
                                     Meal Type
                                 </label>
@@ -295,7 +319,7 @@ const AddItem = ({ restaurantId, setShowAddItem }) => {
                                     <option value="Lunch">Lunch</option>
                                     <option value="Breakfast">Breakfast</option>
                                 </select>
-                            </div>
+                            </div> */}
                         </div>
 
 
@@ -309,8 +333,8 @@ const AddItem = ({ restaurantId, setShowAddItem }) => {
                                     className={`flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md cursor-pointer ${foodType === 'Veg' ? 'bg-green-100' : ''}`}
                                     onClick={() => handleFoodTypeSelect('Veg')}
                                 >
-                                    <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
-                                        <CheckCircleIcon className="h-4 w-4 text-white" />
+                                    <div className="w-5 h-5 rounded-full flex items-center justify-center">
+                                        <img src={veg} className="h-4 w-4 text-white" />
                                     </div>
                                     <span className="text-sm text-gray-700 font-medium">Veg</span>
                                 </div>
@@ -319,8 +343,8 @@ const AddItem = ({ restaurantId, setShowAddItem }) => {
                                     className={`flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md cursor-pointer ${foodType === 'Non-Veg' ? 'bg-red-100' : ''}`}
                                     onClick={() => handleFoodTypeSelect('Non-Veg')}
                                 >
-                                    <div className="w-5 h-5 bg-red-500 flex items-center justify-center">
-                                        <ChevronRightIcon className="h-4 w-4 text-white" />
+                                    <div className="w-5 h-5  flex items-center justify-center">
+                                        <img src={nonveg} className="h-4 w-4 text-white" />
                                     </div>
                                     <span className="text-sm text-gray-700 font-medium">Non-Veg</span>
                                 </div>
@@ -354,13 +378,14 @@ const AddItem = ({ restaurantId, setShowAddItem }) => {
 
 
                                 <input
-                                    id="basePrice"
+                                    id="input-floating"
+                                    step="0.01"
                                     name="basePrice"
                                     type="number"
                                     placeholder="Enter price in num"
                                     value={formData.basePrice}
                                     onChange={handleChange}
-                                    className="px-3 py-2 w-32 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="px-3 py-2 w-32 border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
 
@@ -392,15 +417,16 @@ const AddItem = ({ restaurantId, setShowAddItem }) => {
 
                         {/* Quantity and Preparation Time */}
                         <div className="flex items-center space-x-4">
-                            <div className="flex flex-col w-1/2">
+                            <div className="flex flex-col w-1/4">
                                 <label htmlFor="quantity" className="text-sm font-xs text-gray-700 mb-1">
-                                    Qty
+                                    Quantity
                                 </label>
                                 <input
                                     id="quantity"
                                     name="quantity"
                                     type="number"
                                     value={formData.quantity}
+                                    placeholder='Enter count'
                                     onChange={handleChange}
                                     className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
@@ -414,7 +440,7 @@ const AddItem = ({ restaurantId, setShowAddItem }) => {
                                     id="prepTime"
                                     name="prepTime"
                                     type="num"
-                                    placeholder="Add time in mins"
+                                    placeholder="minutes"
                                     value={formData.prepTime}
                                     onChange={handleChange}
                                     className="px-3 py-2 w-32 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -439,7 +465,7 @@ const AddItem = ({ restaurantId, setShowAddItem }) => {
 
                                             <img src={upload} className="h-10 w-10" />
                                             <span className="text-sm font-medium text-[#008BFF]">Choose Image</span>
-                                            <span className='text-xs'>Image must be under 5mb*</span>
+                                            <span className='text-xs'>Image must be under 10mb*</span>
                                         </label>
                                     )
                                     }
@@ -452,7 +478,7 @@ const AddItem = ({ restaurantId, setShowAddItem }) => {
                                     />
 
                                 </div>
-                                <p className="text-xs text-gray-500 mt-1">Image must be under 5 MB</p>
+                                <p className="text-xs text-gray-500 mt-1">Image must be under 10 MB</p>
                             </div>
 
 
@@ -488,13 +514,13 @@ const AddItem = ({ restaurantId, setShowAddItem }) => {
                         </div>
 
 
-                        <div className="flex flex-col">
+                        <div className="flex flex-col mt-10">
                             <div className="flex items-center space-x-4">
                                 <input
                                     id="addOn"
                                     name="addOn"
                                     type="checkbox"
-                                    checked={formData.selectAddOns}
+                                    checked={formData.addon}
                                     onChange={(e) => setFormData({ ...formData, addon: e.target.checked })}
                                     className="h-4 w-4 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
                                 />
@@ -503,7 +529,7 @@ const AddItem = ({ restaurantId, setShowAddItem }) => {
                                 </label>
                             </div>
 
-                            {formData.addon && (
+                            {formData.addon &&  (
                                 <div className="mt-4">
                                     <label htmlFor="selectAddOns" className="text-sm font-xs text-gray-700 mb-1">
                                         Select Add Ons
@@ -548,9 +574,10 @@ const AddItem = ({ restaurantId, setShowAddItem }) => {
                                         return (
                                             <span
                                                 key={addonId}
-                                                className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm"
+                                                className="bg-[#c5c8cc88] text-[#000000] border-[1px] border-[#443f3f] px-3 py-1 rounded-xl text-sm"
                                             >
-                                                {addon?.addon_name}
+                                                {addon?.addon_name}<span className='text-xl top-4 items-center cursor-pointer justify-center -mt-0 ml-2'
+                                                 onClick={() => handleRemoveAddon(addonId)}>&times;</span>
                                             </span>
                                         );
                                     })}

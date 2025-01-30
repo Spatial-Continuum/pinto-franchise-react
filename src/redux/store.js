@@ -7,6 +7,7 @@ import merchantReducer from "./slices/merchant"
 import itemReducer from './slices/item';
 import addonReducer from './slices/addons';
 import dishReducer from './slices/dishes';
+import menuCategoryReducer from './slices/menucategory'
 
 export const store = configureStore({
   reducer: {
@@ -16,5 +17,6 @@ export const store = configureStore({
     item:itemReducer,
     addon:addonReducer,
     dish:dishReducer,
+    menuCategory:menuCategoryReducer,
   },
 })

@@ -23,18 +23,32 @@ export const getAllItemApi = createAsyncThunk('api/getAllItemApi', async (_, { r
     }
 })
 //getItemById
-export const getItemByIdApi = createAsyncThunk('api/getItemByIdApi', async (restaurantId ,{rejectWithValue}) => {
+export const getItemByIdApi = createAsyncThunk('api/getItemByIdApi', async (itemId ,{rejectWithValue}) => {
     try{
-        const response = await axios.get(`${API_URL}/restaurant/menucategory?restaurant_id=${restaurantId}`)
+        const response = await axios.get(`${API_URL}/restaurant/item/${itemId}`)
+        console.log("item",response.data)
         return response.data
     }catch(err){
         return rejectWithValue(err.response?.data || err.message);
     }
 })
 //updateItemById
-export const updateItemByIdApi = createAsyncThunk('api/updateItemByIdApi', async (itemId,itemData ,{rejectWithValue}) => {
+export const updateItemByIdApi = createAsyncThunk('api/updateItemByIdApi', async ({itemId,formPayload} ,{rejectWithValue}) => {
     try{
-        const response = await axios.put(`${API_URL}/restaurant/item/${itemId}`,itemData)
+        // const formData = new FormData();
+
+        // Append all fields to the FormData object
+        // for (const key in updatedData) {
+        //     if (updatedData.hasOwnProperty(key)) {
+        //         formData.append(key, updatedData[key]);
+        //     }
+        // }
+        const response = await axios.put(`${API_URL}/restaurant/item/${itemId}`,formPayload,{
+            headers: {  
+                'Content-Type': 'multipart/form-data', // Set the content type
+            },
+        })
+
         return response.data
     }catch(err){
         return rejectWithValue(err.response?.data || err.message);

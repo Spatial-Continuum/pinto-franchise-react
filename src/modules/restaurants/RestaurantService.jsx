@@ -130,10 +130,14 @@ const RestaurantService = {
             throw error;
         }
     },
-    editItem: async (itemId, itemData) => {
+    editItem: async (itemId, formPayload) => {
         try {
             // Make an API call to update the item
-            const response = await apiclient.put(`/restaurant/item/${itemId}`, itemData);
+            const response = await apiclient.put(`/restaurant/item/${itemId}`, formPayload,{
+                headers: {
+                    'Content-Type': 'multipart/form-data', // Ensure JSON is sent
+                },
+            });
             return response.data;
         } catch (error) {
             console.error(`Error editing item with ID ${itemId}:`, error);
@@ -216,7 +220,9 @@ const RestaurantService = {
         try {
             const response = await apiclient.put(
                 `/restaurant/merchant/${restaurantId}/update-onboarding`,
-                { onboarding_status: "Success" }
+                { onboarding_status: "Success" ,
+                    rejection_reason:"",
+                }
             );
             return response.data;
         } catch (error) {
@@ -225,11 +231,12 @@ const RestaurantService = {
                 error)
         }
     },
-    updateRestaurantRejected: async (restaurantId) => {
+    updateRestaurantRejected: async (restaurantId, rejectionReason) => {
         try {
             const response = await apiclient.put(
                 `/restaurant/merchant/${restaurantId}/update-onboarding`,
-                { onboarding_status: "Rejected" }
+                { onboarding_status: "Rejected" ,
+                    rejection_reason: rejectionReason,}
             );
             return response.data;
         } catch (error) {
@@ -272,6 +279,7 @@ const RestaurantService = {
 
         }catch(error){
             console.error(`Error creating user :`, error)
+            console.log(userDetails)
             throw error;
         }
     }

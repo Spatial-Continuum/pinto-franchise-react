@@ -86,7 +86,7 @@ const NewRestaurants = ({searchTerm}) => {
         {displayedRestaurants.map((restaurant) => (
           <div
             key={restaurant.restaurant_id}
-            className="flex flex-col items-start border bg-[#FFFFFF] border-gray-300 shadow-lg rounded-lg w-[260px] h-[140px] p-3"
+            className="flex flex-col items-start border bg-[#FFFFFF] border-gray-300 shadow-lg rounded-lg w-[300px] h-[160px] p-3"
             onClick={() =>
               navigate(`/menu/restaurant-item/addmenu/${restaurant.restaurant_id}`)
             }
@@ -101,7 +101,8 @@ const NewRestaurants = ({searchTerm}) => {
                 <h3 className="font-semibold text-lg text-gray-800">
                   {restaurant.name}
                 </h3>
-                <p className="text-sm text-gray-500">{restaurant.street_address_1}{restaurant.street_address_2}</p>
+                <p className="text-sm text-gray-500">{restaurant.street_address_1}&nbsp;{restaurant.street_address_2}</p>
+                <p className="text-sm text-gray-500">{restaurant.landmark}&nbsp;{restaurant.city}&nbsp;{restaurant.pincode}</p>
               </div>
             </div>
 

@@ -1,28 +1,36 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { PhotoIcon } from '@heroicons/react/24/outline';
 import upload from '../../../assets/images/Upload.svg';
+import PdfView from '../../../components/GeneralComponent/PdfView/PdfView';
 
 const UploadingImageView = ({ formData, onDataChange, isEditable }) => {
   const [data, setData] = useState({
     ...formData,
     image: formData?.image || null,
     logo: formData?.logo || null,
-    fassai:formData?.fassai || null,
+    fassai: formData?.fassai || null,
   });
-
+  const [showPdfPreview, setShowPdfPreview] = useState(false);
   const [previews, setPreviews] = useState({
-    fssaiPreview: formData?.fssaiCertificate ? 'PDF file uploaded' : null,
+    // fssaiPreview: formData?.fssaiCertificate ? 'PDF file uploaded' : null,
     imagePreview: formData?.image && formData.image instanceof File
       ? URL.createObjectURL(formData.image)
       : formData?.image || null,
     logoPreview: formData?.logo && formData.logo instanceof File
       ? URL.createObjectURL(formData.logo)
       : formData?.logo || null,
+      fssaiPreview: formData?.fassai && formData.fassai instanceof File
+      ? URL.createObjectURL(formData.fassai)
+      : formData?.fassai || null,
   });
 
   const imageInputRef = useRef(null);
   const logoInputRef = useRef(null);
   const fssaiInputRef = useRef(null);
+
+  const togglePdfPreview = () => {
+    setShowPdfPreview((prevShowPdfPreview) => !prevShowPdfPreview);
+  };
 
   useEffect(() => {
     return () => {
@@ -90,7 +98,7 @@ const UploadingImageView = ({ formData, onDataChange, isEditable }) => {
         ...prevPreviews,
         imagePreview: null,
       }));
-      
+
       if (imageInputRef.current) {
         imageInputRef.current.value = null;
         imageInputRef.current.click();
@@ -104,7 +112,7 @@ const UploadingImageView = ({ formData, onDataChange, isEditable }) => {
         ...prevPreviews,
         logoPreview: null,
       }));
-      
+
       if (logoInputRef.current) {
         logoInputRef.current.value = null;
         logoInputRef.current.click();
@@ -158,6 +166,7 @@ const UploadingImageView = ({ formData, onDataChange, isEditable }) => {
                     ref={imageInputRef}
                     id="upload-image"
                     className="hidden"
+                    disabled={!isEditable}
                     accept="image/*"
                     onChange={(e) => handleFileChange(e, 'image')}
                   />
@@ -178,7 +187,7 @@ const UploadingImageView = ({ formData, onDataChange, isEditable }) => {
                   <img
                     src={previews.logoPreview}
                     alt="Restaurant Logo Preview"
-                    className="object-cover w-full h-full rounded-md"
+                    className="object-contain w-full h-full rounded-md"
                   />
                   <PhotoIcon
                     onClick={() => handleEditIconClick('logo')}
@@ -196,6 +205,7 @@ const UploadingImageView = ({ formData, onDataChange, isEditable }) => {
                     type="file"
                     ref={logoInputRef}
                     id="upload-logo"
+                    disabled={!isEditable}
                     className="hidden"
                     accept="image/*"
                     onChange={(e) => handleFileChange(e, 'logo')}
@@ -209,44 +219,59 @@ const UploadingImageView = ({ formData, onDataChange, isEditable }) => {
 
         {/* Fassai Certificate Upload */}
         <div className="flex flex-col">
-                  <h2 className="font-medium text-gray-800 mb-4">FSSAI certification</h2>
-                  <div className=" bg-[#FAFAFA] p-6 border border-[#DEDEDE] rounded-lg mt-2">
-                    <div className="w-60 h-48 bg-[#FFFFFF] border-[1px] border-[#C9C9C9] rounded-md flex items-center justify-center cursor-pointer hover:bg-gray-300 relative">
-                      {previews.fssaiPreview ? (
-                       <>
-                       <img
-                         src={previews.fssaiPreview}
-                         alt="Restaurant PDF Preview"
-                         className="object-cover w-full h-full rounded-md"
-                       />
-                       <PhotoIcon
-                         onClick={() => handleEditIconClick('fssaiCertificate')}
-                         className="absolute z-50 top-2 right-2 w-6 h-6 text-blue-500 cursor-pointer"
-                       />
-                     </>
-                      ) : (
-                        <>
-        
-                          <label htmlFor="upload-pdf" className="flex flex-col items-center  text-gray-600 cursor-pointer">
-                            <img src={upload} className=" " />
-                            <span className="text-sm font-medium text-[#008BFF]">Upload certification in PDF</span>
-                            <span className='text-xs'>PDF must be under 5mb*</span>
-                          </label>
-                          <input
-                            type="file"
-                            name="fssaiCertificate"
-                            ref={fssaiInputRef}
-                            id="upload-pdf"
-                            className="hidden"
-                            accept="application/pdf"
-                            onChange={(e) => handleFileChange(e, 'fssaiCertificate')} // Handle logo file selection
-                          />
-                        </>
-                      )}
+          <h2 className="font-medium text-gray-800 mb-4">FSSAI certification</h2>
+          <div className=" bg-[#FAFAFA] p-6 border border-[#DEDEDE] rounded-lg mt-2">
+            <div className="w-60 h-48 bg-[#FFFFFF] border-[1px] border-[#C9C9C9] rounded-md flex items-center justify-center cursor-pointer hover:bg-gray-300 relative">
+              {previews.fssaiPreview ? (
+                <>
+                  <button onClick={togglePdfPreview} className="mb-2 px-4 py-2 bg-blue-500 text-white rounded">
+                    {showPdfPreview ? 'Hide PDF' : 'View PDF'}
+                  </button>
+                  {showPdfPreview && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                      <div className="w-3/5 h-3/4 bg-white shadow-lg rounded-lg p-4 relative">
+                        <button
+                          onClick={togglePdfPreview}
+                          className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded"
+                        >
+                          Close
+                        </button>
+                        <h3 className="text-center text-lg font-semibold mb-4">
+                          PDF Preview
+                        </h3>
+                        <PdfView selectedFile={previews.fssaiPreview} />
+                      </div>
                     </div>
+                  )}
+                </>
+              ) : (
+                <>
+
+                  <label htmlFor="upload-pdf" className="flex flex-col items-center  text-gray-600 cursor-pointer">
+                    <img src={upload} className=" " />
+                    <span className="text-sm font-medium text-[#008BFF]">Upload certification in PDF</span>
                     <span className='text-xs'>PDF must be under 5mb*</span>
-                  </div>
-                </div>
+                  </label>
+                  <input
+                    type="file"
+                    name="fssaiCertificate"
+                    ref={fssaiInputRef}
+                    id="upload-pdf"
+                    className="hidden"
+                    disabled={!isEditable}
+                    accept="application/pdf"
+                    onChange={(e) => handleFileChange(e, 'fssaiCertificate')} // Handle logo file selection
+                  />
+                </>
+              )}
+               <PhotoIcon
+        onClick={() => handleEditIconClick('fssaiCertificate')}
+        className="absolute top-2 right-2 w-6 h-6 text-blue-500 cursor-pointer"
+      />
+            </div>
+            <span className='text-xs'>PDF must be under 5mb*</span>
+          </div>
+        </div>
       </div>
     </div>
   );

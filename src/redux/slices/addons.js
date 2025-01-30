@@ -5,7 +5,11 @@ import API_URL from '../../globalImport';
 
 export const createAddonAPi = createAsyncThunk('api/createAddonApi', async ({restaurantId,addonData},{rejectWithValue})=>{
     try{
-        const response = await axios.post(`${API_URL}/restaurant/merchant/addons/${restaurantId}`, addonData)
+        const response = await axios.post(`${API_URL}/restaurant/merchant/addons/${restaurantId}`, addonData,{
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        })
         return response.data
     }catch(err){
         return rejectWithValue(err.response?.data || err.message)

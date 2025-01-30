@@ -8,6 +8,7 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
     const [ownerDetail, setOwnerDetail] = useState()
     const [createUserPopup, setCreateUserPopup] = useState(false)
     const [message, setMessage] =useState(false)
+    const [newOwnerDetails, setNewOwnerDetails] = useState()
     const [newUserDetails, setNewUserDetails] = useState({
         username: '',
         email: '',
@@ -24,7 +25,7 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
         street_address_1: true,
         street_address_2: true,
         city: true,
-        landmark: true,
+        state: true,
         primary_phone: true,
         secondary_phone: true,
         email: true,
@@ -66,9 +67,6 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
             setCreateUserPopup(true)
         }
     };
-    //  const ownerValidation =()=>{
-    //     if (!userData)
-    //  }
     const handleInputChange = (e) => {
         e.preventDefault();
         // try{
@@ -103,6 +101,8 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
         try {
             const response = await RestaurantService.createUser(userDetails)
             console.log("User created successfully:", response.user.user_id);
+            setOwnerDetail(response.user)
+            setOwnerPopup(true)
             setData((prev)=>({...prev, owner:response.user.user_id}))
             setCreateUserPopup(false)
             setMessage(true)
@@ -143,7 +143,7 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                     </div>
 
                     {/* Door Number */}
-                    <div className="w-1/6  flex flex-col mb-4">
+                    {/* <div className="w-1/6  flex flex-col mb-4">
                         <label htmlFor="doorNumber" className="text-sm font-medium text-gray-700">Door No</label>
                         <input
                             id="doorNumber"
@@ -154,7 +154,7 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                             placeholder="Enter door number"
                             className={`w-full px-3 py-2 border ${validFields.door_no ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         />
-                    </div>
+                    </div> */}
                     {/*email*/}
 
 
@@ -226,6 +226,20 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                             type="text"
                             placeholder="Enter landmark"
                             className={`w-full px-3 py-2 border ${validFields.landmark ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                        />
+                    </div>
+                    {/*State */}
+                      <div className="flex flex-col mb-4 w-1/2">
+                        <label htmlFor="state" className="text-sm font-medium text-gray-700">State</label>
+                        <input
+                            id="state"
+                            name="state"
+                            value={formData?.state || ''}
+                            onChange={(e)=>handleInputChange(e)}
+                            // disabled={!isEditable}
+                            type="text"
+                            placeholder="Enter state"
+                            className={`w-full px-3 py-2 border ${validFields.state ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         />
                     </div>
                 </div>
@@ -356,7 +370,7 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                     </div>
                 </div>
                 {
-                    ownerPopup && ownerDetail ? (
+                    ownerPopup && ownerDetail  ? (
                     <div
                         className="z-5  top-full left-0 w-96 bg-[#FFFFFF] border-1px rounded-lg border-[#d6cbcb] justify-center items-center z-50 mt-10"
                     >
@@ -367,7 +381,7 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                                     <label>Name : {ownerDetail.username}</label>
                                 </div>
                                 <div>
-                                    <label>Phone :{ownerDetail.phone}</label>
+                                    <label>Phone : {ownerDetail.phone}</label>
                                 </div>
                                 <div>
                                     <label>Email : {ownerDetail.email}</label>

@@ -1,4 +1,4 @@
-import React, { useState ,useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import DataTable from 'react-data-table-component'
 import { useDispatch, useSelector } from "react-redux";
 import eye from '../../../assets/images/eye.svg';
@@ -8,14 +8,15 @@ import { getMenuByRestaurant, selectMenuCategory } from '../../../redux/slices/r
 import addon from '../../../assets/images/addonview.svg';
 import { ReceiptSwissFranc } from 'lucide-react';
 import UseOnClickOutside from '../../../components/GeneralComponent/Dropdown/UseOnClickOutside';
-import veg from '../../../assets/images/veg.svg';
+import veg from '../../../assets/images/vegicon.svg';
 import edit from '../../../assets/images/edit.svg';
-import nonveg from '../../../assets/images/nonveg.svg';
+import nonveg from '../../../assets/images/nonvegicon.svg';
 import search from '../../../assets/images/prime_search.svg';
 import { useNavigate } from 'react-router-dom';
 import SearchBox from '../../../components/GeneralComponent/SearchBox/SearchBox';
 import { getRestaurantById, selectSelectedRestaurant, selectApiError, selectApiLoading } from '../../../redux/slices/restaurant';
 import { Button } from 'antd';
+import PdfView from '../../../components/GeneralComponent/PdfView/PdfView';
 
 
 
@@ -26,19 +27,24 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
   const loading = useSelector(selectMerchantLoading)
   const error = useSelector(selectMerchantError)
   const [menuSearch, setMenuSearch] = useState('')
+  const [selectedItem, setSelectedItem] = useState(null);
   const [addressPopupData, setAddressPopupData] = useState(null)
+  const [modalContent, setModalContent] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const popupRef = useRef(); // Define ref for the popup
-  UseOnClickOutside(popupRef, () => setPopupOpen(false)); 
+  UseOnClickOutside(popupRef, () => setPopupOpen(false));
 
   const [selectedMerchant, setSelectedMerchant] = useState(null);
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [addressPopup, setAddressPopup] = useState(false);
   const menuData = useSelector(selectMenuCategory)
-  const [selectedMenuTitle , setSelectedMenuTitle] = useState(null)
+  const [allItems, setAllItems] = useState([])
+  const [selectedMenuTitle, setSelectedMenuTitle] = useState('')
+  const [filteredItems, setFilteredItems] = useState([])
   const handleMenuPopup = (row) => {
     const { restaurant_id: restaurantId } = row
-  
+
     setSelectedMerchant(restaurantId)
     dispatch(getMenuByRestaurant(restaurantId))
     // dispatch(getRestaurantById(restaurantId))
@@ -48,8 +54,8 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
 
   }
   const handleEdit = (id) => {
-   
-    navigate(`/menu/restaurant-item/addmenu/${id}`) 
+
+    navigate(`/menu/restaurant-item/addmenu/${id}`)
     console.log('editdata', row)
   }
   const handleAddressPopup = (row) => {
@@ -64,29 +70,63 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
     }
 
   }, [onboarding, dispatch]);
+  const handlePdfView = (fassai) => {
+    setModalContent(<PdfView selectedFile={fassai} />);
+    setModalVisible(true);
+  };
 
   const handleShopNameClick = (restaurantId) => {
     console.log('shop name clicked', restaurantId)
     navigate(`/onboarding-form-view/${restaurantId}`);
-  
+
   }
+
+  useEffect(() => {
+    const searchLower = menuSearch.toLowerCase();
+    const items = [];
+
+    menuData.forEach((doc) => {
+      const documentItems = doc?.items || [];
+      documentItems.forEach((item) => {
+        if (item.item_name.toLowerCase().includes(searchLower)) {
+          items.push(item);
+        }
+      });
+    });
+    setAllItems(items);
+    setFilteredItems(items);
+  }, [menuSearch, menuData]);
+
+
+
   const filteredMerchants = searchTerm ? merchants.filter((merchant) =>
     merchant.name.toLowerCase().includes(searchTerm.toLowerCase())) : merchants;
 
+  console.log('menuddetails', menuData)
 
-  const filteredItems = menuSearch
-    ? menuData[0]?.items?.filter((item) =>
-      item.item_name.toLowerCase().includes(menuSearch.toLowerCase())
-    )
-    : menuData[0]?.items || [];
-  const handleMenuClick=(menuTitle) =>{
+  const handleMenuClick = (menuTitle) => {
     setSelectedMenuTitle(menuTitle);
-  }
-  const filteredData = selectedMenuTitle
-  ? filteredItems.filter(
-      (item) => item.menu_title === selectedMenuTitle
-    )
-  : filteredItems;
+    setSelectedItem(menuTitle);
+    if (menuTitle !== 'All') {
+      const items = [];
+
+      menuData.forEach((doc) => {
+        if (doc.menu_title === menuTitle) {
+          const documentItems = doc?.items || [];
+          documentItems.forEach((item) => {
+            items.push(item);
+          });
+        }
+      });
+
+      setFilteredItems(items);
+    } else {
+      setFilteredItems(allItems);
+    }
+  };
+
+
+  const filteredData = selectedMenuTitle !== 'All' ? filteredItems : allItems;
 
   const handleSearch = (term) => {
     setMenuSearch(term);
@@ -102,16 +142,18 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
     const currentDay = new Date().getDay();
     const currentDayName = daysOfWeek[currentDay];
     const CurrentDayHours = openingHours[currentDayName] || "Hours not available";
-    return `${CurrentDayHours}`;
+    return `${CurrentDayHours} (${currentDayName})`;
   };
   const columns = [
     {
       name: "SHOPNAME",
+      width:"200px",
+      sortable: true,
       cell: (row) => (
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div style={{ display: "flex", alignItems: "center" ,Width:"100px" }}>
           <img
-            src={row.image}
-            alt="shop-logo"
+            src={row.logo}
+            alt={row.image}
             style={{
               width: "30px",
               height: "30px",
@@ -122,8 +164,8 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
           />
           <button
             onClick={() => handleShopNameClick(row.restaurant_id)}
-           
-           
+
+
           >
             {row.name}
           </button>
@@ -132,60 +174,9 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
     },
     
     {
-      name: "PHONE NUMBER",
-      selector: (row) => row.primary_phone,
-    },
-    {
-      name: "STATUS",
-      selector: (row) => (row.is_online ? "Online" : "Offline"),
-    },
-    // {name:"ORDERS",
-    //   selector:(row) =>row.
-    // },
-    // {
-    //   nme:"TOTAL AMOUNT",
-    //   selector:(row)=>row.
-    // },
-    // {
-    //   name:"REVENUE",
-    //   selector:(row)=>row.
-    // },
-    // {name:"PAID",
-    //   selector:(row)=>row.
-    // },
-    // {
-    //   name:"BALANCE",
-    //   selector:(row)=>row.balance,
-    // },
-    {
-      name: "MENU CATEGORY",
-      selector: (row) => (
-        <div
-          style={{
-            display: "flex", justifyContent: "center", alignItems: "center", height: "100%",
-          }}
-        >
-          <img
-            src={eye} alt="menu" style={{ cursor: "pointer", width: "18px", height: "18px" }}
-            onClick={() => handleMenuPopup(row)}
-          />
-        </div>
-      ),
-    },
-    {
-      name: "GSTIN",
-      selector: (row) => row.city,
-    },
-    {
-      name: "FSSI",
-      selector: (row) => row.city,
-    },
-    {
-      name: "CITY",
-      selector: (row) => row.city,
-    },
-    {
       name: "ADDRESS",
+      width:"100px",
+      
       selector: (row) => (
         <div
           style={{
@@ -203,9 +194,69 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
       wrap: true,
     },
     {
-      name: "EMAIL",
-      selector: (row) => row.email,
+      name: "PHONE NUMBER",
+      selector: (row) => row.primary_phone,
     },
+    {
+      name: "STATUS",
+      selector: (row) => (
+        <span style={{ color: row.is_online ? "#008B0E" : "#FF6B00", fontWeight: 'bold' }}>
+          {row.is_online ? "ONLINE" : "OFFLINE"}
+        </span>),
+    },
+    {name:"ORDERS",
+      selector:(row) =>""
+    },
+  
+    {
+      name:"REVENUE",
+      selector:(row)=>""
+    },
+    {name:"PAID",
+      selector:(row)=>""
+    },
+    {
+      name:"BALANCE",
+      selector:(row)=>""
+    },
+    {
+      name: "MENU ITEMS",
+      width:"120px",
+      selector: (row) => (
+        <div
+          style={{
+            display: "flex", justifyContent: "center", alignItems: "center", height: "100%",
+          }}
+        >
+          <img
+            src={eye} alt="menu" style={{ cursor: "pointer", width: "18px", height: "18px" }}
+            onClick={() => handleMenuPopup(row)}
+          />
+        </div>
+      ),
+    },
+    {
+      name: "GSTIN",
+      selector: (row) => row.gstin,
+    },
+    {
+      name: "FASSAI",
+      width:"100px",
+      selector: (row) => (
+        <div
+          style={{
+            display: "flex", justifyContent: "center", alignItems: "center", height: "100%",
+          }}
+        >
+          <img
+            src={addon} alt="menu" style={{ cursor: "pointer", width: "18px", height: "18px" }}
+            onClick={() => handlePdfView(row.fassai)}
+
+          />
+        </div>
+      ),
+    },
+    
 
 
   ]
@@ -240,11 +291,30 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
           columns={columns}
           data={filteredMerchants}
           highlightOnHover
-          fixedHeader
+          // fixedHeader
           striped
           customStyles={customStyles}
         />
       </div>
+      {modalVisible && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="relative w-3/4 bg-white p-4 rounded-lg shadow-lg">
+            {/* Close Button */}
+            <button
+              onClick={() => setModalVisible(false)}
+              className="absolute top-2 text-3xl right-2 text-gray-500 hover:text-gray-700"
+
+            >
+              &times;
+            </button>
+
+            {/* Your modal content here */}
+            {modalContent}
+          </div>
+        </div>
+      )}
+
+
 
       {isPopupOpen && (
         <div
@@ -262,7 +332,7 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
           }}
         >
           <div
-          ref={popupRef}
+            ref={popupRef}
             className="popup"
             style={{
               backgroundColor: "#FAFAFA",
@@ -292,6 +362,22 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
 
               {/* Labels Row */}
               <div style={{ display: "flex", gap: "10px", flexGrow: 1, marginLeft: "20px" }}>
+                <span
+                  key="all"
+                  style={{
+                    padding: "5px 15px",
+                    borderRadius: "20px",
+                    border: "1px solid grey",
+                    cursor: "pointer",
+                    backgroundColor: selectedItem === "All" ? "orange" : "#fff",
+                    transition: "all 0.1s",
+                  }}
+                  onMouseEnter={(e) => (e.target.style.backgroundColor = "orange")}
+                  onMouseLeave={(e) => (e.target.style.backgroundColor =   selectedItem === menu.menu_title || selectedItem === 'All'? "orange" : "#fff")}
+                  onClick={() => handleMenuClick("All")}
+                >
+                  All
+                </span>
                 {menuData?.map((menu, index) => (
                   <span
                     key={menu.id || index}
@@ -300,11 +386,11 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
                       borderRadius: "20px",
                       border: "1px solid grey",
                       cursor: "pointer",
-                      backgroundColor: "#fff",
-                      transition: "all 0.3s",
+                      backgroundColor: selectedItem === menu.menu_title ? "orange" : "#fff",
+                      transition: "all 0.1s",
                     }}
                     onMouseEnter={(e) => (e.target.style.backgroundColor = "orange")}
-                    onMouseLeave={(e) => (e.target.style.backgroundColor = "#fff")}
+                    onMouseLeave={(e) => (e.target.style.backgroundColor = selectedItem === menu.menu_title ? "orange" : "#fff")} 
                     // onClick={(e) => (e.target.style.backgroundColor = "orange")}
                     onClick={() => handleMenuClick(menu.menu_title)}
                   >
@@ -314,11 +400,11 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
               </div>
 
               <SearchBox onSearch={handleSearch} placeholder="search" img={search} />
-             
-              <Button 
-               onClick={()=>handleEdit(selectedMerchant)}
-              
-              className='ml-2 px-7  border-[#DBEFFF] bg-[#F1F5F9] border-[1px] text-[#030714] font-medium  '><img  src={edit}/> Edit</Button>
+
+              <Button
+                onClick={() => handleEdit(selectedMerchant)}
+
+                className='ml-2 px-7  border-[#DBEFFF] bg-[#F1F5F9] border-[1px] hover:text-[#FF6B00] text-[#030714]   font-medium '><img src={edit} /> Edit</Button>
             </div>
 
             {/* Table */}
@@ -395,19 +481,19 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
                     style: { width: "100px" }, // Set fixed width
                   },
                 ]}
-                data={filteredData }  // Pass your row data here
+                data={filteredData}  // Pass your row data here
                 pagination
                 highlightOnHover
                 fixedHeader
                 striped
-                
+
                 customStyles={customStyles}
-                
+
                 style={{ width: "100%" }} // Set the overall table width
               />
             </div>
 
-            
+
           </div>
         </div>
       )}
@@ -427,8 +513,8 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
               <div className="ml-4 flex-1">
                 <h3 className="text-xl font-bold">{addressPopupData.name}</h3>
                 <div className="flex items-center text-sm text-gray-600">
-                  <span>{addressPopupData.primary_phone},{addressPopupData.secondary_phone}</span>
-                  <span className="ml-4">⏰ Timings {getCurrentDayHours(addressPopupData.opening_hours)}</span>
+                  <span>{addressPopupData.primary_phone}&nbsp;-&nbsp;{addressPopupData.secondary_phone}</span>
+                  <span className="ml-4">⏰ Timings :&nbsp;{getCurrentDayHours(addressPopupData.opening_hours)}</span>
                 </div>
               </div>
 
@@ -442,7 +528,9 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
             <div className='border-[1px] border-gray-300 rounded-lg mt-4'>
               <div className="  p-4">
                 <h6 className="text-xl font-medium text-black mb-2">Shop Address</h6>
-                <h4 className="text-sm  text-gray-700">{addressPopupData.street_address_1},{addressPopupData.street_address_2}</h4>
+                <h4 className="text-sm  text-gray-700">{addressPopupData.street_address_1} ,{addressPopupData.street_address_2}</h4>
+                <h4 className="text-sm  text-gray-700">{addressPopupData.landmark},</h4>
+                <h4 className="text-sm text-gray-700">{addressPopupData.city} - {addressPopupData.pincode}</h4>
 
               </div>
 

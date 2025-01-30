@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import roundTick from '../../../assets/images/roundTick.svg';
 import { postNewRestaurant, selectApiError, selectApiLoading } from '../../../redux/slices/restaurant';
 import PdfComp from '../../../PdfComp';
+import { useNavigate } from 'react-router-dom';
 
 const OnboardingForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -20,11 +21,12 @@ const OnboardingForm = () => {
   const error = useSelector(selectApiError);
   const [extraStore, setExtraStore] = useState("")
   const [extraCuisine, setExtraCuisine] = useState("")
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     restaurantInfo: {
       name: '',
-      door_no: '',
+      // door_no: '',
       street_address_1: '',
       street_address_2: '',
       email: '',
@@ -33,6 +35,7 @@ const OnboardingForm = () => {
       gstin:'',
       commission_percentage:'',
       landmark: '',
+      //state:'',
       primary_phone: '',
       secondary_phone: '',
       owner:''
@@ -107,7 +110,7 @@ const OnboardingForm = () => {
    console.log("alldata",formData)
     dataToSubmit.append('name', formData.restaurantInfo.name);
     dataToSubmit.append('short_description', formData.typeTimings.short_description);
-    dataToSubmit.append('door_no', formData.restaurantInfo.door_no);
+    //dataToSubmit.append('door_no', formData.restaurantInfo.door_no);
     dataToSubmit.append('email', formData.restaurantInfo.email);
     dataToSubmit.append('street_address_1', formData.restaurantInfo.street_address_1);
     dataToSubmit.append('street_address_2', formData.restaurantInfo.street_address_2);
@@ -172,6 +175,7 @@ const OnboardingForm = () => {
     try {
       await dispatch(postNewRestaurant(dataToSubmit)).unwrap();
       setModalVisible(true);
+      
     } catch (error) {
       console.error('Error submiting fomr', error)
     }
@@ -294,7 +298,10 @@ const OnboardingForm = () => {
             </p>
             <div className="flex justify-center">
               <button
-                onClick={() => setModalVisible(false)}
+               onClick={() => {
+                setModalVisible(false);
+                navigate('/merchant/onboarding');
+            }}
                 className="w-32 h-8 text-white bg-[#004680] rounded-lg"
               >
                 Done

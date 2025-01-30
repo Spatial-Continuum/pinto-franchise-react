@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 
 
 import { useNavigate } from "react-router-dom";
-import { selectRestaurantList, selectApiError, selectApiLoading, getRestaurantList } from "../../redux/slices/restaurant";
+import { selectRestaurantList, selectApiError, selectApiLoading, getRestaurantList ,getAllRestaurantSuccess ,selectSuccessRestaurants} from "../../redux/slices/restaurant";
 import { useDispatch, useSelector } from "react-redux";
 
 const RestaurantList = ({searchTerm}) => {
   const dispatch = useDispatch();
   
 
-  const restaurants = useSelector(selectRestaurantList)
+  const restaurants = useSelector(selectSuccessRestaurants)
   const loading = useSelector(selectApiLoading)
   const error = useSelector(selectApiError)
 
@@ -18,7 +18,8 @@ const RestaurantList = ({searchTerm}) => {
 
 
   useEffect(() => {
-    dispatch(getRestaurantList())
+    dispatch(getAllRestaurantSuccess())
+  
   }, [dispatch]);
 
   const calculateItems = (menuCategories) => {
@@ -57,7 +58,7 @@ const RestaurantList = ({searchTerm}) => {
         {filteredRestaurants.map((restaurant) => (
           <div
             key={restaurant.restaurant_id}
-            className="flex flex-col items-start bg-[#FFFFFF] border border-gray-300 shadow-lg rounded-lg w-[260px] h-[140px]  p-3"
+            className="flex flex-col items-start bg-[#FFFFFF] border border-gray-300 shadow-lg rounded-lg w-[300px] h-[170px]  p-3"
             onClick={() => navigate(`/menu/restaurant-item/addmenu/${restaurant.restaurant_id}`)}
           >
             <div className="flex items-center  " >
@@ -71,7 +72,8 @@ const RestaurantList = ({searchTerm}) => {
                 <h3 className="font-semibold text-lg text-gray-800">
                   {restaurant.name}
                 </h3>
-                <p className="text-sm text-gray-500 mb-2">{restaurant.address}</p>
+                <p className="text-sm text-gray-500 mb-2">{restaurant.street_address_1},{restaurant.street_address_2}</p>
+                <p className="text-sm text-gray-500">{restaurant.landmark}&nbsp;{restaurant.city}&nbsp;{restaurant.pincode}</p>
               </div>
             </div>
 

@@ -28,7 +28,7 @@ const DeliveryPartnerDeliveryBased = () => {
   }
 
   return (
-    <MainLayout>
+    <MainLayout headerName="Delivery Partner Delivery Based">
       <div>
         <div className="">
           <MetricsCard cards={cardsData} onCardClick={handleCardClick} />

@@ -3,13 +3,13 @@ import React from "react";
 
 const FilterDropdown = ({value, onChange, options}) => {
   return (
-    <div className="  w-32   h-10  ">
+    <div className="  w-40   h-10  ">
       
-      <select className="w-32 bg-[#FFFFFF]  border-[#A7D7FF] border-[1px] rounded-lg h-10 px-2"
+      <select className="w-40 bg-[#FFFFFF]  border-[#A7D7FF] border-[1px] rounded-lg h-10 px-2"
         value={value}
         onChange={(e)=>onChange(e.target.value)}
         >
-          <option value="">All Partners</option>
+          <option value="">All Merchants</option>
           {options.map((option)=>(
             <option key={option.value} value={option.value}>
               {option.label}  

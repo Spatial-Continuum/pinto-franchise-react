@@ -20,7 +20,7 @@ const Restaurants = () => {
   }
   return (
     <div>
-      <MainLayout className="bg-[#F8F8F8]">
+      <MainLayout headerName="Restaurant Menu" className="bg-[#F8F8F8]">
         <div>
         <div className='flex justify-between   mt-5'>
           <SearchBox placeholder="Search Restaurant name" img={search} onSearch={handleSearch}  />

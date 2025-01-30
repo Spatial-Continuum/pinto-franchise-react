@@ -1,19 +1,27 @@
-    import React from 'react'
+    import React, { useEffect } from 'react'
     import PropsSearchBox from '../../../../GeneralComponent/SearchBox/PropsSearchBox'
     import { useState } from 'react';
     import ratingstar from '../../../../../assets/images/ratingstar.svg';
     import { useDispatch, useSelector } from 'react-redux';
+    import SearchBox from '../../../..//GeneralComponent/SearchBox/SearchBox';
     import search from '../../../../../assets/images/prime_search.svg';
-    import { fetchMerchantSearchApi, selectMerchantData, selectMerchnatError, selectMerchantLoading } from '../../../../../redux/slices/merchant';
+    import { fetchMerchantSearchApi, selectMerchantData, selectMerchantError, selectMerchantLoading } from '../../../../../redux/slices/merchant';
+    import { selectRestaurantList, selectApiLoading, selectApiError, getRestaurantList } from '../../../../../redux/slices/restaurant';
     import { useNavigate } from 'react-router-dom';
+    import clock from '../../../../../assets/images/clockicon.svg';
 
     const SearchRestaurant = () => {
         const navigate = useNavigate()
         const dispatch = useDispatch()
         const [searchTerm, setSearchTerm] = useState('');
         const restaurants = useSelector(selectMerchantData)
+        const allRestaurants = useSelector(selectRestaurantList)
         const loading = useSelector(selectMerchantLoading)
 
+
+        useEffect(()=>{
+            dispatch(getRestaurantList())
+        },[dispatch])
 
         const handleSearch = (term) => {
             setSearchTerm(term);
@@ -28,7 +36,7 @@
         const handleRestaurantClick = (restaurantId) =>{
             navigate(`/orders/phone-orders/searchrestaurant/customerdetail/${restaurantId}`)
         }
-
+        const displayedRestaurants = searchTerm ? restaurants : allRestaurants;
         return (
             <div>
 
@@ -36,9 +44,10 @@
                 <div className='mt-8'>
                     <div className='mb-8'>
                         <h1 className="text-2xl font-bold mb-6">Search Restaurant</h1>
-                        <PropsSearchBox placeholder={"search Restaurant name, Id etc.."}
+                        {/* <PropsSearchBox placeholder={"search Restaurant name, Id etc.."}
                             img={search}
-                            onSearch={handleSearch} />
+                            onSearch={handleSearch} /> */}
+                            <SearchBox  placeholder={"search restaurant by name"} img={search} onSearch={handleSearch}/>
                     </div>
 
                     {/* Loading Indicator */}
@@ -46,7 +55,7 @@
                     {/* Grid */}
                     <div className="grid grid-cols-5 gap-6">
                         
-                        {restaurants.map((restaurant, index) => (
+                        {displayedRestaurants.map((restaurant, index) => (
                             <div key={index} 
                             onClick={()=>handleRestaurantClick(restaurant.restaurant_id)}
                             className="flex flex-col ">
@@ -71,14 +80,14 @@
                                         <img src={ratingstar} alt="rating" />
                                         {restaurant.average_rating}
                                     </span>
-                                    <p className="text-gray-500 mt-2">
-                                        
+                                    <span className="flex items-center mr-4">
+                                        <img src={clock} alt="time" />
                                         {getTimingForToday(restaurant.opening_hours)}
-                                    </p>
+                                    </span>
                                 </div>
 
                                 {/* Address */}
-                                <p className="text-gray-500  mt-2">{restaurant.street_address_1},{restaurant.street_address_2}</p>
+                                <p className="text-gray-500 flex mt-2">{restaurant.street_address_1},{restaurant.street_address_2}</p>
                             </div>
                         ))}
                     </div>

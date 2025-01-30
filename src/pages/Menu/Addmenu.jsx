@@ -7,7 +7,7 @@ const Addmenu = () => {
     const {restaurantId} = useParams()
     return (
         <div>
-            <MainLayout>
+            <MainLayout >
                 <div>
                     <DiningMenu restaurantId={restaurantId}/>
                 </div>

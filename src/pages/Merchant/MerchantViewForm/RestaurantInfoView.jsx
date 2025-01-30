@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 const RestaurantInfoView = ({ formData, onDataChange, isEditable }) => {
     // const [data, setData] = useState(restaurant || {})
     const [ownerPopup, setOwnerPopup] = useState(false)
+    const [ownerDetails,setOwnerDetails] = useState([])
     const [validFields, setValidFields] = useState({
         name: true, // Assuming 'name' is a field
         pincode: true,
@@ -11,7 +12,7 @@ const RestaurantInfoView = ({ formData, onDataChange, isEditable }) => {
         street_address_1: true,
         street_address_2: true,
         city: true,
-        landmark: true,
+        state: true,
         primary_phone: true,
         secondary_phone: true,
         email: true,
@@ -21,11 +22,13 @@ const RestaurantInfoView = ({ formData, onDataChange, isEditable }) => {
         owner_phone: true,
     });
 
-    // useEffect(() => {
-    //     if (formData) {
-    //         setData(formData)
-    //     }
-    // }, [])
+  useEffect(()=>{
+    if(formData.owner_details){
+        setOwnerDetails(formData.owner_details)
+        setOwnerPopup(true)
+    }
+    console.log('hio',formData.owner_details)
+  },[formData.owner_details])
 
 
     // useEffect(() => {
@@ -55,7 +58,7 @@ const RestaurantInfoView = ({ formData, onDataChange, isEditable }) => {
                     <h2 className="text-lg font-medium text-gray-800 mb-4">Restaurant Name & Address</h2>
                 </div>
                 <div className='w-2/6'>
-                    <h2 className="text-lg font-medium mr-96 text-gray-800 mb-4">Restaurant Location</h2>
+                    <h2 className="text-lg font-medium  text-gray-800 mb-4">Restaurant Location</h2>
                 </div>
             </div>
 
@@ -75,11 +78,12 @@ const RestaurantInfoView = ({ formData, onDataChange, isEditable }) => {
                             disabled={!isEditable}
                             onChange={(e)=>handleInputChange(e)}
                             className={`w-1/2 px-3 py-2 border ${validFields.name ? 'border-gray-300' : 'border-red-500'}rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                            
                         />
                     </div>
 
                     {/* Door Number */}
-                    <div className="w-1/6  flex flex-col mb-4">
+                    {/* <div className="w-1/6  flex flex-col mb-4">
                         <label htmlFor="doorNumber" className="text-sm font-medium text-gray-700">Door No</label>
                         <input
                             id="doorNumber"
@@ -91,7 +95,7 @@ const RestaurantInfoView = ({ formData, onDataChange, isEditable }) => {
                             disabled={!isEditable}
                             className={`w-full px-3 py-2 border ${validFields.door_no ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         />
-                    </div>
+                    </div> */}
                     {/*email*/}
 
 
@@ -170,6 +174,23 @@ const RestaurantInfoView = ({ formData, onDataChange, isEditable }) => {
                             className={`w-full px-3 py-2 border ${validFields.landmark ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         />
                     </div>
+
+                    {/* <div className="flex flex-col mb-4 w-1/2">
+                        <label htmlFor="state" className="text-sm font-medium text-gray-700">State</label>
+                        <input
+                            id="state"
+                            name="state"
+                            value={formData?.state || ''}
+                            onChange={(e)=>handleInputChange(e)}
+                            disabled={!isEditable}
+                            type="text"
+                            placeholder="Enter state"
+                            className={`w-full px-3 py-2 border ${validFields.state ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                        />
+                    </div> */}
+
+
+
                 </div>
 
                 {/* Right Box */}
@@ -297,6 +318,7 @@ const RestaurantInfoView = ({ formData, onDataChange, isEditable }) => {
                             <button
                                 className='border-[1px] px-4 py-1 text-[#FFFFFF] bg-[#030714] rounded-lg'
                                 // onClick={handleOwnerPopup}
+                                // value={}
                                 disabled={!isEditable}
                             >
                                 FIND USER
@@ -304,28 +326,28 @@ const RestaurantInfoView = ({ formData, onDataChange, isEditable }) => {
                         </div>
                     </div>
                 </div>
-                {/* {
-                    ownerPopup &&
+                 {
+                    ownerPopup && ownerDetails && (
                     <div
-                        className="relative top-full left-0 w-full bg-[#FFFFFF] border-1px border-[#d6cbcb] justify-center items-center z-50 mt-2"
+                        className="relative top-full left-0 w-2/6 p-4 bg-[#FFFFFF] border-1px border-[#d6cbcb] justify-center items-center z-50 mt-5 rounded-lg"
                     >
-                        <div className='flex flex-col'>
+                        <div className='flex flex-col '>
                             <label className='text-green-600'>User Found!!</label>
                             <div className='grid grid-cols-1'>
                                 <div>
-                                    <label>Name : ""</label>
+                                    <label>Name : {ownerDetails.name}</label>
                                 </div>
                                 <div>
-                                    <label>Phone :" "</label>
+                                    <label>Phone : {ownerDetails.phone}</label>
                                 </div>
                                 <div>
-                                    <label>Email : ""</label>
+                                    <label>Email : {ownerDetails.email}</label>
                                 </div>
                             </div>
                             
                         </div>
                     </div>
-                } */}
+               ) }  
             </div>
             {/* <button
             onClick={}>
