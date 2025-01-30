@@ -13,7 +13,7 @@ import { selectSelectedRestaurant, getRestaurantById, selectApiError, selectApiL
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllAddonApi, createAddonAPi, selectCreateAddonApiData, selectGetAllAddonApiData, } from '../../redux/slices/addons';
 import { updateItemByIdApi, deleteItemByIdApi, selectUpdateItemByIdApi } from '../../redux/slices/item';
-import menuicon from '../../assets/images/menuicon.svg';
+import menuicon from '../../assets/images/menuIcon.svg';
 import { createMenuCategoryApi, selectCreateMenuCategroy, } from '../../redux/slices/menucategory';
 const DiningMenu = ({ restaurantId }) => {
     const [activeSubTab, setActiveSubTab] = useState("menu")
