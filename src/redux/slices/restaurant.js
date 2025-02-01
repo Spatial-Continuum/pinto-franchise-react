@@ -14,6 +14,7 @@ export const postNewRestaurant = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
+      console.error("newrestaurant error",error)
       return rejectWithValue(error.response?.data || error.message);
     }
   }

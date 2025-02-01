@@ -46,7 +46,7 @@ const DiningMenu = ({ restaurantId }) => {
 
         }
 
-    }, [restaurantId, dispatch]);
+    }, [restaurantId, dispatch, refresh]);
     useEffect(() => {
         if (refresh && restaurantId) {
             // Fetch the latest data
@@ -86,24 +86,29 @@ const DiningMenu = ({ restaurantId }) => {
     };
 
     const handleRecommondationToggle = (item) => {
-       
         const newRecommendedStatus = !item.recommended;
-       
+        const formPayload = new FormData();
+        formPayload.append("recommended", newRecommendedStatus);
+
+        // try {
+        //     dispatch(
+        //       updateItemByIdApi({ itemId: item.item_id, formPayload })
+        //     ).unwrap();
+        //     // No need to refresh - Redux state is already updated
+        //   } catch (error) {
+        //     console.error('Availability update failed:', error);
+        //   }
     
-        const updatedData = new FormData();
-        updatedData.append("recommended", newRecommendedStatus);
-        
-        dispatch(updateItemByIdApi({ itemId: item.item_id, updatedData }))
+        dispatch(updateItemByIdApi({ itemId: item.item_id, formPayload }))
             .then(() => {
-                // Trigger a refresh after the API call is successful
-                setRecommonded(updatedData);
-                setRefresh(true);
-                console.log("recommeneditem", item.recommended);
+                 dispatch(getRestaurantById(restaurantId));
+                //setRefresh(true);
             })
             .catch(error => {
                 console.error("Failed to update recommendation:", error);
             });
-        setRefresh(!refresh); // Trigger a re-render
+     
+        setRefresh(!refresh);
     };
 
 
@@ -112,15 +117,20 @@ const DiningMenu = ({ restaurantId }) => {
         console.log("adons", addons)
     };
     const handleAvailabilityToggle = (item) => {
-        console.log("Before toggle:", item.is_available);
-        const updatedData = new FormData();
-        updatedData.append("is_available", !item.is_available); 
-        console.log("aftertogle", updatedData);
-
-        dispatch(updateItemByIdApi({ itemId: item.item_id, updatedData }));
-        console.log("After toggle:", updatedData)
-
-    }
+        const newAvailability = !item.is_available;
+        const formPayload = new FormData();
+        formPayload.append("is_available", newAvailability);
+    
+        dispatch(updateItemByIdApi({ itemId: item.item_id, formPayload }))
+            .then(() => {
+                // Trigger refresh after successful update
+                dispatch(getRestaurantById(restaurantId));
+                
+            })
+            .catch(error => {
+                console.error("Failed to update availability:", error);
+            });
+    };
     // const handleAvailabilityToggle = (item) => {
     //     console.log("Before toggle:", item.is_available);
     //     const formData = new FormData();

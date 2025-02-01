@@ -7,14 +7,14 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
     const [data, setData] = useState(formData)
     const [ownerDetail, setOwnerDetail] = useState()
     const [createUserPopup, setCreateUserPopup] = useState(false)
-    const [message, setMessage] =useState(false)
+    const [message, setMessage] = useState(false)
     const [newOwnerDetails, setNewOwnerDetails] = useState()
     const [newUserDetails, setNewUserDetails] = useState({
         username: '',
         email: '',
         phone: '',
         role: 'restaurant_owner',
-        
+
     })
     const [ownerPopup, setOwnerPopup] = useState(false)
     const [phoneNo, setPhoneNo] = useState()
@@ -24,6 +24,7 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
         door_no: true,
         street_address_1: true,
         street_address_2: true,
+        landmark: true,
         city: true,
         state: true,
         primary_phone: true,
@@ -33,7 +34,16 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
         gstin: true,
         owner_name: true,
         owner_phone: true,
+        mobile_no: true,
+
     });
+
+    useEffect(() => {
+        setValidFields(prev => ({
+            ...prev,
+            owner_phone: !!phoneNo,
+        }));
+    }, [phoneNo]);
 
     useEffect(() => {
         console.log("Form Data Updated: ", data)
@@ -44,22 +54,22 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
     const handleOwnerSearch = async () => {
 
         if (!phoneNo) {
-            console.error("Phone number is required");
+            setValidFields(prev => ({ ...prev, owner_phone: false }));
             return;
         }
 
         try {
             const userData = await RestaurantService.getUserByPhone(phoneNo);
 
-            if(userData){
+            if (userData) {
                 setOwnerDetail(userData);
                 setOwnerPopup(true);
                 setData((prev) => ({ ...prev, owner: userData.user_id }));
                 setCreateUserPopup(false)
-            }else{
+            } else {
                 setOwnerDetail(null)
                 setOwnerPopup(false)
-                setData((prev)=>({...prev, owner:null}))
+                setData((prev) => ({ ...prev, owner: null }))
             }
         } catch (error) {
             console.error("Error fetching user data:", error);
@@ -91,19 +101,19 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
         userDetails.append('email', newUserDetails.email)
         userDetails.append('phone', newUserDetails.phone)
         userDetails.append('role', newUserDetails.role)
-    
+
 
         for (const [key, value] of userDetails.entries()) {
             console.log(`${key}: ${value}`);
-          }
-      
-      
+        }
+
+
         try {
             const response = await RestaurantService.createUser(userDetails)
             console.log("User created successfully:", response.user.user_id);
             setOwnerDetail(response.user)
             setOwnerPopup(true)
-            setData((prev)=>({...prev, owner:response.user.user_id}))
+            setData((prev) => ({ ...prev, owner: response.user.user_id }))
             setCreateUserPopup(false)
             setMessage(true)
 
@@ -138,9 +148,14 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                             value={data.name}
                             placeholder="Enter restaurant name"
                             onChange={handleInputChange}
-                            className={`w-1/2 px-3 py-2 border ${validFields.name ? 'border-gray-300' : 'border-red-500'}rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                            className={`w-1/2 px-3 py-2 border ${validFields.name ? 'border-gray-300' : 'border-red-500'
+                                } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         />
+                        {!validFields.name && (
+                            <span className="text-red-500 text-sm mt-1">This field is required</span>
+                        )}
                     </div>
+
 
                     {/* Door Number */}
                     {/* <div className="w-1/6  flex flex-col mb-4">
@@ -169,9 +184,15 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                                 value={data.street_address_1 || ''}
                                 onChange={handleInputChange}
                                 placeholder="Enter street address 1"
-                                className={`w-full px-3 py-2 border ${validFields.street_address_1 ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                className={`w-full px-3 py-2 border ${validFields.street_address_1 ? 'border-gray-300' : 'border-red-500'
+                                    } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             />
+                            {!validFields.street_address_1 && (
+                                <span className="text-red-500 text-sm mt-1">This field is required</span>
+                            )}
                         </div>
+
+
                         <div className="w-1/2">
                             <label htmlFor="streetAddress2" className="text-sm font-medium text-gray-700">Street Address 2</label>
                             <input
@@ -181,8 +202,12 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                                 value={data.street_address_2 || ''}
                                 onChange={handleInputChange}
                                 placeholder="Enter street address 2"
-                                className={`w-full px-3 py-2 border ${validFields.street_address_2 ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                className={`w-full px-3 py-2 border ${validFields.street_address_2 ? 'border-gray-300' : 'border-red-500'
+                                    } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             />
+                            {!validFields.street_address_2 && (
+                                <span className="text-red-500 text-sm mt-1">This field is required</span>
+                            )}
                         </div>
                     </div>
 
@@ -198,9 +223,14 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                                 value={data.city || ""}
                                 onChange={handleInputChange}
                                 placeholder="Enter city"
-                                className={`w-full px-3 py-2 border ${validFields.city ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                className={`w-full px-3 py-2 border ${validFields.city ? 'border-gray-300' : 'border-red-500'
+                                    } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             />
+                            {!validFields.city && (
+                                <span className="text-red-500 text-sm mt-1">This field is required</span>
+                            )}
                         </div>
+
                         <div className="w-1/2">
                             <label htmlFor="pincode" className="text-sm font-medium text-gray-700">Pincode</label>
                             <input
@@ -210,8 +240,12 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                                 value={data.pincode || ''}
                                 onChange={handleInputChange}
                                 placeholder="Enter pincode"
-                                className={`w-full px-3 py-2 border ${validFields.pincode ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                className={`w-full px-3 py-2 border ${validFields.pincode ? 'border-gray-300' : 'border-red-500'
+                                    } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             />
+                            {!validFields.pincode && (
+                                <span className="text-red-500 text-sm mt-1">This field is required</span>
+                            )}
                         </div>
                     </div>
 
@@ -225,36 +259,45 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                             onChange={handleInputChange}
                             type="text"
                             placeholder="Enter landmark"
-                            className={`w-full px-3 py-2 border ${validFields.landmark ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                        />
+                            className={`w-full px-3 py-2 border ${validFields.landmark ? 'border-gray-300' : 'border-red-500'
+                            } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    />
+                    {!validFields.landmark && (
+                        <span className="text-red-500 text-sm mt-1">This field is required</span>
+                    )}
                     </div>
                     {/*State */}
-                      <div className="flex flex-col mb-4 w-1/2">
+                    <div className="flex flex-col mb-4 w-1/2">
                         <label htmlFor="state" className="text-sm font-medium text-gray-700">State</label>
                         <input
                             id="state"
                             name="state"
-                            value={formData?.state || ''}
-                            onChange={(e)=>handleInputChange(e)}
+                            value={data.state || ''}
+                            onChange={(e) => handleInputChange(e)}
                             // disabled={!isEditable}
                             type="text"
                             placeholder="Enter state"
-                            className={`w-full px-3 py-2 border ${validFields.state ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                            className={`w-full px-3 py-2 border ${validFields.state ? 'border-gray-300' : 'border-red-500'
+                                } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         />
+                        {!validFields.state && (
+                            <span className="text-red-500 text-sm mt-1">This field is required</span>
+                        )}
                     </div>
                 </div>
+            
 
-                {/* Right Box */}
+            {/* Right Box */}
 
-                <div className="w-1/3 bg-gray-100 p-4 border border-gray-300 rounded-lg flex justify-center items-center">
+            <div className="w-1/3 bg-gray-100 p-4 border border-gray-300 rounded-lg flex justify-center items-center">
 
-                    <div className="w-24 h-24 border-2 border-gray-300 rounded-lg flex justify-center items-center cursor-pointer hover:bg-gray-200">
-                        <span className="text-sm text-gray-700">Detect</span>
-                    </div>
+                <div className="w-24 h-24 border-2 border-gray-300 rounded-lg flex justify-center items-center cursor-pointer hover:bg-gray-200">
+                    <span className="text-sm text-gray-700">Detect</span>
                 </div>
             </div>
+        </div>
 
-            {/* Contact Numbers */}
+            {/* Contact Numbers */ }
             <h2 className="font-medium text-gray-800 mt-6">Contact Number of Restaurant</h2>
             <div className="w-2/3 bg-gray-100 p-4 border border-gray-300 rounded-lg mt-2">
                 <div className="">
@@ -266,13 +309,18 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                             </label>
                             <input
                                 id="mobileNumber"
-                                type="text"
+                                type="number"
                                 name="primary_phone"
                                 value={data.primary_phone || ''}
                                 onChange={handleInputChange}
                                 placeholder="Enter mobile number"
-                                className={`px-3 py-2 border ${validFields.primary_phone ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                className={`px-3 py-2 border ${
+                                    validFields.primary_phone ? 'border-gray-300' : 'border-red-500'
+                                } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             />
+                            {!validFields.primary_phone && (
+                                <span className="text-red-500 text-sm mt-1">This field is required</span>
+                            )}
                         </div>
                         <div className="flex flex-col w-1/2">
                             <label htmlFor="landlineNumber" className="text-sm text-gray-700 mb-1">
@@ -283,10 +331,15 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                                 name="secondary_phone"
                                 value={data.secondary_phone || ''}
                                 onChange={handleInputChange}
-                                type="text"
+                                type="number"
                                 placeholder="Enter Secondary Mobile Number"
-                                className={`px-3 py-2 border ${validFields.secondary_phone ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                className={`px-3 py-2 border ${
+                                    validFields.secondary_phone ? 'border-gray-300' : 'border-red-500'
+                                } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             />
+                            {!validFields.secondary_phone && (
+                                <span className="text-red-500 text-sm mt-1">This field is required</span>
+                            )}
                         </div>
                     </div>
                     <div className="flex flex-col w-1/2 mt-4 mb-4">
@@ -298,14 +351,19 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                             onChange={handleInputChange}
                             type="text"
                             placeholder="Enter email address"
-                            className={`w-1/2 px-3 py-2 border ${validFields.email ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-50`}
+                            className={`w-1/2 px-3 py-2 border ${
+                                validFields.email ? 'border-gray-300' : 'border-red-500'
+                            } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         />
+                        {!validFields.email && (
+                            <span className="text-red-500 text-sm mt-1">This field is required</span>
+                        )}
                     </div>
                 </div>
-            </div>
+                </div>
 
 
-            {/* Pinto Commission and GST Number */}
+    {/* Pinto Commission and GST Number */ }
             <h2 className="font-medium text-gray-800 mt-6">Pinto Commission and GST Number</h2>
 
             <div className="w-2/3  flex flex-row gap-7 border-gray-300 rounded-lg mt-2">
@@ -318,10 +376,15 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                             type="number"
                             name="commission_percentage"
                             value={data.commission_percentage || ''}
-                            onChange={(e)=>handleInputChange(e)}
+                            onChange={(e) => handleInputChange(e)}
                             placeholder="Enter Pinto Commission"
-                            className={`px-3 py-2 border ${validFields.commission_percentage ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                            className={`px-3 py-2 border ${
+                                validFields.commission_percentage ? 'border-gray-300' : 'border-red-500'
+                            } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         />
+                        {!validFields.commission_percentage && (
+                            <span className="text-red-500 text-sm mt-1">This field is required</span>
+                        )}
                     </div>
                 </div>
 
@@ -338,13 +401,17 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                             onChange={handleInputChange}
                             placeholder="Enter GSTIN"
                             style={{ textTransform: 'uppercase' }}
-                            className={`px-3 py-2 border ${validFields.gstin ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                            className={`px-3 py-2 border ${
+                                validFields.gstin ? 'border-gray-300' : 'border-red-500'
+                            } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         />
+                        {!validFields.gstin && (
+                            <span className="text-red-500 text-sm mt-1">This field is required</span>
+                        )}
                     </div>
-
                 </div>
             </div>
-            {/* Restaurant Owner Details */}
+    {/* Restaurant Owner Details */ }
             <h2 className="font-medium text-gray-800 mt-6">Restaurant Owner Details</h2>
             <div className="w-2/3 bg-gray-100 p-4 border border-gray-300 rounded-lg mt-2">
                 <div className="flex flex-row space-x-4 w-1/2 ">
@@ -356,8 +423,13 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                                 name="mobile_no"
                                 value={phoneNo}
                                 onChange={(e) => setPhoneNo(e.target.value)}
-                                className={`px-3 py-2  border ${validFields.owner_name ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                className={`px-3 py-2 border ${
+                                    validFields.mobile_no    ? 'border-gray-300' : 'border-red-500'
+                                } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             />
+                            {!validFields.mobile_no && (
+                                <span className="text-red-500 text-sm mt-1">This field is required</span>
+                            )}
                         </div>
                         <div className='flex w-1/2 items-center justify-center  mt-6'>
                             <button
@@ -370,76 +442,76 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                     </div>
                 </div>
                 {
-                    ownerPopup && ownerDetail  ? (
-                    <div
-                        className="z-5  top-full left-0 w-96 bg-[#FFFFFF] border-1px rounded-lg border-[#d6cbcb] justify-center items-center z-50 mt-10"
-                    >
-                        <div className='flex p-3 flex-col'>
-                            <label className='text-green-600 mb-3 '>User Found!!</label>
-                            <div className='grid grid-cols-1'>
-                                <div>
-                                    <label>Name : {ownerDetail.username}</label>
+                    ownerPopup && ownerDetail ? (
+                        <div
+                            className="z-5  top-full left-0 w-96 bg-[#FFFFFF] border-1px rounded-lg border-[#d6cbcb] justify-center items-center z-50 mt-10"
+                        >
+                            <div className='flex p-3 flex-col'>
+                                <label className='text-green-600 mb-3 '>User Found!!</label>
+                                <div className='grid grid-cols-1'>
+                                    <div>
+                                        <label>Name : {ownerDetail.username}</label>
+                                    </div>
+                                    <div>
+                                        <label>Phone : {ownerDetail.phone}</label>
+                                    </div>
+                                    <div>
+                                        <label>Email : {ownerDetail.email}</label>
+                                    </div>
                                 </div>
-                                <div>
-                                    <label>Phone : {ownerDetail.phone}</label>
-                                </div>
-                                <div>
-                                    <label>Email : {ownerDetail.email}</label>
-                                </div>
-                            </div>
-                            
-                        </div>
-                    </div>
 
-                    ): null}
-                  {  createUserPopup  ?
+                            </div>
+                        </div>
+
+                    ) : null}
+                {createUserPopup ?
                     (
                         <div className="z-5 top-full left-0 w-4/6 bg-[#FFFFFF] border-1px rounded-lg border-[#d6cbcb] justify-center items-center z-50 mt-10">
-                        <div className='flex p-3 flex-col'>
-                            <label className='text-red-600 mb-4'>User Not Found!!</label>
-                            <div className='flex grid-cols-2 gap-5'>
-                                {/* Owner Name Input */}
-                                <div className='flex flex-col mb-4'>
-                                    <label className='text-sm font-medium text-gray-700'>Owner Name</label>
-                                    <input
-                                        type="text"
-                                        name="username"
-                                        placeholder="Enter Owner Name"
-                                        value={newUserDetails.username}
-                                        onChange={handleUserDetailsChange}
-                                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    />
-                                </div>
+                            <div className='flex p-3 flex-col'>
+                                <label className='text-red-600 mb-4'>User Not Found!!</label>
+                                <div className='flex grid-cols-2 gap-5'>
+                                    {/* Owner Name Input */}
+                                    <div className='flex flex-col mb-4'>
+                                        <label className='text-sm font-medium text-gray-700'>Owner Name</label>
+                                        <input
+                                            type="text"
+                                            name="username"
+                                            placeholder="Enter Owner Name"
+                                            value={newUserDetails.username}
+                                            onChange={handleUserDetailsChange}
+                                            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        />
+                                    </div>
 
-                                {/* Mobile No Input */}
-                                <div className='flex flex-col mb-4'>
-                                    <label className='text-sm font-medium text-gray-700'>Mobile No</label>
-                                    <input
-                                        type="text"
-                                        name="phone"
-                                        placeholder="Enter Mobile No"
-                                        value={newUserDetails.phone}
-                                        onChange={handleUserDetailsChange}
-                                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    />
-                                </div>
+                                    {/* Mobile No Input */}
+                                    <div className='flex flex-col mb-4'>
+                                        <label className='text-sm font-medium text-gray-700'>Mobile No</label>
+                                        <input
+                                            type="text"
+                                            name="phone"
+                                            placeholder="Enter Mobile No"
+                                            value={newUserDetails.phone}
+                                            onChange={handleUserDetailsChange}
+                                            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        />
+                                    </div>
                                 </div>
                                 <div className='flex grid-cols-2 gap-5'>
-                            {/* Email Input */}
-                            <div className='flex flex-col mb-4'>
-                                <label className='text-sm font-medium text-gray-700'>Email Id</label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    placeholder="email"
-                                    value={newUserDetails.email}
-                                    onChange={handleUserDetailsChange}
-                                    className="px-3 py-2 border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                            </div>
+                                    {/* Email Input */}
+                                    <div className='flex flex-col mb-4'>
+                                        <label className='text-sm font-medium text-gray-700'>Email Id</label>
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            placeholder="email"
+                                            value={newUserDetails.email}
+                                            onChange={handleUserDetailsChange}
+                                            className="px-3 py-2 border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        />
+                                    </div>
 
-                            <div className='flex flex-col mb-4'>
-                                {/* <label className='text-sm font-medium text-gray-700'>Password</label>
+                                    <div className='flex flex-col mb-4'>
+                                        {/* <label className='text-sm font-medium text-gray-700'>Password</label>
                                 <input
                                     type="password"
                                     name="password"
@@ -448,28 +520,28 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                                     onChange={handleUserDetailsChange}
                                     className="px-3 py-2 border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 /> */}
+                                    </div>
+                                </div>
+                                {/* Create User Button */}
+                                <button
+                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg w-2/6 hover:bg-blue-700"
+                                    onClick={handleCreateUser}
+                                >
+                                    Create User
+                                </button>
                             </div>
-                            </div>
-                            {/* Create User Button */}
-                            <button
-                                className="px-4 py-2 bg-blue-600 text-white rounded-lg w-2/6 hover:bg-blue-700"
-                                onClick={handleCreateUser}
-                            >
-                                Create User
-                            </button>
                         </div>
-                    </div>
-                    ) :null
-                    
+                    ) : null
+
                 }
                 {
-                    message && 
+                    message &&
                     <div className='left-0 w-4/6 justify-center items-center z-50'>
                         <p className='text-xs text-green-600 font-medium '>User created Successfully!</p>
                     </div>
                 }
             </div>
-        </div>
+        </div >
     );
 };
 

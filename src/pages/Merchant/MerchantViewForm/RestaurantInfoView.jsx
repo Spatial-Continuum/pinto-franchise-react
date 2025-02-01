@@ -11,6 +11,7 @@ const RestaurantInfoView = ({ formData, onDataChange, isEditable }) => {
         door_no: true,
         street_address_1: true,
         street_address_2: true,
+        landmark: true,
         city: true,
         state: true,
         primary_phone: true,
@@ -175,7 +176,7 @@ const RestaurantInfoView = ({ formData, onDataChange, isEditable }) => {
                         />
                     </div>
 
-                    {/* <div className="flex flex-col mb-4 w-1/2">
+                    <div className="flex flex-col mb-4 w-1/2">
                         <label htmlFor="state" className="text-sm font-medium text-gray-700">State</label>
                         <input
                             id="state"
@@ -187,7 +188,7 @@ const RestaurantInfoView = ({ formData, onDataChange, isEditable }) => {
                             placeholder="Enter state"
                             className={`w-full px-3 py-2 border ${validFields.state ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                         />
-                    </div> */}
+                    </div>
 
 
 

@@ -29,6 +29,10 @@ const OnboardingFormView = () => {
   const error = useSelector(selectApiError);
   const [extraStore, setExtraStore] = useState("")
   const [extraCuisine, setExtraCuisine] = useState("")
+   const [showPopup, setShowPopup] = useState(false);
+    const [errorMessage, setErrorMessage] = useState();
+    const [popupMessage, setPopupMessage] = useState('');
+    const [errorPopup, setErrorPopup] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
   // const [restaurantInfo, setRestaurantInfo] = useState(null);
   const [formData, setFormData] = useState({
@@ -39,6 +43,7 @@ const OnboardingFormView = () => {
     gstin: "",
     owner: null,
     fassai: null,
+    state: "",
     door_no: "",
     street_address_1: "",
     street_address_2: "",
@@ -85,6 +90,7 @@ const OnboardingFormView = () => {
         gstin: restaurantDetails.gstin || null,
         owner: restaurantDetails.owner || null,
         fassai: restaurantDetails.fassai || null,
+        state: restaurantDetails.state || null,
         door_no: restaurantDetails.door_no || "",
         street_address_1: restaurantDetails.street_address_1 || "",
         street_address_2: restaurantDetails.street_address_2 || "",
@@ -136,16 +142,131 @@ const OnboardingFormView = () => {
 
 
   const validateStep = (step) => {
-    if (step === 1 && !formData.name) {
-      alert('Please fill in the restaurant name.');
-      return false;
+    if (step === 1) {
+      if (!formData.name) {
+        setPopupMessage('Please fill in the restaurant name.');
+        setShowPopup(true);
+        return false;
+      }
+      if (!formData.city) {
+        setPopupMessage('Please fill in the city.');
+        setShowPopup(true);
+        return false;
+      }
+      if (!formData.pincode) {
+        setPopupMessage('Please fill in the pincode.');
+        setShowPopup(true);
+        return false;
+      }
+      if (!formData.primary_phone) {
+        setPopupMessage('Please fill in the primary phone number.');
+        setShowPopup(true);
+        return false;
+      }
+      if (!formData.secondary_phone) {
+        setPopupMessage('Please fill in the secondary phone number.');
+        setShowPopup(true);
+        return false;
+      }
+      if (!/^\d{10}$/.test(formData.secondary_phone)) {
+        setPopupMessage('Primary phone number must be exactly 10 digits.');
+        setShowPopup(true);
+        return false;
+      }
+
+      if (!/^\d{10}$/.test(formData.primary_phone)) {
+        setPopupMessage('Primary phone number must be exactly 10 digits.');
+        setShowPopup(true);
+        return false;
+      }
+
+      if (!formData.email) {
+        setPopupMessage('Please fill in the email address.');
+        setShowPopup(true);
+        return false;
+      }
+      if (!formData.landmark) {
+        setPopupMessage('Please fill in the landmark.');
+        setShowPopup(true);
+        return false;
+      }
+
+      if (!formData.gstin) {
+        setPopupMessage('Please fill in the GSTIN.');
+        setShowPopup(true);
+        return false;
+      }
+      if (formData.gstin.length !== 15) {
+        setPopupMessage('GSTIN must be exactly 15 characters long.');
+        setShowPopup(true);
+        return false;
+      }
+
+
+
+
     }
-    if (step === 2 && formData.merchant_type.length === 0) {
-      alert('Please select at least one merchant type.');
-      return false;
+    if (step === 2) {
+      if (!formData.restaurant_category) {
+        setPopupMessage('Please select the restaurant category.');
+        setShowPopup(true);
+        return false;
+      }
+      if (!formData.cuisine_type.length===0) {
+        setPopupMessage('Please select at least one cuisine type.');
+        setShowPopup(true);
+        return false;
+      }
+      if(!formData.short_description){
+        setPopupMessage('Please fill in the short description.');
+        setShowPopup(true);
+        return false;
+      }
+
+
+      if (!formData.opening_hours) {
+        setPopupMessage('Please select opening hours');
+        setShowPopup(true);
+        return false;
+      }
+
+      if (
+        formData.merchant_type.length === 0) {
+        setPopupMessage('Please select at least one merchant type.');
+        setShowPopup(true);
+        return false;
+      }
     }
+
     return true;
   };
+  const extractErrorMessage = (error) => {
+    if (typeof error === 'string') {
+      // If the error is a string, return it directly
+      return error;
+    }
+  
+    if (error?.detail) {
+      // Handle cases where the error has a 'detail' key
+      return error.detail;
+    }
+  
+    if (error?.non_field_errors) {
+      // Handle cases where the error has a 'non_field_errors' key
+      return error.non_field_errors[0];
+    }
+  
+    // Handle nested field errors (e.g., owner, email, etc.)
+    for (const key in error) {
+      if (Array.isArray(error[key]) && error[key].length > 0) {
+        return error[key][0]; // Return the first error message for the field
+      }
+    }
+  
+    // Fallback message if no error message is found
+    return 'An error occurred while submitting the form.';
+  };
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -208,6 +329,11 @@ const OnboardingFormView = () => {
       setModalVisible(true)
     } catch (error) {
       console.error('Error submitting form:', error);
+      const errorMsg = extractErrorMessage(error);
+      setErrorMessage(errorMsg); // Set the error message
+    
+    
+          setErrorPopup(true);
     }
   }
 
@@ -327,7 +453,7 @@ const OnboardingFormView = () => {
               onClick={prevStep}
               className="w-32 h-8 rounded-lg border-[1px] border-[#030714] bg-[#FAFAFA] mr-5 mx-5"
             >
-              Clear
+              Back
             </button>
           )}
           {currentStep < 3 ? (
@@ -368,6 +494,37 @@ const OnboardingFormView = () => {
             </div>
           </div>
         </div>
+      )}
+      {showPopup && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white w-[320px] h-[160px] rounded-lg p-6">
+
+            <h2 className="text-center text-xl font-semibold mb-4">Error Occurred</h2>
+            <p>{popupMessage}</p>
+            <div className="flex justify-center">
+              <button
+                onClick={() => setShowPopup(false)}
+                className="w-32 h-8 text-white bg-[#004680] rounded-lg"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {errorPopup &&(
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white w-[400px] h-[200px] rounded-lg p-6">
+          <h2 className="text-center text-xl font-semibold mb-4">Error Occurred</h2>
+          <p>{errorMessage}</p>
+          <button
+                onClick={() => setErrorPopup(false)}
+                className="w-32 h-8 text-white bg-[#004680] rounded-lg"
+              >
+                Close
+              </button>
+          </div>
+          </div>
       )}
 
     </MainLayout>

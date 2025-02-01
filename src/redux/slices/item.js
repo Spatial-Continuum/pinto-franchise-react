@@ -3,9 +3,13 @@ import axios from 'axios';
 import API_URL from '../../globalImport';
 
 //createItemApi
-export const createItemApi = createAsyncThunk('api/createItemApi', async (itemData, { rejectWithValue }) => {
+export const createItemApi = createAsyncThunk('api/createItemApi', async (postData, { rejectWithValue }) => {
     try {
-        const response = await axios.post(`${API_URL}/restaurant/item`, itemData)
+        const response = await axios.post(`${API_URL}/restaurant/item`, postData ,{
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
         return response.data
     } catch (err) {
         return rejectWithValue(err.response?.data || err.message);
@@ -77,11 +81,11 @@ export const updateItemByIdApi = createAsyncThunk('api/updateItemByIdApi', async
 const itemSlice = createSlice({
     name: 'item',
     initialState: {
-        createItemData: null,
-        allItems:null,
-        itemById: null,
+        createItemData: [],
+        allItems:[],
+        itemById: [],
         updatedItem: null,
-        deletedItem: null,
+        deletedItem: [],
         loading: false,
         error: null,
     },
@@ -137,8 +141,21 @@ const itemSlice = createSlice({
             })
             .addCase(updateItemByIdApi.fulfilled, (state, action) => {
                 state.loading = false;
-                state.updatedItem = action.payload;
-            })
+                const updatedItem = action.payload;
+        
+                // Update the items array
+                // state.item = state.item.map((item) =>
+                //   item.item_id === updatedItem.item_id ? updatedItem : item
+                // );
+        
+                // // Update itemById if you're using it
+                // if (state.itemById[updatedItem.item_id]) {
+                //   state.itemById[updatedItem.item_id] = updatedItem;
+                // }
+        
+                // // Optionally track the updated item separately
+                // state.updatedItem = updatedItem;
+              })
             .addCase(updateItemByIdApi.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;

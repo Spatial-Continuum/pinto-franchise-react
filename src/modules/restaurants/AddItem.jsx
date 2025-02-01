@@ -7,6 +7,7 @@ import nonveg from '../../assets/images/nonvegicon.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllAddonApi, selectGetAllAddonApiData, selectApiError, selectApiLoading } from '../../redux/slices/addons';
 import { selectSelectedRestaurant, getRestaurantById, } from '../../redux/slices/restaurant';
+import { createItemApi } from '../../redux/slices/item';
 
 const AddItem = ({ restaurantId, setShowAddItem, setRefresh, setAddMenuPopup }) => {
 
@@ -36,7 +37,7 @@ const AddItem = ({ restaurantId, setShowAddItem, setRefresh, setAddMenuPopup }) 
         mealType: '',
         commission: '',
         selectedAddons: [],
-        addon: 'false'
+        addons: [],
     });
 
     useEffect(() => {
@@ -112,10 +113,9 @@ const handleRemoveAddon = (addonId) => {
         postData.append('menu_category_id', formData.menuCategory);
         postData.append('subcategory_id', formData.subCategory);
         if (formData.selectedAddons.length > 0) {
-            formData.selectedAddons.forEach((addonId) => {
-              postData.append('addon_id ', addonId); // Append each addon_id
-            });
-          }
+            postData.append('addons',JSON.stringify(formData.selectedAddons) )
+                }
+
 
         // Append item image if present
         if (itemImage) {
@@ -128,15 +128,25 @@ const handleRemoveAddon = (addonId) => {
         }
 
         console.log("posting data id", postData);
+
         try {
-            console.log("forming data is ", postData)
-            const response = await RestaurantService.createItemNew(postData); // API call to post the data
-            setRefresh1(!refresh1)
-            setRefresh(true)
+            await dispatch(createItemApi(postData)).unwrap();
+            setRefresh1(!refresh1);
+            setRefresh(true);
             setShowAddItem(false);
         } catch (error) {
-            console.error('Error adding item:', error);
+            console.error('Item creation failed:', error);
         }
+            // Add error toast/notification here
+        // try {
+        //     console.log("forming data is ", postData)
+        //     const response = await RestaurantService.createItemNew(postData); // API call to post the data
+        //     setRefresh1(!refresh1)
+        //     setRefresh(true)
+        //     setShowAddItem(false);
+        // } catch (error) {
+        //     console.error('Error adding item:', error);
+        // }
     };
 
 
