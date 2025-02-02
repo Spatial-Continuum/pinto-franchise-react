@@ -37,9 +37,9 @@ function ShowCuisine(props) {
   console.log("lkasjfdjlfsa", singleCuisine);
 
   const handleCuisine = (singleCus, subcuisine, index = "") => {
-    setSubCuisineName(singleCus);
+    setSubCuisineName(singleCus.category_title);
     setSubCatIndex(index);
-    setSinlgeSubCuisine(singleCus);
+    setSinlgeSubCuisine(singleCus.subcategories);
     // setNewItem(singleCus.cuisine_title);
     // setNewImage(singleCus.image);
     // setNewImagePreview(singleCus.image);
@@ -152,7 +152,7 @@ function ShowCuisine(props) {
                   {categoryName && catIndex == index ? (
                     <div className="my-8 w-full">
                       <h2 className="text-lg font-semibold">
-                        Sub Categories in {categoryName}{" "}
+                        Categories in this {categoryName}{" "}
                       </h2>
                       <div className="border border-gray-200 rounded-lg">
                         <div className="flex flex-wrap gap-4  m-4">
@@ -166,15 +166,15 @@ function ShowCuisine(props) {
                                 style={"w-36 h-30"}
                                 setSub={() => {
                                   handleCuisine(
-                                    subcategory.cuisines,
-                                    subcategory.cuisines,
+                                    subcategory,
+                                    subcategory,
                                     index1
                                   );
                                 }}
                                 onEdit={() => {
                                   handleCuisine(
-                                    subcategory.cuisines,
-                                    subcategory.cuisines,
+                                    subcategory,
+                                    subcategory,
                                     "edit"
                                   );
                                 }}
@@ -183,16 +183,24 @@ function ShowCuisine(props) {
                           )}
                         </div>
                         {cuisineName ? (
-                          <div className="flex flex-wrap gap-4  m-4">
-                            {cuisineName?.map((subcategory) => (
-                              <ShowFlexElements
-                                category={subcategory}
-                                title={subcategory.cuisine_title}
-                                topName={true}
-                                style={"w-36 h-30"}
-                              />
-                            ))}
-                          </div>
+                          <>
+                            <div className="pl-8  font-normal">
+                              {" "}
+                              {`${singleSubCuisine.length} `} {cuisineName} in
+                              this category{" "}
+                            </div>
+                            <div className="flex flex-wrap gap-4  m-4">
+                              <div> </div>
+                              {singleSubCuisine?.map((subcategory) => (
+                                <ShowFlexElements
+                                  category={subcategory}
+                                  title={subcategory.subcategory_title}
+                                  topName={true}
+                                  style={"w-36 h-30"}
+                                />
+                              ))}
+                            </div>
+                          </>
                         ) : (
                           ""
                         )}
