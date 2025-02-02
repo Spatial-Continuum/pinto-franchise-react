@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import ShowFlexElements from "../../../../GeneralComponent/FlexElement/ShowFlexElement.jsx";
+import ShowFullElements from "../../../../GeneralComponent/FlexElement/ShowFullElements.jsx";
 import MainLayout from "../../../../GeneralComponent/Layout/MainLayout.jsx";
 import { Menu as MenuIcon, Search, Upload } from "lucide-react";
 import vector from "../../../../../assets/images/Vector_colorless.png";
 import axios from "axios";
-import { fetchSubCategoryApi } from "../../../../../redux/slices/menu.js";
+import {
+  fetchSubCategoryApi,
+  selectSubCategory,
+} from "../../../../../redux/slices/menu.js";
 function ShowSubCategory() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -14,8 +17,9 @@ function ShowSubCategory() {
     location?.state?.subcategories || []
   );
   const dispatch = useDispatch();
+  const subcategories1 = useSelector(selectSubCategory);
   const [singleSubCategory, setSingleSubCategory] = useState({});
-  const [allEdit, setAllEdit] = useState(false);
+  const [allEdit, setAllEdit] = useState("edit");
   const [singleEdit, setSingleEdit] = useState(false);
   const [newitem, setNewItem] = useState("");
   const [newimage, setNewImage] = useState(null);
@@ -36,12 +40,17 @@ function ShowSubCategory() {
     console.log("Dispatching fetchSubCategoryApi");
     dispatch(fetchSubCategoryApi());
   }, [dispatch]);
+  useEffect(() => {
+    setSubCategories(subcategories1);
+  }, [subcategories1]);
   const handleEditSubCatgory = (subcategory) => {
     console.log("akjsdfhkjashasdj;d");
     setSingleEdit(true);
     setShowModal(true);
     setNewItem(subcategory.subcategory_title);
     setNewImage(subcategory.image);
+    setNewLogo(subcategory.logo);
+    setNewLogoPreview(subcategory.logo);
     setNewImagePreview(subcategory.image);
     setSingleSubCategory(subcategory);
   };
@@ -49,6 +58,8 @@ function ShowSubCategory() {
     setNewItem("");
     setNewImage(null);
     setNewImagePreview(null);
+    setNewLogo(null);
+    setNewLogoPreview(null);
     setSingleEdit(false);
     setShowModal(false);
   };
@@ -78,9 +89,10 @@ function ShowSubCategory() {
         },
       })
         .then(function (response) {
-          const data = response.data.data;
-          console.log("jsdjflasl", response.data.data);
-
+          const data = response?.data?.data;
+          console.log("jsdjflasl", response?.data?.data);
+          setShowModal(false);
+          dispatch(fetchSubCategoryApi());
           console.log(response);
           setNewItem("");
           setNewImage(null);
@@ -118,13 +130,23 @@ function ShowSubCategory() {
                 <Search className="w-5 h-5 absolute left-3 top-10 text-gray-400" />
               </div>
               <div className="flex space-x-4">
-                <button
-                  onClick={() => setAllEdit(true)}
-                  className="p-2 text-black rounded-lg border border-black flex item-center"
-                >
-                  <img src={vector} alt="Edit" className="mt-2 mr-2" />
-                  Edit
-                </button>
+                {allEdit == "edit" ? (
+                  <button
+                    onClick={() => setAllEdit("cancel")}
+                    className="p-2 text-black rounded-lg border border-black flex item-center"
+                  >
+                    <img src={vector} alt="Edit" className="mt-2 mr-2" />
+                    Edit
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setAllEdit("edit")}
+                    className="p-2 text-black rounded-lg border border-black flex item-center"
+                  >
+                    Cancel
+                  </button>
+                )}
+
                 <button
                   onClick={() => setShowModal(true)}
                   className=" px-2 bg-green-600 text-white rounded-lg "
@@ -137,13 +159,13 @@ function ShowSubCategory() {
           <div className="mb-8">
             <div className="flex flex-wrap gap-5">
               {subcategories.map((subcategory) => (
-                <ShowFlexElements
+                <ShowFullElements
                   key={subcategory.subcategory_id}
                   category={subcategory}
                   topName={true}
-                  topEdit={allEdit ? true : ""}
+                  topEdit={allEdit == "cancel" ? true : ""}
                   handleEditTop={
-                    allEdit
+                    allEdit == "cancel"
                       ? () => {
                           handleEditSubCatgory(subcategory);
                         }
@@ -178,7 +200,7 @@ function ShowSubCategory() {
 
             {/* Cuisine Title Input */}
             <div className="mb-4">
-              <label className="block mb-1">Enter Sub Category title</label>
+              <label className="block text-sm">Enter Sub Category title</label>
               <input
                 type="text"
                 className="w-full border p-2 rounded"
@@ -191,7 +213,7 @@ function ShowSubCategory() {
             {/* Image Upload */}
             <div className="grid grid-cols-2 gap-4 ">
               <div>
-                <label>Add Logo:</label>
+                <label className="text-sm">Add Logo:</label>
                 <div
                   className={`mb-4 mt-2 w-fit border border-gray-300 rounded-lg ${
                     !newLogo ? "p-8" : ""
@@ -204,7 +226,7 @@ function ShowSubCategory() {
                     id="new item logo"
                     type="file"
                     name="new item logo"
-                    accept="image/png, image/jpeg"
+                    accept="image/png"
                     onChange={(e) => {
                       console.log("listed listed name", e.target),
                         setNewLogo(e.target.files[0]),
@@ -232,7 +254,7 @@ function ShowSubCategory() {
                 </div>
               </div>
               <div>
-                <label className="block mb-1">Add image</label>
+                <label className="block text-sm ">Add image</label>
                 <div
                   className={`mb-4 w-fit border border-gray-300 rounded-lg ${
                     !newimage ? "p-8" : ""
@@ -245,7 +267,7 @@ function ShowSubCategory() {
                     id="new item image"
                     type="file"
                     name="new item image"
-                    accept="image/png, image/jpeg"
+                    accept="image/jpeg,image/jpg"
                     onChange={(e) => {
                       console.log("listed listed name", e.target),
                         setNewImage(e.target.files[0]),

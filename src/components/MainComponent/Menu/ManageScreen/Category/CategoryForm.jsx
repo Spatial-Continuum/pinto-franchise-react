@@ -439,7 +439,7 @@ const AddCategoryForm = () => {
                 {/* Dropdown */}
                 {loading && <p className="text-gray-400 mt-2">Loading...</p>}
                 {subCategories.length > 0 && (
-                  <ul className="absolute z-2 top-full border rounded mt-2 shadow-md max-h-48 overflow-auto">
+                  <ul className="absolute z-2 top-full border rounded mt-2 shadow-md max-h-48 overflow-auto bg-gray-100">
                     {subCategories.map((item) => (
                       <li
                         key={item.subcategory_id}
@@ -482,7 +482,7 @@ const AddCategoryForm = () => {
                   </span>
                 </div>
                 {formState.dropdownOpen && (
-                  <div className="absolute  top-full z-2 border bg-white shadow-lg mt-1 w-40 rounded">
+                  <div className="absolute  top-full z-2 border bg-white shadow-lg mt-1 w-40 rounded bg-gray-100">
                     <div className="p-2">
                       {formState?.allcuisine?.map((cuisine) => (
                         <div
@@ -694,7 +694,7 @@ const AddCategoryForm = () => {
                       id="new item logo"
                       type="file"
                       name="new item logo"
-                      accept="image/png, image/jpeg"
+                      accept="image/png"
                       onChange={(e) => {
                         console.log("listed listed name", e.target),
                           setNewLogo(e.target.files[0]),
@@ -744,7 +744,7 @@ const AddCategoryForm = () => {
                     id="new item image"
                     type="file"
                     name="new item image"
-                    accept="image/png, image/jpeg"
+                    accept="image/jpg, image/jpeg"
                     onChange={(e) => {
                       console.log("listed listed name", e.target),
                         setNewImage(e.target.files[0]),
