@@ -15,6 +15,7 @@ import { getAllAddonApi, createAddonAPi, selectCreateAddonApiData, selectGetAllA
 import { updateItemByIdApi, deleteItemByIdApi, selectUpdateItemByIdApi } from '../../redux/slices/item';
 import menuicon from '../../assets/images/menuIcon.svg';
 import { createMenuCategoryApi, selectCreateMenuCategroy, } from '../../redux/slices/menucategory';
+import EditAddOn from './EditAddOn';
 const DiningMenu = ({ restaurantId }) => {
     const [activeSubTab, setActiveSubTab] = useState("menu")
     const [openCategories, setOpenCategories] = useState([]); // Track open categories
@@ -32,6 +33,7 @@ const DiningMenu = ({ restaurantId }) => {
     const [refresh, setRefresh] = useState(false);
     const [recommonded, setRecommonded] = useState()
     const [deletePopup, setDeletePopup] = useState(false)
+    const [showEditAddon, setShowEditAddon] = useState(false)
     const [deleteItemId, setDeleteItemId] = useState(null)
     const [editItemId, setEditItemId] = useState(null)
     const [availabe, setAvailable] = useState()
@@ -98,20 +100,24 @@ const DiningMenu = ({ restaurantId }) => {
         //   } catch (error) {
         //     console.error('Availability update failed:', error);
         //   }
-    
+
         dispatch(updateItemByIdApi({ itemId: item.item_id, formPayload }))
             .then(() => {
-                 dispatch(getRestaurantById(restaurantId));
+                dispatch(getRestaurantById(restaurantId));
                 //setRefresh(true);
             })
             .catch(error => {
                 console.error("Failed to update recommendation:", error);
             });
-     
+
         setRefresh(!refresh);
     };
 
-
+    const handleEditAddonClick = () => {
+        setShowEditAddon(true)
+        setShowAddItem(false)
+        setShowEditItem(false)
+    }
     const handleSubTabClick = (subTab) => {
         setActiveSubTab(subTab);
         console.log("adons", addons)
@@ -120,12 +126,12 @@ const DiningMenu = ({ restaurantId }) => {
         const newAvailability = !item.is_available;
         const formPayload = new FormData();
         formPayload.append("is_available", newAvailability);
-    
+
         dispatch(updateItemByIdApi({ itemId: item.item_id, formPayload }))
             .then(() => {
                 // Trigger refresh after successful update
                 dispatch(getRestaurantById(restaurantId));
-                
+
             })
             .catch(error => {
                 console.error("Failed to update availability:", error);
@@ -477,7 +483,9 @@ const DiningMenu = ({ restaurantId }) => {
                                                 };
                                                 dispatch(createMenuCategoryApi(categoryData));
                                                 setAddMenuPopup(false); // Close the popup after dispatching
+                                                setMenuTitle("");
                                                 setRefresh(!refresh)
+
                                             }}>
                                             Done
                                         </button>
@@ -572,7 +580,7 @@ const DiningMenu = ({ restaurantId }) => {
                                                     <PencilIcon
                                                         className="h-4 w-7   text-green-500 hover:text-green-700 cursor-pointer"
                                                         title="Edit"
-                                                        onClick={""}
+                                                        onClick={() => { handleEditAddonClick(addon.addon_id) }}
                                                     />
                                                     <TrashIcon
                                                         className="h-5 w-5 text-red-500 hover:text-red-700 cursor-pointer"
@@ -594,6 +602,7 @@ const DiningMenu = ({ restaurantId }) => {
                         {showAddItem && <AddItem restaurantId={restaurantId} setAddMenuPopup={setAddMenuPopup} setRefresh={setRefresh} setShowAddItem={setShowAddItem} />}
                         {showEditItem && <EditItem itemId={editItemId} restaurantId={restaurantId} setShowEditItem={setShowEditItem} />}
                         {showAddAddon && <AddAddOn setShowAddAddon={setShowAddAddon} restaurantId={restaurantId} setRefresh={setRefresh} />}
+                        {showEditAddon && <EditAddOn setShowEditAddon={setShowEditAddon} restaurantId={restaurantId} setRefresh={setRefresh} />}
                     </div>
                 </div>
             </div>
@@ -605,19 +614,24 @@ const DiningMenu = ({ restaurantId }) => {
                 <div className="flex flex-col lg:flex-row gap-5 mt-5 ">
                     <div className="w-full lg:w-4/6 bg-gray-100  border border-gray-300 rounded-lg">
                         <div className="flex justify-between py-3  bg-[#FFFFFF] items-center mb-0">
-                            <h1 className="text-lg font-bold  px-4 text-gray-800">Recommended Menus</h1>
+                            <h1 className="text-lg font-bold  px-4 text-gray-800">Packaging Charge</h1>
                         </div>
 
-                        <div className="flex flex- bg-[#FFFFFF] gap-4 pt-5 pl-4">
-                            <div className="flex items-center gap-4">
-                                <img
-                                    src={""}
-                                    className='w-12 h-12 object-cover rounded-full'
-                                    alt='Recommended Menu'
-                                />
-                                <h2>
+                        <div className="flex flex-col bg-[#FFFFFF] gap-4 pt-5 ">
+                        <div className='bg-[#F1F5F9] py-4 pl-5'><h3>APPLIED</h3></div>
+                            <div className="flex items-center flex-row   gap-4 pl-5">
+                                
+                                <h2>Packaging charge</h2>
+                                <div className='flex flex-row w-14 py-2 mb-2 rounded-md  border-[1px] border-[#C9C9C9]'>
+                                    <h2>Rs:</h2>
+                                    <input
+                                    type="text"
+                                    className="w-full rounded-lg border-none"
+                                    placeholder=""
+                                    // value={packagingCharge}
 
-                                </h2>
+                                    />
+                                </div>
 
                             </div>
 

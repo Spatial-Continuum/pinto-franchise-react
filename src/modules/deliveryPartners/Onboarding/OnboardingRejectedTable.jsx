@@ -9,6 +9,7 @@ import { fetchMerchantListOnboarding, selectMerchantListOnboarding, selectMercha
 import updateRestaurantSuccess from '../../restaurants/RestaurantService';
 import RestaurantService from '../../restaurants/RestaurantService';
 import PdfView from '../../../components/GeneralComponent/PdfView/PdfView';
+
 import { useNavigate } from 'react-router-dom';
 const OnboardingRejectedTable = ({ searchTerm }) => {
     const dispatch = useDispatch();
@@ -17,8 +18,10 @@ const OnboardingRejectedTable = ({ searchTerm }) => {
     const merchants = useSelector(selectMerchantListOnboarding);
     const [addressPopup, setAddressPopup] = useState(false)
     const [addressPopupData, setAddressPopupData] = useState(null)
+    const [Editable, setEditable] = useState(false)
     const [rejectReasonPopup, setRejectReasonPopup] = useState(false)
-    const [rejectReason, setRejectReason] = useState(null)    
+    const [rejectReason, setRejectReason] = useState(null)
+    const [currentRestaurantId, setCurrentRestaurantId] = useState(null)
     const [selectedRow, setSelectedRow] = useState(null)
     const loading = useSelector(selectMerchantLoading);
     const [modalContent, setModalContent] = useState(null);
@@ -31,7 +34,7 @@ const OnboardingRejectedTable = ({ searchTerm }) => {
 
     useEffect(() => {
         dispatch(fetchMerchantListOnboarding({ onboarding }));
-        console.log('timings',timingPopupData)
+        console.log('timings', timingPopupData)
     }, [onboarding, dispatch, refresh, timingPopupData]);
 
     const filteredMerchants = searchTerm ? merchants.filter((merchant) =>
@@ -44,29 +47,29 @@ const OnboardingRejectedTable = ({ searchTerm }) => {
     }
     const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
-    const handleLaunch = async (restaurantId) => {
-        console.log('KeyboardOffIcon', restaurantId)
+    const handleLaunch = async () => {
+        
         try {
-            const response = await RestaurantService.updateRestaurantSuccess(restaurantId)
+            const response = await RestaurantService.updateRestaurantSuccess(currentRestaurantId)
             console.log("Onboarding status updated successfully:", response);
-            alert("Onboarding status updated to 'Success'!");
+            setRejectReasonPopup(false)
             setRefresh((prev) => !prev);
         } catch (error) {
             console.error("Error updating onboarding status:", error);
             alert("Failed to update onboarding status. Please try again.");
         }
     }
-    const handleReject = async (restaurantId) => {
-        try {
-            const response = await RestaurantService.updateRestaurantRejected(restaurantId)
-            console.log("Onboarding status updated successfully:", response);
-            alert("Onboarding status updated to 'Rejected'!");
-            setRefresh((prev) => !prev);
-        } catch (error) {
-            console.error("Error updating onboarding status:", error);
-            alert("Failed to update onboarding status. Please try again.");
-        }
-    }
+    // const handleReject = async (restaurantId) => {
+    //     try {
+    //         const response = await RestaurantService.updateRestaurantRejected(restaurantId)
+    //         console.log("Onboarding status updated successfully:", response);
+    //         alert("Onboarding status updated to 'Rejected'!");
+    //         setRefresh((prev) => !prev);
+    //     } catch (error) {
+    //         console.error("Error updating onboarding status:", error);
+    //         alert("Failed to update onboarding status. Please try again.");
+    //     }
+    // }
     const getCurrentDayHours = (openingHours) => {
         const daysOfWeek = [
             "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
@@ -85,10 +88,27 @@ const OnboardingRejectedTable = ({ searchTerm }) => {
         setTimingPopupData(opening_hours)
 
     }
-    const handleVerify =(rejectionReason) =>{
-      
+    const handleVerify = (rejectionReason) => {
+
         setRejectReasonPopup(true)
-        setRejectReason(rejectionReason )
+        setRejectReason(rejectionReason)
+
+    }
+    const sumbitRejection = async () => {
+        try {
+            const response = await RestaurantService.updateRestaurantRejected(currentRestaurantId, rejectReason)
+            console.log("Rejected restaurant_id:", currentRestaurantId);
+            console.log("Rejection Reason:", rejectReason);
+
+            setRejectReasonPopup(false);
+            setCurrentRestaurantId(null);
+            setRejectReason("");
+
+            setRefresh((prev) => !prev);
+        } catch (error) {
+            console.error("Error updating onboarding status:", error);
+            alert("Failed to update onboarding status. Please try again.");
+        }
 
     }
 
@@ -99,7 +119,7 @@ const OnboardingRejectedTable = ({ searchTerm }) => {
     }
     const columns = [{
         name: "SHOP NAME",
-        width:"200px",
+        width: "200px",
         cell: (row) => (
             <div style={{ display: "flex", alignItems: "center" }}>
                 <img
@@ -127,7 +147,7 @@ const OnboardingRejectedTable = ({ searchTerm }) => {
     },
     {
         name: "FASSAI",
-        width:"100px",
+        width: "100px",
         selector: (row) => (
             <div
                 style={{
@@ -144,7 +164,7 @@ const OnboardingRejectedTable = ({ searchTerm }) => {
     },
     {
         name: "PER%",
-        width:"100px",
+        width: "100px",
         selector: (row) => row.commission_percentage
     },
     {
@@ -153,7 +173,7 @@ const OnboardingRejectedTable = ({ searchTerm }) => {
     },
     {
         name: "ADDRESS",
-        width:"100px",
+        width: "100px",
         selector: (row) => (
             <div
                 style={{
@@ -177,14 +197,14 @@ const OnboardingRejectedTable = ({ searchTerm }) => {
     },
     {
         name: "EMAIL",
-        width:"200px",
+        width: "200px",
         selector: (row) => row.email,
 
 
     },
     {
         name: "TIMINGS",
-        width:"100px",
+        width: "100px",
         selector: (row) => (
             <div
                 style={{
@@ -223,7 +243,11 @@ const OnboardingRejectedTable = ({ searchTerm }) => {
                         borderRadius: "8px",
                         cursor: "pointer",
                     }}
-                    onClick={()=>handleVerify(row.rejection_reason)}>
+                    onClick={() => {
+                        handleVerify(row.rejection_reason)
+                        setCurrentRestaurantId(row.restaurant_id)
+                    }
+                    }>
                     Review
                 </button>
             </div>
@@ -255,7 +279,7 @@ const OnboardingRejectedTable = ({ searchTerm }) => {
                 <DataTable
 
                     columns={columns}
-                    data={filteredMerchants ||"No Merchants found"}
+                    data={filteredMerchants || "No Merchants found"}
                     highlightOnHover
                     //fixedHeader
                     striped
@@ -344,15 +368,22 @@ const OnboardingRejectedTable = ({ searchTerm }) => {
                             <h2 className="text-xl font-semibold mb-4">Rejecting the Applicant ?</h2>
 
                             {/* Description Input */}
-                            <label className="block text-gray-700 text-xs font-medium mb-2">
-                                Reason for Rejection
-                            </label>
+                            <div className='flex justify-between'>
+                                <label className="block text-gray-700 text-xs font-medium mb-2">
+                                    Reason for Rejection
+                                </label>
+                                <button className='text-black font-semibold'
+                                    onClick={() => setEditable(true)}>
+                                    ?
+                                </button>
+                            </div>
                             <textarea
                                 className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
                                 rows="4"
                                 placeholder="Type here..."
                                 value={rejectReason}
-                                disabled
+                                onChange={(e) => setRejectReason(e.target.value)}
+                                disabled={!Editable}
                             ></textarea>
 
                             {/* Buttons */}
@@ -368,13 +399,14 @@ const OnboardingRejectedTable = ({ searchTerm }) => {
                                 <div className="flex gap-3 mt-4">
                                     <button
                                         className="px-4 py-0 text-red-700 border border-red-400 rounded-md hover:bg-red-100"
-                                    // Close popup on cancel
+                                        onClick={sumbitRejection}
+
                                     >
                                         Reject
                                     </button>
                                     <button
                                         className="px-4 py-0 bg-green-200 text-green-900 rounded-md hover:bg-green-700"
-                                        // onClick={handleReject} // Replace with actual reject function
+                                     onClick={handleLaunch}
                                     >
                                         Approve
                                     </button>

@@ -42,6 +42,8 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
   const [allItems, setAllItems] = useState([])
   const [selectedMenuTitle, setSelectedMenuTitle] = useState('')
   const [filteredItems, setFilteredItems] = useState([])
+  const [timingPopup, setTimingPopup] = useState(false)
+  const [timingPopupData, setTimingPopupData] = useState({})
   const handleMenuPopup = (row) => {
     const { restaurant_id: restaurantId } = row
 
@@ -124,6 +126,7 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
       setFilteredItems(allItems);
     }
   };
+  const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
 
   const filteredData = selectedMenuTitle !== 'All' ? filteredItems : allItems;
@@ -144,13 +147,18 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
     const CurrentDayHours = openingHours[currentDayName] || "Hours not available";
     return `${CurrentDayHours} (${currentDayName})`;
   };
+  const handleOpenTimings = (opening_hours) => {
+    setTimingPopup(true)
+    setTimingPopupData(opening_hours)
+
+  }
   const columns = [
     {
       name: "SHOPNAME",
-      width:"200px",
+      width: "200px",
       sortable: true,
       cell: (row) => (
-        <div style={{ display: "flex", alignItems: "center" ,Width:"100px" }}>
+        <div style={{ display: "flex", alignItems: "center", Width: "100px" }}>
           <img
             src={row.logo}
             alt={row.image}
@@ -172,11 +180,11 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
         </div>
       ),
     },
-    
+
     {
       name: "ADDRESS",
-      width:"100px",
-      
+      width: "100px",
+
       selector: (row) => (
         <div
           style={{
@@ -204,24 +212,26 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
           {row.is_online ? "ONLINE" : "OFFLINE"}
         </span>),
     },
-    {name:"ORDERS",
-      selector:(row) =>""
-    },
-  
     {
-      name:"REVENUE",
-      selector:(row)=>""
+      name: "ORDERS",
+      selector: (row) => ""
     },
-    {name:"PAID",
-      selector:(row)=>""
+
+    {
+      name: "REVENUE",
+      selector: (row) => ""
     },
     {
-      name:"BALANCE",
-      selector:(row)=>""
+      name: "PAID",
+      selector: (row) => ""
+    },
+    {
+      name: "BALANCE",
+      selector: (row) => ""
     },
     {
       name: "MENU ITEMS",
-      width:"120px",
+      width: "120px",
       selector: (row) => (
         <div
           style={{
@@ -236,12 +246,32 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
       ),
     },
     {
+      name: "TIMINGS",
+      width: "100px",
+      selector: (row) => (
+        <div
+          style={{
+            display: "flex", justifyContent: "center", alignItems: "center", height: "100%",
+          }}
+        >
+          <img
+            src={addon} alt="menu" style={{ cursor: "pointer", width: "18px", height: "18px" }}
+            onClick={() => handleOpenTimings(row.opening_hours)}
+
+
+          />
+        </div>
+      ),
+
+      wrap: true,
+    },
+    {
       name: "GSTIN",
       selector: (row) => row.gstin,
     },
     {
       name: "FASSAI",
-      width:"100px",
+      width: "100px",
       selector: (row) => (
         <div
           style={{
@@ -256,7 +286,7 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
         </div>
       ),
     },
-    
+
 
 
   ]
@@ -373,7 +403,7 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
                     transition: "all 0.1s",
                   }}
                   onMouseEnter={(e) => (e.target.style.backgroundColor = "orange")}
-                  onMouseLeave={(e) => (e.target.style.backgroundColor =   selectedItem === menu.menu_title || selectedItem === 'All'? "orange" : "#fff")}
+                  onMouseLeave={(e) => (e.target.style.backgroundColor = selectedItem === menu.menu_title || selectedItem === 'All' ? "orange" : "#fff")}
                   onClick={() => handleMenuClick("All")}
                 >
                   All
@@ -390,7 +420,7 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
                       transition: "all 0.1s",
                     }}
                     onMouseEnter={(e) => (e.target.style.backgroundColor = "orange")}
-                    onMouseLeave={(e) => (e.target.style.backgroundColor = selectedItem === menu.menu_title ? "orange" : "#fff")} 
+                    onMouseLeave={(e) => (e.target.style.backgroundColor = selectedItem === menu.menu_title ? "orange" : "#fff")}
                     // onClick={(e) => (e.target.style.backgroundColor = "orange")}
                     onClick={() => handleMenuClick(menu.menu_title)}
                   >
@@ -549,7 +579,36 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
           </div>
         </div>
       )}
+      {
+        timingPopup && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-80 relative">
+              {/* Heading */}
+              <button
+                className=" absolute top-2 right-2 text-black  text-4xl pr-5  "
+                onClick={() => setTimingPopup(false)}
+              >
+                &times;
+              </button>
 
+              <h2 className="text-xl font-semibold mb-4">Opening Hours</h2>
+
+
+
+              {/* Opening Hours Table */}
+              <div className="grid grid-cols-1 gap-4">
+                {daysOfWeek.map((day) => (
+                  <div key={day} className={`flex justify-between ${timingPopupData[day] === "" ? "text-red-500" : "text-gray-800"}`}>
+                    <span className="font-medium">{day}</span>
+                    <span>{timingPopupData[day] === "" ? "Closed" : timingPopupData[day]}</span>
+                  </div>
+                ))}
+
+              </div>
+            </div>
+          </div>
+        )
+      }
 
     </>
   )

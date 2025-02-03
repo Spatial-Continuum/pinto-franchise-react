@@ -113,8 +113,10 @@ const handleRemoveAddon = (addonId) => {
         postData.append('menu_category_id', formData.menuCategory);
         postData.append('subcategory_id', formData.subCategory);
         if (formData.selectedAddons.length > 0) {
-            postData.append('addons',JSON.stringify(formData.selectedAddons) )
-                }
+            formData.selectedAddons.forEach((addonId) => {
+              postData.append('addon_ids', addonId); // Most API formats
+            });
+          }
 
 
         // Append item image if present
@@ -295,7 +297,7 @@ const handleRemoveAddon = (addonId) => {
                                 />
                                 {/* Dropdown list for search results */}
                                 {subcategories.length > 0 && (
-                                    <ul className=" bg-white mt-2 border border-gray-300 rounded-md max-h-40 overflow-y-auto w-full">
+                                    <ul className=" absolute overflow-y-auto z-50 top-full left-0 bg-white mt-2 border border-gray-300 rounded-md max-h-40 o= w-full">
                                         {subcategories.map((sub) => (
                                             <li
                                                 key={sub.subcategory_id}

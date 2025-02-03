@@ -270,7 +270,7 @@ const RestaurantTypeTimings = ({ formData, ExtraCuisine, ExtraStore, onDataChang
                                             <Switch
                                                 checked={formData.opening_hours[day] !== ''}
                                                 onChange={(checked) => {
-                                                    // When the switch is toggled, either set the value to empty or set a default time
+                                                
                                                     setData((prev) => ({
                                                         ...prev,
                                                         opening_hours: {

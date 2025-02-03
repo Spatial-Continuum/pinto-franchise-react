@@ -229,7 +229,7 @@ const OnboardingPendingTable = ({ searchTerm }) => {
                         borderRadius: "4px",
                         cursor: "pointer",
                     }}
-                    onClick={() => handleReject(row.restaurant_id)}
+                    onClick={() =>  handleReject(row.restaurant_id)}
                 >
                     Reject
                 </button>

@@ -314,6 +314,7 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                                 value={data.primary_phone || ''}
                                 onChange={handleInputChange}
                                 placeholder="Enter mobile number"
+                                maxLength="10"
                                 className={`px-3 py-2 border ${
                                     validFields.primary_phone ? 'border-gray-300' : 'border-red-500'
                                 } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
@@ -331,6 +332,7 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                                 name="secondary_phone"
                                 value={data.secondary_phone || ''}
                                 onChange={handleInputChange}
+                                maxLength="10"
                                 type="number"
                                 placeholder="Enter Secondary Mobile Number"
                                 className={`px-3 py-2 border ${
@@ -399,6 +401,7 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                             name="gstin"
                             value={data.gstin || ''}
                             onChange={handleInputChange}
+                            maxLength="15"
                             placeholder="Enter GSTIN"
                             style={{ textTransform: 'uppercase' }}
                             className={`px-3 py-2 border ${
@@ -490,6 +493,7 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                                             type="text"
                                             name="phone"
                                             placeholder="Enter Mobile No"
+                                            maxLength="10"
                                             value={newUserDetails.phone}
                                             onChange={handleUserDetailsChange}
                                             className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"

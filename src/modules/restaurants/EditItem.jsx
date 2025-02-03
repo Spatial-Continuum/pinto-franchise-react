@@ -7,11 +7,13 @@ import { getItemByIdApi, selectGetItemByIdApi, updateItemByIdApi } from '../../r
 import { getSubcategoryByApi, selectSubcategorybyName } from '../../redux/slices/menucategory';
 import { getMenuCategoriesByRestaurantApi, selectGetMenuRestaurant } from '../../redux/slices/menucategory';
 import { getRestaurantById, selectSelectedRestaurant } from '../../redux/slices/restaurant';
+import { getAllAddonApi, selectGetAllAddonApiData } from '../../redux/slices/addons';
 
 
 const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
   const dispatch = useDispatch();
   //const { itemById } = useSelector((state) => state.item);
+  const addons = useSelector(selectGetAllAddonApiData)
   const itemById = useSelector(selectGetItemByIdApi)
   const subcategories = useSelector(selectSubcategorybyName)
   const categories = useSelector(selectGetMenuRestaurant)
@@ -37,6 +39,8 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
     image: null,
     imagePreview: null,
     sellingPrice: '',
+    selectedAddons:[],
+    addons: []
   });
 
   // Fetch item data on mount
@@ -47,6 +51,7 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
     }
     if (restaurantId) {
       dispatch(getMenuCategoriesByRestaurantApi(restaurantId))
+      dispatch(getAllAddonApi(restaurantId))
 
 
     }
@@ -57,9 +62,10 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
   // Populate form when item data is loaded
   useEffect(() => {
     if (itemById) {
+      console.log('ietemdjsbf', itemById)
       setFormData({
         name: itemById.item_name || '',
-        category: itemById.menu_category || '',
+        category: itemById.menu_category?.menu_category_id || '',
         subcategory_id: itemById.subcategory_id || '',
         subcategory_title: itemById.subcategory_title || '',
         foodType: itemById.item_type || '',
@@ -70,7 +76,10 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
         image: null,
         imagePreview: itemById.image || '',
         sellingPrice: itemById.selling_price || '',
-      });
+        selectedAddons: Array.isArray(itemById.addons) 
+        ? itemById.addons.map(addon => addon.addon_id) 
+        : [],
+    });
     }
 
   }, [itemById,]);
@@ -84,10 +93,24 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
     else {
       setShowSubcategoryDropdown(false);
     }
+    const fetchCategories = async () => {
+      try {
+
+          if (restaurantId) {
+             dispatch(getMenuCategoriesByRestaurantApi(restaurantId))
+
+          }
+      } catch (error) {
+          console.error('Error fetching categories:', error);
+      }
+  };
+  if (restaurantId) {
+      fetchCategories();
+  }
   }, [searchQuery, dispatch]);
 
   const handleSubcategorySelect = (subcategory) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       subcategory_id: subcategory.subcategory_id,
     }));
@@ -95,6 +118,19 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
     setSearchQuery('');
     setShowSubcategoryDropdown(false);
   };
+
+  const handleCheckboxChange = (addonId) => {
+    setFormData((prev) => {
+      const isSelected = prev.selectedAddons?.includes(addonId);
+      return {
+        ...prev,
+        selectedAddons: isSelected
+          ? prev.selectedAddons.filter((id) => id !== addonId) 
+          : [...prev.selectedAddons, addonId], 
+      };
+    });
+  };
+  
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -106,6 +142,35 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
       }));
     }
   };
+  const handleRemoveAddon = (addonId) => {
+    setFormData({
+        ...formData,
+        selectedAddons: formData.selectedAddons.filter((id) => id !== addonId),
+    });
+}
+//   <div className="mt-4">
+//   <label htmlFor="selectAddOns" className="text-sm font-xs text-gray-700 mb-1">
+//     Select Add Ons
+//   </label>
+//   {addons.length > 0 ? (
+//     addons.map((addon) => (
+//       <div key={addon.addon_id} className="flex items-center space-x-2">
+//         <input
+//           type="checkbox"
+//           id={`addon-${addon.addon_id}`}
+//           checked={formData.selectedAddons.includes(addon.addon_id)}
+//           onChange={() => handleCheckboxChange(addon.addon_id)}
+//           className="h-4 w-4"
+//         />
+//         <label htmlFor={`addon-${addon.addon_id}`} className="text-sm text-gray-700">
+//           {addon.addon_name}
+//         </label>
+//       </div>
+//     ))
+//   ) : (
+//     <p className="text-gray-500">No addons available</p>
+//   )}
+// </div>
 
   const removeImage = () => {
     setFormData(prev => ({
@@ -151,6 +216,11 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
       } else {
         console.log(`${key}: ${value}`);
       }
+    }
+    if (formData.selectedAddons.length > 0) {
+      formData.selectedAddons.forEach((addonId) => {
+        formPayload.append('addon_ids', addonId); // 
+      });
     }
     console.log('formiing', formData)
     dispatch(updateItemByIdApi({ itemId, formPayload })).unwrap()
@@ -226,62 +296,62 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
 
 
           <div className="flex flex-col w-1/2 relative">
-                <label htmlFor="subCategory" className="text-sm font-xs text-gray-700 mb-1">Sub Category</label>
-                <div className="relative">
-                  <input
-                    id="subCategory"
-                    name='subcategory_id'
-                    type="text"
-                    value={subcategoryTitle}
-                    onChange={(e) => {
-                      setSearchQuery(e.target.value);
-                      // setFormData(prev => ({ ...prev, subcategory_id: e.target.value }));
-                    }}
-                    placeholder="Search"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"
-                  />
-                  <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <label htmlFor="subCategory" className="text-sm font-xs text-gray-700 mb-1">Sub Category</label>
+            <div className="relative">
+              <input
+                id="subCategory"
+                name='subcategory_id'
+                type="text"
+                value={subcategoryTitle}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  // setFormData(prev => ({ ...prev, subcategory_id: e.target.value }));
+                }}
+                placeholder="Search"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"
+              />
+              <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
 
-                  {showSubcategoryDropdown && (
-                    <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
-                      {subcategories?.map(sub => (
-                        <div
-                          key={sub.subcategory_id}
-                          onClick={() => handleSubcategorySelect(sub)}
-                          className="p-2 hover:bg-gray-100 cursor-pointer"
-                        >
-                          {sub.subcategory_title}
-                        </div>
-                      ))}
+              {showSubcategoryDropdown && (
+                <div className="absolute z-10 top-full left-0 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
+                  {subcategories?.map(sub => (
+                    <div
+                      key={sub.subcategory_id}
+                      onClick={() => handleSubcategorySelect(sub)}
+                      className="p-2 hover:bg-gray-100 cursor-pointer"
+                    >
+                      {sub.subcategory_title}
                     </div>
-                  )}
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+          <div>
+            <div>
+              <label className="text-sm font-xs text-gray-700 mb-1">Food Type</label>
+              <div className="flex gap-4 mt-2">
+                <div
+                  className={`flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md cursor-pointer ${formData?.foodType === 'Veg' ? 'bg-green-100' : ''}`}
+                  onClick={() => handleFoodTypeSelect('Veg')}
+                >
+                  <div className="w-5 h-5 rounded-full flex items-center justify-center">
+                    <img src={veg} className="h-4 w-4 text-white" />
+                  </div>
+                  <span className="text-sm text-gray-700 font-medium">Veg</span>
+                </div>
+
+                <div
+                  className={`flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md cursor-pointer ${formData.foodType === 'Non-Veg' ? 'bg-red-100' : ''}`}
+                  onClick={() => handleFoodTypeSelect('Non-Veg')}
+                >
+                  <div className="w-5 h-5  flex items-center justify-center">
+                    <img src={nonveg} className="h-4 w-4 text-white" />
+                  </div>
+                  <span className="text-sm text-gray-700 font-medium">Non-Veg</span>
                 </div>
               </div>
-          <div>
-          <div>
-                <label className="text-sm font-xs text-gray-700 mb-1">Food Type</label>
-                <div className="flex gap-4 mt-2">
-                  <div
-                    className={`flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md cursor-pointer ${formData?.foodType === 'Veg' ? 'bg-green-100' : ''}`}
-                    onClick={() => handleFoodTypeSelect('Veg')}
-                  >
-                    <div className="w-5 h-5 rounded-full flex items-center justify-center">
-                      <img src={veg} className="h-4 w-4 text-white" />
-                    </div>
-                    <span className="text-sm text-gray-700 font-medium">Veg</span>
-                  </div>
-
-                  <div
-                    className={`flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md cursor-pointer ${formData.foodType === 'Non-Veg' ? 'bg-red-100' : ''}`}
-                    onClick={() => handleFoodTypeSelect('Non-Veg')}
-                  >
-                    <div className="w-5 h-5  flex items-center justify-center">
-                      <img src={nonveg} className="h-4 w-4 text-white" />
-                    </div>
-                    <span className="text-sm text-gray-700 font-medium">Non-Veg</span>
-                  </div>
-                </div>
-              </div>  
+            </div>
 
             {/* Item Description */}
             <div className="flex flex-col mt-5">
@@ -387,11 +457,11 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
               {/* Item Name and Category inputs remain same */}
 
               {/* Modified Subcategory Section */}
-              
 
 
 
-             
+
+
 
               {/* Modified Image Upload Section */}
               <div className="flex flex-col w-2/5 mt-5">
@@ -426,6 +496,50 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
                     </label>
                   )}
                 </div>
+              </div>
+
+
+              <div className="mt-4">
+                <label htmlFor="selectAddOns" className="text-sm font-xs text-gray-700 mb-1">
+                  Select Add Ons
+                </label>
+                {addons?.length > 0 ? (
+                  addons.map((addon) => (
+                    <div key={addon.addon_id} className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id={`addon-${addon.addon_id}`}
+                        
+                        checked={formData.selectedAddons.includes(addon.addon_id)}
+                       
+                        onChange={() => handleCheckboxChange(addon.addon_id)}
+                        className="h-4 w-4"
+                      />
+                      <label htmlFor={`addon-${addon.addon_id}`} className="text-sm text-gray-700">
+                        {addon.addon_name}
+                      </label>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-gray-500">No addons available</p>
+                )}
+
+{formData.selectedAddons.length > 0 && (
+                                <div className="mt-4 flex flex-wrap gap-2">
+                                    {formData.selectedAddons.map((addonId) => {
+                                        const addon = addons?.find((a) => a.addon_id === addonId);
+                                        return (
+                                            <span
+                                                key={addonId}
+                                                className="bg-[#c5c8cc88] text-[#000000] border-[1px] border-[#443f3f] px-3 py-1 rounded-xl text-sm"
+                                            >
+                                                {addon?.addon_name}<span className='text-xl top-4 items-center cursor-pointer justify-center -mt-0 ml-2'
+                                                 onClick={() => handleRemoveAddon(addonId)}>&times;</span>
+                                            </span>
+                                        );
+                                    })}
+                                </div>
+                            )}
               </div>
             </div>
           </div>
