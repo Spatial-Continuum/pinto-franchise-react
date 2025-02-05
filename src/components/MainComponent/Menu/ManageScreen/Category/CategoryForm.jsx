@@ -169,7 +169,6 @@ const AddCategoryForm = () => {
     ];
     setSelectedCategory(updatedData);
   };
-
   const handleSubmit = (e) => {
     console.log("sadfsdsds", selectedCuisineIds);
     e.preventDefault();
