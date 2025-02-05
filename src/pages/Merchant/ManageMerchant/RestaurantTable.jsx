@@ -313,7 +313,7 @@ const RestaurantTable = ({ onboarding, searchTerm }) => {
     <>
 
 
-      <div className="hide-scrollbar rounded-md gap-5 w-full border-[1px] border-green-600 ">
+      <div className="hide-scrollbar rounded-md gap-5 w-full border-[1px] overscroll-x-auto  border-green-600 ">
         {loading && <div>Loading...</div>}
         {error && <div>Error: {error}</div>}
         <DataTable

@@ -16,10 +16,14 @@ const ManageIndex = () => {
         { label: 'rejected', value: "Rejected" },
     ]
     const cardsData = [
-        { value: 75, label: 'Active Restaurants', textColor: 'text-blue-600', borderColor: 'border-[#1E99FF]' },
-        { value: '2k', label: 'Total Orders', textColor: 'text-orange-600', borderColor: 'border-[#FF6B00]' },
-        { value: 200, label: 'New Signups', textColor: 'text-green-700', borderColor: 'border-[#008B0E]' },
-        { value: '+', label: 'New Restaurant', textColor: 'text-gray-500', borderColor: 'border-gray-300', route: '/onboardingform' },
+        { value: '50', label: 'Live Orders', textColor: 'text-[#008BFF]', borderColor: 'border-[#008BFF]',text1:'10% increased', text2:'avcc', text3:'bdjh',text1Color:'text-[#585858]', text2Color:'text-[#585858]', text3Color:'text-[#585858]' },
+        { value: '1.5k', label: 'Completed', textColor: 'text-[#008B0E]', borderColor: 'border-[#008B0E]' ,text1:'10% increased', text2:'avcc', text3:'bdjh' , text1Color:'text-[#585858]', text2Color:'text-[#585858]', text3Color:'text-[#585858]'},
+        { value: '05', label: 'Cancelled', textColor: 'text-[#FF0000]', borderColor: 'border-[#FF0000]',text1:'10% increased', text2:'avcc', text3:'bdjh',text1Color:'text-[#585858]',  text2Color:'text-[#585858]', text3Color:'text-[#585858]' },
+        { value: '10', label: 'Delayed', textColor: 'text-[#720F3D]', borderColor: 'border-[#720F3D]',text1:'10% increased', text2:'avcc', text3:'bdjh' ,text1Color:'text-[#585858]',  text2Color:'text-[#585858]', text3Color:'text-[#585858]'}, 
+        { value: '1.52K', label: 'Total Orders', textColor: 'text-[#020D6E]', borderColor: 'border-[#020D6E]', text1:'10% increased', text2:'avcc', text3:'bdjh',text1Color:'text-[#585858]',  text2Color:'text-[#585858]', text3Color:'text-[#585858]'},
+        { value: '20%', label: 'Order Ratio', textColor: 'text-[#FF00C7]', borderColor: 'border-[#FF00C7]',text1:'10% increased', text2:'avcc', text3:'bdjh',text1Color:'text-[#585858]',  text2Color:'text-[#585858]', text3Color:'text-[#585858]' },
+        //{ value: '20%', label: 'Order Ratio', textColor: 'text-gray-500', borderColor: 'border-gray-300', route: '/onboardingform' },
+
     ];
 
     const handleCardClick = (card) => {

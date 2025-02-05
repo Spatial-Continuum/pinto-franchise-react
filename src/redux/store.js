@@ -8,6 +8,7 @@ import itemReducer from './slices/item';
 import addonReducer from './slices/addons';
 import dishReducer from './slices/dishes';
 import menuCategoryReducer from './slices/menucategory'
+import orderHistoryReducer from './slices/ordersHistory'
 
 export const store = configureStore({
   reducer: {
@@ -18,5 +19,8 @@ export const store = configureStore({
     addon:addonReducer,
     dish:dishReducer,
     menuCategory:menuCategoryReducer,
+    orderHistory:orderHistoryReducer
+
+
   },
 })

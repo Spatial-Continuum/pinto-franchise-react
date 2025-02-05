@@ -6,7 +6,7 @@ import nonveg from '../../assets/images/nonvegicon.svg'
 import { getItemByIdApi, selectGetItemByIdApi, updateItemByIdApi } from '../../redux/slices/item';
 import { getSubcategoryByApi, selectSubcategorybyName } from '../../redux/slices/menucategory';
 import { getMenuCategoriesByRestaurantApi, selectGetMenuRestaurant } from '../../redux/slices/menucategory';
-import { getRestaurantById, selectSelectedRestaurant } from '../../redux/slices/restaurant';
+import { getRestaurantById, selectSelectedRestaurant, selectApiError, selectApiLoading } from '../../redux/slices/restaurant';
 import { getAllAddonApi, selectGetAllAddonApiData } from '../../redux/slices/addons';
 
 
@@ -15,10 +15,12 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
   //const { itemById } = useSelector((state) => state.item);
   const addons = useSelector(selectGetAllAddonApiData)
   const itemById = useSelector(selectGetItemByIdApi)
+  const loading = useSelector(selectApiLoading)
+  const error = useSelector(selectApiError)
   const subcategories = useSelector(selectSubcategorybyName)
   const categories = useSelector(selectGetMenuRestaurant)
   const restaurantDetails = useSelector(selectSelectedRestaurant)
-  const [subcategoryTitle, setSubcategoryTitle] = useState('')
+  //const [subcategoryTitle, setSubcategoryTitle] = useState('')
   const [searchQuery, setSearchQuery] = useState("")
 
   //const subcategories = useSelector((state) => state.menuCategory.subcategories);
@@ -29,8 +31,6 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
   const [formData, setFormData] = useState({
     name: '',
     category: '',
-    subcategory_id: '',
-    subcategory_title: '',
     foodType: '',
     description: '',
     basePrice: '',
@@ -39,7 +39,9 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
     image: null,
     imagePreview: null,
     sellingPrice: '',
-    selectedAddons:[],
+    subcategory_id: itemById.subcategory?.subcategory_id || '',
+    subcategory_title: itemById.subcategory?.subcategory_title || '',
+    selectedAddons: [],
     addons: []
   });
 
@@ -67,7 +69,7 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
         name: itemById.item_name || '',
         category: itemById.menu_category?.menu_category_id || '',
         subcategory_id: itemById.subcategory_id || '',
-        subcategory_title: itemById.subcategory_title || '',
+        subcategory_title: itemById.subcategory?.subcategory_title || '',
         foodType: itemById.item_type || '',
         description: itemById.description || '',
         basePrice: itemById.base_price || '',
@@ -76,17 +78,17 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
         image: null,
         imagePreview: itemById.image || '',
         sellingPrice: itemById.selling_price || '',
-        selectedAddons: Array.isArray(itemById.addons) 
-        ? itemById.addons.map(addon => addon.addon_id) 
-        : [],
-    });
+        selectedAddons: Array.isArray(itemById.addons)
+          ? itemById.addons.map(addon => addon.addon_id)
+          : [],
+      });
     }
 
   }, [itemById,]);
 
   // Handle subcategory search
   useEffect(() => {
-    if (searchQuery.length > 0) {
+    if (searchQuery.length > 0 && searchQuery !== formData.subcategory_title) {
       dispatch(getSubcategoryByApi(searchQuery));
       setShowSubcategoryDropdown(true);
     }
@@ -96,25 +98,26 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
     const fetchCategories = async () => {
       try {
 
-          if (restaurantId) {
-             dispatch(getMenuCategoriesByRestaurantApi(restaurantId))
+        if (restaurantId) {
+          dispatch(getMenuCategoriesByRestaurantApi(restaurantId))
 
-          }
+        }
       } catch (error) {
-          console.error('Error fetching categories:', error);
+        console.error('Error fetching categories:', error);
       }
-  };
-  if (restaurantId) {
+    };
+    if (restaurantId) {
       fetchCategories();
-  }
+    }
   }, [searchQuery, dispatch]);
 
   const handleSubcategorySelect = (subcategory) => {
     setFormData((prev) => ({
       ...prev,
       subcategory_id: subcategory.subcategory_id,
+      subcategory_title: subcategory.subcategory_title
     }));
-    setSubcategoryTitle(subcategory.subcategory_title);
+    
     setSearchQuery('');
     setShowSubcategoryDropdown(false);
   };
@@ -125,12 +128,12 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
       return {
         ...prev,
         selectedAddons: isSelected
-          ? prev.selectedAddons.filter((id) => id !== addonId) 
-          : [...prev.selectedAddons, addonId], 
+          ? prev.selectedAddons.filter((id) => id !== addonId)
+          : [...prev.selectedAddons, addonId],
       };
     });
   };
-  
+
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -144,33 +147,10 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
   };
   const handleRemoveAddon = (addonId) => {
     setFormData({
-        ...formData,
-        selectedAddons: formData.selectedAddons.filter((id) => id !== addonId),
+      ...formData,
+      selectedAddons: formData.selectedAddons.filter((id) => id !== addonId),
     });
-}
-//   <div className="mt-4">
-//   <label htmlFor="selectAddOns" className="text-sm font-xs text-gray-700 mb-1">
-//     Select Add Ons
-//   </label>
-//   {addons.length > 0 ? (
-//     addons.map((addon) => (
-//       <div key={addon.addon_id} className="flex items-center space-x-2">
-//         <input
-//           type="checkbox"
-//           id={`addon-${addon.addon_id}`}
-//           checked={formData.selectedAddons.includes(addon.addon_id)}
-//           onChange={() => handleCheckboxChange(addon.addon_id)}
-//           className="h-4 w-4"
-//         />
-//         <label htmlFor={`addon-${addon.addon_id}`} className="text-sm text-gray-700">
-//           {addon.addon_name}
-//         </label>
-//       </div>
-//     ))
-//   ) : (
-//     <p className="text-gray-500">No addons available</p>
-//   )}
-// </div>
+  }
 
   const removeImage = () => {
     setFormData(prev => ({
@@ -207,6 +187,11 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
     if (formData.image) {
       formPayload.append('image', formData.image)
     }
+    if (formData.selectedAddons.length > 0) {
+      formData.selectedAddons.forEach((addonId) => {
+        formPayload.append('addon_ids', addonId); // 
+      });
+    }
     for (const [key, value] of formPayload.entries()) {
       if (value instanceof File) {
         console.log(`${key}:`);
@@ -217,11 +202,7 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
         console.log(`${key}: ${value}`);
       }
     }
-    if (formData.selectedAddons.length > 0) {
-      formData.selectedAddons.forEach((addonId) => {
-        formPayload.append('addon_ids', addonId); // 
-      });
-    }
+  
     console.log('formiing', formData)
     dispatch(updateItemByIdApi({ itemId, formPayload })).unwrap()
     console.log('itemiddata', itemId)
@@ -300,12 +281,18 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
             <div className="relative">
               <input
                 id="subCategory"
-                name='subcategory_id'
+                name='subcategory_title'
                 type="text"
-                value={subcategoryTitle}
+                value={formData.subcategory_title || searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
-                  // setFormData(prev => ({ ...prev, subcategory_id: e.target.value }));
+                  if (!e.target.value) {
+                    setFormData(prev => ({
+                      ...prev,
+                      subcategory_id: '',
+                      subcategory_title: ''
+                    }))
+                  }
                 }}
                 placeholder="Search"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"
@@ -499,47 +486,84 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
               </div>
 
 
-              <div className="mt-4">
-                <label htmlFor="selectAddOns" className="text-sm font-xs text-gray-700 mb-1">
-                  Select Add Ons
-                </label>
-                {addons?.length > 0 ? (
-                  addons.map((addon) => (
-                    <div key={addon.addon_id} className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id={`addon-${addon.addon_id}`}
-                        
-                        checked={formData.selectedAddons.includes(addon.addon_id)}
-                       
-                        onChange={() => handleCheckboxChange(addon.addon_id)}
-                        className="h-4 w-4"
-                      />
-                      <label htmlFor={`addon-${addon.addon_id}`} className="text-sm text-gray-700">
-                        {addon.addon_name}
-                      </label>
+              <div className="flex flex-col">
+                {/* Add-On Checkbox */}
+                <div className="flex items-center space-x-4 mt-10">
+                  <input
+                    id="addOn"
+                    name="addOn"
+                    type="checkbox"
+                    checked={formData.addonChecked}
+                    onChange={() => setFormData(prev => ({ ...prev, addonChecked: !prev.addonChecked }))}
+                    className="h-4 w-4 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  />
+                  <label htmlFor="addOn" className="text-sm font-xs text-gray-700">
+                    Add On
+                  </label>
+                </div>
+
+                {/* Dropdown for Addons */}
+                {formData.addonChecked && (
+                  <div className="relative">
+                    {/* Dropdown Button */}
+                    <div
+                      className="w-4/12 px-3 py-2 mt-4 border cursor-pointer border-gray-400 text-[#9CA3B6] rounded-md bg-white text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      onClick={() => setFormData(prev => ({ ...prev, showAddonDropdown: !prev.showAddonDropdown }))}
+                    >
+                      Select Add Ons 🡣
                     </div>
-                  ))
-                ) : (
-                  <p className="text-gray-500">No addons available</p>
+
+                    {/* Dropdown List */}
+                    {formData.showAddonDropdown && (
+                      <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg">
+                        {loading ? (
+                          <p className="p-2">Loading...</p>
+                        ) : error ? (
+                          <p className="p-2 text-red-500">{error}</p>
+                        ) : addons?.length > 0 ? (
+                          addons.map((addon) => (
+                            <div key={addon.addon_id} className="flex items-center px-3 py-2 hover:bg-gray-100">
+                              <input
+                                type="checkbox"
+                                id={`addon-${addon.addon_id}`}
+                                checked={formData.selectedAddons.includes(addon.addon_id)}
+                                onChange={() => handleCheckboxChange(addon.addon_id)}
+                                className="h-4 w-4"
+                              />
+                              <label htmlFor={`addon-${addon.addon_id}`} className="ml-2 text-sm text-gray-700">
+                                {addon.addon_name}
+                              </label>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="p-2 text-gray-500">No addons available</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 )}
 
-{formData.selectedAddons.length > 0 && (
-                                <div className="mt-4 flex flex-wrap gap-2">
-                                    {formData.selectedAddons.map((addonId) => {
-                                        const addon = addons?.find((a) => a.addon_id === addonId);
-                                        return (
-                                            <span
-                                                key={addonId}
-                                                className="bg-[#c5c8cc88] text-[#000000] border-[1px] border-[#443f3f] px-3 py-1 rounded-xl text-sm"
-                                            >
-                                                {addon?.addon_name}<span className='text-xl top-4 items-center cursor-pointer justify-center -mt-0 ml-2'
-                                                 onClick={() => handleRemoveAddon(addonId)}>&times;</span>
-                                            </span>
-                                        );
-                                    })}
-                                </div>
-                            )}
+                {/* Selected Addons Display */}
+                {formData.selectedAddons.length > 0 && (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {formData.selectedAddons.map((addonId) => {
+                      const addon = addons?.find((a) => a.addon_id === addonId);
+                      return (
+                        <span
+                          key={addonId}
+                          className="bg-[#c5c8cc88] text-[#000000] border-[1px] border-[#443f3f] px-3 py-1 rounded-xl text-sm"
+                        >
+                          {addon?.addon_name}
+                          <span className="text-xl top-4 items-center cursor-pointer justify-center -mt-0 ml-2"
+                            onClick={() => handleRemoveAddon(addonId)}
+                          >
+                            &times;
+                          </span>
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
           </div>

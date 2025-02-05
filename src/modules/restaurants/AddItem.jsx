@@ -37,6 +37,9 @@ const AddItem = ({ restaurantId, setShowAddItem, setRefresh, setAddMenuPopup }) 
         mealType: '',
         commission: '',
         selectedAddons: [],
+        // addonChecked: '',
+        addonChecked: false,
+        showAddonDropdown: false,
         addons: [],
     });
 
@@ -60,31 +63,31 @@ const AddItem = ({ restaurantId, setShowAddItem, setRefresh, setAddMenuPopup }) 
         if (restaurantId) {
             fetchCategories();
         }
-    }, [dispatch,refresh1, restaurantId]);
+    }, [dispatch, refresh1, restaurantId]);
 
     const basePrices = formData.basePrice
 
-    let sellingPrice = parseInt( basePrices + ((basePrices * commissionPercentage )/100))
-    
+    let sellingPrice = parseInt(basePrices + ((basePrices * commissionPercentage) / 100))
+
     const handleChange = (e) => {
 
         const { name, value } = e.target;
         if (value === "addNewMenu") {
             setAddMenuPopup(true);
         } else {
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
-}
+            setFormData((prevData) => ({
+                ...prevData,
+                [name]: value,
+            }));
+        };
+    }
 
-const handleRemoveAddon = (addonId) => {
-    setFormData({
-        ...formData,
-        selectedAddons: formData.selectedAddons.filter((id) => id !== addonId),
-    });
-}
+    const handleRemoveAddon = (addonId) => {
+        setFormData({
+            ...formData,
+            selectedAddons: formData.selectedAddons.filter((id) => id !== addonId),
+        });
+    }
     const handleFoodTypeSelect = (type) => {
         setFoodType(type);
     };
@@ -114,9 +117,9 @@ const handleRemoveAddon = (addonId) => {
         postData.append('subcategory_id', formData.subCategory);
         if (formData.selectedAddons.length > 0) {
             formData.selectedAddons.forEach((addonId) => {
-              postData.append('addon_ids', addonId); // Most API formats
+                postData.append('addon_ids', addonId); // Most API formats
             });
-          }
+        }
 
 
         // Append item image if present
@@ -139,7 +142,7 @@ const handleRemoveAddon = (addonId) => {
         } catch (error) {
             console.error('Item creation failed:', error);
         }
-            // Add error toast/notification here
+        // Add error toast/notification here
         // try {
         //     console.log("forming data is ", postData)
         //     const response = await RestaurantService.createItemNew(postData); // API call to post the data
@@ -262,14 +265,14 @@ const handleRemoveAddon = (addonId) => {
                                     onChange={handleChange}
                                     className="px-3 py-2 border cursor-pointer border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
-                                    <option className="cursor-pointer"  value="">Select category</option>
+                                    <option className="cursor-pointer" value="">Select category</option>
                                     {categories.map((category) => (
                                         <option key={category.menu_category_id} value={category.menu_category_id}>
                                             {category.menu_title}
                                         </option>
-                                        
+
                                     ))}
-                                     <option className='text-[#014E8D] cursor-pointer p-3 mt-2' value="addNewMenu">Add a New Menu</option>
+                                    <option className='text-[#014E8D] cursor-pointer p-3 mt-2' value="addNewMenu">Add a New Menu</option>
                                 </select>
                             </div>
                         </div>
@@ -289,15 +292,16 @@ const handleRemoveAddon = (addonId) => {
                                     value={subCategoryTitle}
                                     placeholder="Search subcategory"
                                     onChange={(e) => handleSubcategorySearch(e.target.value)}
-                                    onBlur={() =>{
+                                    onBlur={() => {
                                         if (dropdownRef.current && !dropdownRef.current.contains(e.relatedTarget)) {
                                             setTimeout(() => setSubcategories([]), 50);
-                                        }}} // Clear dropdown after input loses focus
+                                        }
+                                    }} // Clear dropdown after input loses focus
                                     className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                                 {/* Dropdown list for search results */}
                                 {subcategories.length > 0 && (
-                                    <ul className=" absolute overflow-y-auto z-50 top-full left-0 bg-white mt-2 border border-gray-300 rounded-md max-h-40 o= w-full">
+                                    <ul className=" absolute overflow-y-auto z-50 top-full  left-0 bg-white  border border-gray-300 rounded-md max-h-40  w-full">
                                         {subcategories.map((sub) => (
                                             <li
                                                 key={sub.subcategory_id}
@@ -428,7 +432,7 @@ const handleRemoveAddon = (addonId) => {
 
 
                         {/* Quantity and Preparation Time */}
-                        <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-4 ">
                             <div className="flex flex-col w-1/4">
                                 <label htmlFor="quantity" className="text-sm font-xs text-gray-700 mb-1">
                                     Quantity
@@ -461,8 +465,8 @@ const handleRemoveAddon = (addonId) => {
                         </div>
 
                         {/* Item Image */}
-                        <div className='flex flex-row gap-5'>
-                            <div className="flex flex-col w-3/6">
+                        <div className='flex flex-row gap-5 '>
+                            <div className="flex flex-col w-3/6 ">
                                 <label className="text-sm font-xs text-gray-700 mb-1">Item Image</label>
                                 <div className="flex  items-center space-x-4 border border-gray-300 rounded-md py-7 px-5 cursor-pointer hover:bg-gray-100">
 
@@ -526,59 +530,60 @@ const handleRemoveAddon = (addonId) => {
                         </div>
 
 
-                        <div className="flex flex-col mt-10">
-                            <div className="flex items-center space-x-4">
+                        <div className="flex flex-col  ">
+                            <div className="flex items-center space-x-4 mt-10">
                                 <input
                                     id="addOn"
                                     name="addOn"
                                     type="checkbox"
-                                    checked={formData.addon}
-                                    onChange={(e) => setFormData({ ...formData, addon: e.target.checked })}
+                                    checked={formData.addonChecked}
+                                    onChange={(e) => setFormData({ ...formData, addonChecked: !formData.addonChecked })}
                                     className="h-4 w-4 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
                                 />
                                 <label htmlFor="addOn" className="text-sm font-xs text-gray-700">
                                     Add On
                                 </label>
                             </div>
+                            {formData.addonChecked &&
 
-                            {formData.addon &&  (
-                                <div className="mt-4">
-                                    <label htmlFor="selectAddOns" className="text-sm font-xs text-gray-700 mb-1">
-                                        Select Add Ons
-                                    </label>
-                                    {loading ? (
-                                        <p>Loading...</p>
-                                    ) : error ? (
-                                        <p className="text-red-500">{error}</p>
-                                    ) : (
-                                        <div className="relative">
-                                            <div className="border border-gray-400 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                {addons?.length > 0 ? (
-                                                    addons.map((addon) => (
-                                                        <div key={addon.addon_id} className="flex items-center space-x-2">
-                                                            <input
-                                                                type="checkbox"
-                                                                id={`addon-${addon.addon_id}`}
-                                                                checked={formData.selectedAddons.includes(addon.addon_id)}
-                                                                onChange={() => handleCheckboxChange(addon.addon_id)}
-                                                                className="h-4 w-4"
-                                                            />
-                                                            <label
-                                                                htmlFor={`addon-${addon.addon_id}`}
-                                                                className="text-sm text-gray-700"
-                                                            >
-                                                                {addon.addon_name}
-                                                            </label>
-                                                        </div>
-                                                    ))
-                                                ) : (
-                                                    <p className="text-gray-500">No addons available</p>
-                                                )}
-                                            </div>
+                                <div className="relative">
+                                    {/* Dropdown Button */}
+                                    <div
+                                        className="w-4/12 px-3 py-2 mt-4 border cursor-pointer border-gray-400 text-[#9CA3B6] rounded-md bg-white text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        onClick={() => setFormData(prev => ({ ...prev, showAddonDropdown: !prev.showAddonDropdown }))}
+                                    >
+                                        Select Add Ons 🡣
+                                    </div>
+
+                                    {/* Dropdown List */}
+                                    {formData.showAddonDropdown && (
+                                        <div className=" z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg">
+                                            {loading ? (
+                                                <p className="p-2">Loading...</p>
+                                            ) : error ? (
+                                                <p className="p-2 text-red-500">{error}</p>
+                                            ) : addons?.length > 0 ? (
+                                                addons.map((addon) => (
+                                                    <div key={addon.addon_id} className="flex items-center px-3 py-2 hover:bg-gray-100">
+                                                        <input
+                                                            type="checkbox"
+                                                            id={`addon-${addon.addon_id}`}
+                                                            checked={formData.selectedAddons.includes(addon.addon_id)}
+                                                            onChange={() => handleCheckboxChange(addon.addon_id)}
+                                                            className="h-4 w-4"
+                                                        />
+                                                        <label htmlFor={`addon-${addon.addon_id}`} className="ml-2 text-sm text-gray-700">
+                                                            {addon.addon_name}
+                                                        </label>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <p className="p-2 text-gray-500">No addons available</p>
+                                            )}
                                         </div>
                                     )}
-                                </div>
-                            )}
+                                </div>}
+
                             {formData.selectedAddons.length > 0 && (
                                 <div className="mt-4 flex flex-wrap gap-2">
                                     {formData.selectedAddons.map((addonId) => {
@@ -589,7 +594,7 @@ const handleRemoveAddon = (addonId) => {
                                                 className="bg-[#c5c8cc88] text-[#000000] border-[1px] border-[#443f3f] px-3 py-1 rounded-xl text-sm"
                                             >
                                                 {addon?.addon_name}<span className='text-xl top-4 items-center cursor-pointer justify-center -mt-0 ml-2'
-                                                 onClick={() => handleRemoveAddon(addonId)}>&times;</span>
+                                                    onClick={() => handleRemoveAddon(addonId)}>&times;</span>
                                             </span>
                                         );
                                     })}

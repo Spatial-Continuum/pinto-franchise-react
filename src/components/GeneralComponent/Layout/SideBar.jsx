@@ -119,7 +119,7 @@ const SideBar = ({isExpanded,setIsExpanded}) => {
       submenu: [
         { text: "Manage order", to: "/orders/manage-orders" },
         { text: "Phone orders", to: "/orders/phone-orders" },
-        { text: "Order history" }
+        { text: "Order history", to:"/orders/order-history" }
       ]
     },
     {
@@ -139,8 +139,9 @@ const SideBar = ({isExpanded,setIsExpanded}) => {
       text: "Delivery partner",
       menuKey: "delivery",
       submenu: [
-        { text: "Salaried" ,to: '/deliverypartner/salaried'},
-        { text: "Delivery based" ,to:'/deliverypartner/deliverybased' },
+        // { text: "Salaried" ,to: '/deliverypartner/salaried'},
+        // { text: "Delivery based" ,to:'/deliverypartner/deliverybased' },
+        {text:"Manage Partners", to:'/deliverypartner/manage-partners'},
         { text: "Onboarding" ,to:'/deliverypartner/onboarding'}
       ]
     },

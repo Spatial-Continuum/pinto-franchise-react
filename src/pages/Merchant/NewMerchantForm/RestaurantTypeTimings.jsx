@@ -259,57 +259,57 @@ const RestaurantTypeTimings = ({ formData, ExtraCuisine, ExtraStore, onDataChang
                             </thead>
 
                             {/* Table Body */}
-                            <tbody>
-                                {Object.keys(formData.opening_hours).map((day) => (
-                                    <tr key={day} className="hover:bg-gray-100 grid grid-cols-3 gap-36">
+                                <tbody>
+                                    {Object.keys(formData.opening_hours).map((day) => (
+                                        <tr key={day} className="hover:bg-gray-100 grid grid-cols-3 gap-36">
+                                            <div className=''>
+                                            <td className="py-2">{day}</td>
+                                            </div>
                                         <div className=''>
-                                        <td className="py-2">{day}</td>
-                                        </div>
-                                     <div className=''>
-                                        <td className="py-2 flex flex-row gap-3 ">
-                                            <Switch
-                                                checked={formData.opening_hours[day] !== ''}
-                                                onChange={(checked) => {
-                                                
-                                                    setData((prev) => ({
-                                                        ...prev,
-                                                        opening_hours: {
-                                                            ...prev.opening_hours,
-                                                            [day]: checked ? '09:00 - 17:00' : '', // Default time or empty
-                                                        },
-                                                    }));
-                                                }}
-                                            />
-                                            <p>{formData.opening_hours[day] !== '' ? "Opened" : "Closed"}
-                                            </p>
-                                        </td>
-                                        </div>
-                                       
-                                        <div className='flex gap-4 '>
-                                        <td className="py-2">
-                                            <input
-                                                type="time"
-                                                id={`start-time-${day}`}
-                                                className="bg-[#FFFFFF] border leading-none border-[#A6A6A6] text-[#636363] text-sm rounded-lg  p-2.5 px-5 "
-                                                value={formData.opening_hours[day].split(' - ')[0] || '09:00'} // Extract start time or set default
-                                                onChange={(e) => handleOpeningHoursChange(day, `${e.target.value} - ${formData.opening_hours[day].split(' - ')[1] || '17:00'}`)}
-                                                disabled={formData.opening_hours[day] === ''}
-                                            />
-                                        </td>
-                                        <td className="py-2">
-                                            <input
-                                                type="time"
-                                                id={`end-time-${day}`}
-                                                className="bg-[#FFFFFF] border leading-none border-[#A6A6A6] text-[#636363] text-sm rounded-lg p-2.5 px-5"
-                                                value={formData.opening_hours[day].split(' - ')[1] || '17:00'} // Extract end time or set default
-                                                onChange={(e) => handleOpeningHoursChange(day, `${formData.opening_hours[day].split(' - ')[0] || '09:00'} - ${e.target.value}`)}
-                                                disabled={formData.opening_hours[day] === ''}
-                                            />
-                                        </td>
-                                        </div>
-                                    </tr>
-                                ))}
-                            </tbody>
+                                            <td className="py-2 flex flex-row gap-3 ">
+                                                <Switch
+                                                    checked={formData.opening_hours[day] !== ''}
+                                                    onChange={(checked) => {
+                                                    
+                                                        setData((prev) => ({
+                                                            ...prev,
+                                                            opening_hours: {
+                                                                ...prev.opening_hours,
+                                                                [day]: checked ? '09:00 - 17:00' : '', // Default time or empty
+                                                            },
+                                                        }));
+                                                    }}
+                                                />
+                                                <p>{formData.opening_hours[day] !== '' ? "Opened" : "Closed"}
+                                                </p>
+                                            </td>
+                                            </div>
+                                        
+                                            <div className='flex gap-4 '>
+                                            <td className="py-2">
+                                                <input
+                                                    type="time"
+                                                    id={`start-time-${day}`}
+                                                    className="bg-[#FFFFFF] border leading-none border-[#A6A6A6] text-[#636363] text-sm rounded-lg  p-2.5 px-5 "
+                                                    value={formData.opening_hours[day].split(' - ')[0] || '09:00'} // Extract start time or set default
+                                                    onChange={(e) => handleOpeningHoursChange(day, `${e.target.value} - ${formData.opening_hours[day].split(' - ')[1] || '17:00'}`)}
+                                                    disabled={formData.opening_hours[day] === ''}
+                                                />
+                                            </td>
+                                            <td className="py-2">
+                                                <input
+                                                    type="time"
+                                                    id={`end-time-${day}`}
+                                                    className="bg-[#FFFFFF] border leading-none border-[#A6A6A6] text-[#636363] text-sm rounded-lg p-2.5 px-5"
+                                                    value={formData.opening_hours[day].split(' - ')[1] || '17:00'} // Extract end time or set default
+                                                    onChange={(e) => handleOpeningHoursChange(day, `${formData.opening_hours[day].split(' - ')[0] || '09:00'} - ${e.target.value}`)}
+                                                    disabled={formData.opening_hours[day] === ''}
+                                                />
+                                            </td>
+                                            </div>
+                                        </tr>
+                                    ))}
+                                </tbody>
                         </table>
                     </div>
                 </div>

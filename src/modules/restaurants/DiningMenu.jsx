@@ -11,6 +11,7 @@ import { Switch } from 'antd';
 import AddAddOn from './AddAddOn';
 import { selectSelectedRestaurant, getRestaurantById, selectApiError, selectApiLoading } from '../../redux/slices/restaurant';
 import { useDispatch, useSelector } from 'react-redux';
+import { deletedAddonIdApi, selectDeleteAddonData, updateAddonApi } from '../../redux/slices/addons';
 import { getAllAddonApi, createAddonAPi, selectCreateAddonApiData, selectGetAllAddonApiData, } from '../../redux/slices/addons';
 import { updateItemByIdApi, deleteItemByIdApi, selectUpdateItemByIdApi } from '../../redux/slices/item';
 import menuicon from '../../assets/images/menuIcon.svg';
@@ -25,6 +26,7 @@ const DiningMenu = ({ restaurantId }) => {
     const loading = useSelector(selectApiLoading)
     const error = useSelector(selectApiError)
     const dispatch = useDispatch();
+    const [addonId, setAddonId] = useState(null)
     const [menuTitle, setMenuTitle] = useState("")
     const [addMenuPopup, setAddMenuPopup] = useState(false)
     const [showAddItem, setShowAddItem] = useState(false)
@@ -32,11 +34,13 @@ const DiningMenu = ({ restaurantId }) => {
     const [showEditItem, setShowEditItem] = useState(false)
     const [refresh, setRefresh] = useState(false);
     const [recommonded, setRecommonded] = useState()
+    const [deleteAddonId, setDeleteAddonId] = useState(null)
     const [deletePopup, setDeletePopup] = useState(false)
     const [showEditAddon, setShowEditAddon] = useState(false)
     const [deleteItemId, setDeleteItemId] = useState(null)
     const [editItemId, setEditItemId] = useState(null)
-    const [availabe, setAvailable] = useState()
+
+    const [deleteAddonPopup, setDeleteAddonPopup] = useState(false)
     const addons = useSelector(selectGetAllAddonApiData)
 
     // const [selectedItem, setSelectedItem] = useState([]);
@@ -113,11 +117,14 @@ const DiningMenu = ({ restaurantId }) => {
         setRefresh(!refresh);
     };
 
-    const handleEditAddonClick = () => {
+    const handleEditAddonClick = (addonId) => {
+        setAddonId(addonId.addon_id)
         setShowEditAddon(true)
+        setShowAddAddon(false)
         setShowAddItem(false)
         setShowEditItem(false)
     }
+
     const handleSubTabClick = (subTab) => {
         setActiveSubTab(subTab);
         console.log("adons", addons)
@@ -137,6 +144,21 @@ const DiningMenu = ({ restaurantId }) => {
                 console.error("Failed to update availability:", error);
             });
     };
+    const handleAddonAvailablityChange = (addon) => {
+        const newAddonAvailablity = !addon.is_available;
+        const addonData = new FormData()
+        addonData.append("is_available", newAddonAvailablity);
+        dispatch(updateAddonApi({ addonId: addon.addon_id, addonData }))
+            .then(() => {
+                dispatch(getAllAddonApi(restaurantId))
+                setRefresh(true)
+
+            })
+            .catch(error => {
+                console.error("Failed to update addon availability:", error);
+            })
+
+    }
     // const handleAvailabilityToggle = (item) => {
     //     console.log("Before toggle:", item.is_available);
     //     const formData = new FormData();
@@ -156,23 +178,18 @@ const DiningMenu = ({ restaurantId }) => {
         console.log("addbutton", restaurantId)
         setShowAddItem(true)
         setShowAddAddon(false)
-
+        setShowEditAddon(false)
         setShowEditItem(false)
 
     };
     const handleDelete = (itemId) => {
 
         setDeletePopup(true);
-        setDeleteItemId(itemId); // Set the item ID to be deleted
-
-        // dispatch(deleteItemByIdApi(itemId))
-        //     .then(() => {
-        //         console.log("Item deleted successfully");
-        //     })
-        //     .catch(error => {
-        //         console.error("Failed to delete item:", error);
-        //     });
-
+        setDeleteItemId(itemId);
+    }
+    const handleDeleteAddon = (deleteId) => {
+        setDeleteAddonPopup(true);
+        setDeleteAddonId(deleteId);
     }
 
 
@@ -519,6 +536,31 @@ const DiningMenu = ({ restaurantId }) => {
                             )
                         }
 
+                        {deleteAddonPopup && (
+                            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                                <div className="bg-white w-96 rounded-lg shadow-lg flex flex-col p-6 relative">
+                                    <h3>Are yu sure want to delete ?</h3>
+                                    <div className='flex justify-end gap-4 mt-3'>
+                                        <button className="px-4 py-1 border-[#4A4E56] border-[1px] bg-[#ADADAD24] rounded-lg cursor-pointer text-[#4A4E56]" onClick={() => setDeletePopup(false)}>Cancel</button>
+                                        <button className="px-4 py-1 border-[#FF0000] border-[1px] bg-[#FF0000] rounded-lg cursor-pointer text-[#FFFFFF]" onClick={() => {
+                                            dispatch(deletedAddonIdApi(deleteAddonId))
+                                                .then(() => {
+                                                    console.log("Item deleted successfully");
+                                                    setDeleteAddonPopup(false);
+                                                    setRefresh(true);
+                                                    // Optionally refresh the data or perform other actions
+                                                })
+                                                .catch(error => {
+                                                    console.error("Failed to delete item:", error);
+                                                    setDeletePopup(false);
+                                                });
+                                        }}>Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        )}
+
 
 
                         {activeSubTab === "addons" && (
@@ -538,6 +580,7 @@ const DiningMenu = ({ restaurantId }) => {
                                         onClick={() => {
                                             setShowAddAddon(true)
                                             setShowEditItem(false)
+                                            setShowEditAddon(false)
                                             setShowAddItem(false)
                                         }
 
@@ -574,17 +617,20 @@ const DiningMenu = ({ restaurantId }) => {
                                                     <p className='text-black font-medium'>₹{addon.selling_price}</p>
                                                     <Switch
                                                         size="small"
-                                                        checked={addon.is_available} // Switch is ON if item is available (item_unavailable is false)
-                                                        disabled={false} // Optionally, disable the switch if needed
+                                                        checked={addon.is_available}
+                                                        
+                                                        onChange={() => handleAddonAvailablityChange(addon.is_available)}
                                                     />
                                                     <PencilIcon
                                                         className="h-4 w-7   text-green-500 hover:text-green-700 cursor-pointer"
                                                         title="Edit"
-                                                        onClick={() => { handleEditAddonClick(addon.addon_id) }}
+                                                        onClick={() => handleEditAddonClick(addon)}
+                                                    //onClick={() => handleAddClick(restaurantId)}>
                                                     />
                                                     <TrashIcon
                                                         className="h-5 w-5 text-red-500 hover:text-red-700 cursor-pointer"
                                                         title="Delete"
+                                                        onClick={() => handleDeleteAddon(addon.addon_id)}
                                                     />
 
                                                 </div>
@@ -602,7 +648,7 @@ const DiningMenu = ({ restaurantId }) => {
                         {showAddItem && <AddItem restaurantId={restaurantId} setAddMenuPopup={setAddMenuPopup} setRefresh={setRefresh} setShowAddItem={setShowAddItem} />}
                         {showEditItem && <EditItem itemId={editItemId} restaurantId={restaurantId} setShowEditItem={setShowEditItem} />}
                         {showAddAddon && <AddAddOn setShowAddAddon={setShowAddAddon} restaurantId={restaurantId} setRefresh={setRefresh} />}
-                        {showEditAddon && <EditAddOn setShowEditAddon={setShowEditAddon} restaurantId={restaurantId} setRefresh={setRefresh} />}
+                        {showEditAddon && <EditAddOn setShowEditAddon={setShowEditAddon} addonId={addonId} restaurantId={restaurantId} setRefresh={setRefresh} />}
                     </div>
                 </div>
             </div>
@@ -618,16 +664,16 @@ const DiningMenu = ({ restaurantId }) => {
                         </div>
 
                         <div className="flex flex-col bg-[#FFFFFF] gap-4 pt-5 ">
-                        <div className='bg-[#F1F5F9] py-4 pl-5'><h3>APPLIED</h3></div>
+                            <div className='bg-[#F1F5F9] py-4 pl-5'><h3>APPLIED</h3></div>
                             <div className="flex items-center flex-row   gap-4 pl-5">
-                                
+
                                 <h2>Packaging charge</h2>
                                 <div className='flex flex-row w-14 py-2 mb-2 rounded-md  border-[1px] border-[#C9C9C9]'>
                                     <h2>Rs:</h2>
                                     <input
-                                    type="text"
-                                    className="w-full rounded-lg border-none"
-                                    placeholder=""
+                                        type="text"
+                                        className="w-full rounded-lg border-none"
+                                        placeholder=""
                                     // value={packagingCharge}
 
                                     />
