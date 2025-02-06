@@ -30,7 +30,7 @@ function Category()
                 imagestyle={"w-24 h-24  text-center "}
                 title= {category.category_title} 
                
-              onEdit={()=>{navigate("/menu/manage-screen/categoty-form" , { state: { category,categories } })}} 
+              // onEdit={()=>{navigate("/menu/manage-screen/categoty-form" , { state: { category,categories } })}} 
                 />
               ))}
               <CategoryCard add={true} isAdd={true} categories={categories} 

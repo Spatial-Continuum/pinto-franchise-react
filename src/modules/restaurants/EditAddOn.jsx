@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MagnifyingGlassIcon, CheckCircleIcon, ChevronRightIcon, PhotoIcon , XMarkIcon} from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, CheckCircleIcon, ChevronRightIcon, PhotoIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import veg from '../../assets/images/vegicon.svg'
 import nonveg from '../../assets/images/nonvegicon.svg'
 import RestaurantService from './RestaurantService';
@@ -17,6 +17,7 @@ const EditAddOn = ({ restaurantId, addonId, setRefresh, setShowEditAddon }) => {
         image: null,
         imagePreview: null,
     });
+    const [errors, setErrors] = useState({});
 
     const dispatch = useDispatch();
     const addonById = useSelector(selectGetAddonById)
@@ -25,7 +26,7 @@ const EditAddOn = ({ restaurantId, addonId, setRefresh, setShowEditAddon }) => {
 
     const sellingPrice = parseInt(formData.basePrice + ((formData.basePrice * commissionPercentage) / 100))
 
-   
+
 
 
     useEffect(() => {
@@ -40,11 +41,11 @@ const EditAddOn = ({ restaurantId, addonId, setRefresh, setShowEditAddon }) => {
                 foodType: addonById.item_type || '',
                 qty: addonById.quantity || '',
                 basePrice: addonById.base_price || '',
-                
-               image:  null || '',
+
+                image: null || '',
                 imagePreview: addonById.image || '',
-                
-                
+
+
             });
         }
     }, [addonById]);
@@ -77,15 +78,30 @@ const EditAddOn = ({ restaurantId, addonId, setRefresh, setShowEditAddon }) => {
 
 
     const handlePublish = async () => {
-        if (!formData.addonName || !formData.qty || !formData.basePrice ) {
-            alert('Please fill out all fields and upload an image.');
+        let newErrors = {};
+
+        // Validate required fields
+        if (!formData.addonName.trim()) newErrors.addonName = "Addon name is required";
+        if (!formData.foodType) newErrors.foodType = "Food type is required";
+        if (!formData.qty) newErrors.qty = "Quantity is required";
+        if (!formData.basePrice || formData.basePrice <= 0) newErrors.basePrice = "Base price must be greater than 0";
+        if (!formData.imagePreview) newErrors.image = "Item image is required";
+
+        // If there are any errors, prevent submission and display the errors
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
             return;
         }
+
+        // If no errors, clear the errors state and proceed with form submission
+        setErrors({});
+        console.log("Form data on publish:", formData);
         const addonData = new FormData()
         addonData.append('addon_name', formData.addonName)
         addonData.append('item_type', formData.foodType)
         // addonData.append('base_price', basePrice)
         // addonData.append('commission', commission)
+        addonData.append('restaurant_id',restaurantId)
         addonData.append('base_price', formData.basePrice)
         addonData.append('quantity', formData.qty)
         addonData.append('image', formData?.image)
@@ -102,7 +118,7 @@ const EditAddOn = ({ restaurantId, addonId, setRefresh, setShowEditAddon }) => {
             }
         }
         dispatch(updateAddonApi({ addonId, addonData }))
-    
+
 
         setRefresh(true)
 
@@ -137,8 +153,10 @@ const EditAddOn = ({ restaurantId, addonId, setRefresh, setShowEditAddon }) => {
                         addonName: e.target.value
                     }))}
                     placeholder="Enter addon name"
-                    className="w-1/2 border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500"
-                />
+                   // className="w-1/2 border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500"
+                   className={`w-1/2 border ${errors.addonName ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500`}
+                   />
+                   {errors.addonName && <p className="text-red-500 text-xs mt-1">{errors.addonName}</p>}
             </div>
 
             {/* Food Type and Qty */}
@@ -148,8 +166,10 @@ const EditAddOn = ({ restaurantId, addonId, setRefresh, setShowEditAddon }) => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Food Type</label>
                     <div className="flex items-center gap-4">
                         <button
-                            className={`flex items-center px-4 py-2 border border-gray-300 rounded-md text-gray-700
-                                    ${formData.foodType === 'Veg' ? 'border-orange-500' : 'border-gray-300'}`}
+                            // className={`flex items-center px-4 py-2 border border-gray-300 rounded-md text-gray-700
+                            //         ${formData.foodType === 'Veg' ? 'border-orange-500' : 'border-gray-300'}`}
+                            // className={`flex items-center px-4 py-2 border ${errors.foodType ? 'border-red-500' : 'border-gray-300'} rounded-md text-gray-700`}
+                            className={`flex items-center gap-2 px-4 py-2 border ${errors.foodType ? 'border-red-500' : 'border-gray-300'} rounded-md cursor-pointer ${formData.foodType === 'Veg' ? 'bg-green-100' : ''}`}
                             onClick={(e) => setFormData(prev => ({
                                 ...prev,
                                 foodType: 'Veg'
@@ -158,8 +178,10 @@ const EditAddOn = ({ restaurantId, addonId, setRefresh, setShowEditAddon }) => {
                             <img src={veg} /> &nbsp;Veg
                         </button>
                         <button
-                            className={`flex items-center px-4 py-2 border rounded-md text-gray-700 
-                                ${formData.foodType === 'Non-Veg' ? 'border-orange-500' : 'border-gray-300'}`}
+                            // className={`flex items-center px-4 py-2 border rounded-md text-gray-700 
+                            //     ${formData.foodType === 'Non-Veg' ? 'border-orange-500' : 'border-gray-300'}`}
+                            //className={`flex items-center px-4 py-2 border ${errors.foodType ? 'border-red-500' : 'border-gray-300'} rounded-md text-gray-700`}
+                            className={`flex items-center gap-2 px-4 py-2 border ${errors.foodType ? 'border-red-500' : 'border-gray-300'} rounded-md cursor-pointer ${formData.foodType === 'Non-Veg' ? 'bg-red-100' : ''}`}
                             onClick={(e) => setFormData(prev => ({
                                 ...prev,
                                 foodType: 'Non-Veg',
@@ -167,7 +189,8 @@ const EditAddOn = ({ restaurantId, addonId, setRefresh, setShowEditAddon }) => {
                         >
                             <img src={nonveg} />&nbsp;Non-veg
                         </button>
-                    </div>
+                    </div>  
+                    {errors.foodType && <p className="text-red-500 text-xs mt-1">{errors.foodType}</p>}
                 </div>
 
                 {/* Qty */}
@@ -181,8 +204,10 @@ const EditAddOn = ({ restaurantId, addonId, setRefresh, setShowEditAddon }) => {
                             ...prev,
                             qty: e.target.value
                         }))}
-                        className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500"
-                    />
+                        //className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500"
+                        className={`w-full border ${errors.qty ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500`}
+                        />
+                        {errors.qty && <p className="text-red-500 text-xs mt-1">{errors.qty}</p>}
                 </div>
             </div>
 
@@ -200,8 +225,10 @@ const EditAddOn = ({ restaurantId, addonId, setRefresh, setShowEditAddon }) => {
                         }))}
 
                         placeholder="Enter base price"
-                        className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500"
-                    />
+                        //className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500"
+                        className={`w-full border ${errors.basePrice ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500`}
+                        />
+                        {errors.basePrice && <p className="text-red-500 text-xs mt-1">{errors.basePrice}</p>}
                 </div>
                 {/* Commission */} {/* Selling Price */}
                 <div className="flex-1">
@@ -230,7 +257,7 @@ const EditAddOn = ({ restaurantId, addonId, setRefresh, setShowEditAddon }) => {
             {/* Item Image */}
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Item Image</label>
-                <div className="w-60 h-48 relative bg-gray-100 border border-gray-300 rounded-md flex items-center justify-center">
+                <div className="w-60 h-48 relative bg-gray-100 border ${errors.image ? 'border-red-500' : 'border-gray-300'} rounded-md flex items-center justify-center">
                     {formData.imagePreview ? (
                         <>
                             <img
@@ -263,6 +290,7 @@ const EditAddOn = ({ restaurantId, addonId, setRefresh, setShowEditAddon }) => {
                 </div>
                 <p className="text-xs text-gray-500 mt-1">Image must be under 5 MB</p>
             </div>
+            {errors.image && <p className="text-red-500 text-xs mt-1">{errors.image}</p>}
         </div>
     );
 }

@@ -24,13 +24,12 @@ function CitySpotLight(){
           <button className="text-orange-500 text-sm" onClick={()=>{navigate("/menu/manage-screen/show-city-sopts" , { state: {citySpots } });}} >View all</button>
         </div>
         <div className="flex gap-4 flex-wrap">
-          {citySpots?.length>3 ? citySpots: citySpots?.slice(0, 3).map((citySpot) =>(
-             <CategoryCard image={Spot} style="w-54 h-48"
-             key = {citySpot.cityspotlight_id}
-             imagestyle="w-54 h-48 p-2 border rounded-lg" />
+          {citySpots[0]&&
+             (<CategoryCard image={Spot} style="w-54 h-48"
+             imagestyle="w-54 h-48 p-2 border rounded-lg" />)
 
             
-          ))}
+          }
         <CategoryCard style="w-48 h-48 hover:border-orange-500 " isAdd={true} editImage={Editpencil} editName="customize" imagestyle="w-30 h-30 mb-2" />
         </div>
       </div> 

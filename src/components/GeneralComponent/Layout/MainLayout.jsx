@@ -17,7 +17,7 @@ const MainLayout = ({ children,headerName,headerClick }) => {
         <Sidebar isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
 
        
-        <div className="flex flex-col h-full overflow-hidden">
+        <div className="flex flex-col h-full overflow-hidden cursor-pointer">
           <HeaderBar name={headerName? headerName : ''} headerClick={headerClick?headerClick:""}/>
           <main className="main-content-scrollable overflow-y-auto flex-1 py-8 pl-8 pr-4" style={{
             scrollbarWidth: "thin", /* For Firefox */

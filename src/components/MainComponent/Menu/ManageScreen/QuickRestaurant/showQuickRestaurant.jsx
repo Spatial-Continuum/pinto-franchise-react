@@ -1,38 +1,35 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import ShowFullElements from "../../../../GeneralComponent/FlexElement/ShowFullElements.jsx";
+import ShowFlexElements from "../../../../GeneralComponent/FlexElement/ShowFlexElement.jsx";
 import ShowFlexWithoutImage from "../../../../GeneralComponent/FlexElement/ShowFlexWithoutImage.jsx";
 import MainLayout from "../../../../GeneralComponent/Layout/MainLayout.jsx";
-import {
-  fetchQuickFilterApi,
-  selectQuickFilterApiData,
-} from "../../../../../redux/slices/menu.js";
+import { fetchQuickRestaurantApi } from "../../../../../redux/slices/menu.js";
 import { Menu as MenuIcon, Search } from "lucide-react";
-function ShowFilter() {
+import { useDispatch } from "react-redux";
+function ShowQuickRestaurant() {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-
-  const [filters, setFilters] = useState(location?.state?.filters || []);
-  console.log("filters_filters", filters);
+  const [restaurants, setrestaurants] = useState(
+    location?.state?.restaurants || []
+  );
+  console.log("restaurants_restaurants", restaurants);
   const [categoryname, setCategoryName] = useState("");
   useEffect(() => {
-    console.log("Dispatching fetchQuickFilterApi in the quick filter");
-    dispatch(fetchQuickFilterApi());
+    console.log("Dispatching fetchQuickRestaurantApi in the quick filter");
+    dispatch(fetchQuickRestaurantApi());
   }, [dispatch]);
-
   return (
     <MainLayout
       headerName={"Back"}
       headerClick={() =>
-        navigate("/menu/manage-screen", { state: { filters } })
+        navigate("/menu/manage-screen", { state: { restaurants } })
       }
     >
       <div className="p-6">
         <div>
           <div className="relative mb-8">
-            <h2 className="text-lg font-semibold">Quick Filter</h2>
+            <h2 className="text-lg font-semibold">Quick Restaurant</h2>
             <div className="flex justify-between items-center mb-4">
               <div>
                 <input
@@ -44,8 +41,8 @@ function ShowFilter() {
               </div>
               <button
                 onClick={() => {
-                  navigate("/menu/manage-screen/quick-filter-form", {
-                    state: { filters },
+                  navigate("/menu/manage-screen/quick-restaurant-form", {
+                    state: { restaurants },
                   });
                 }}
                 className="px-4 py-2 bg-green-600 text-white rounded-lg"
@@ -56,14 +53,14 @@ function ShowFilter() {
           </div>
           <div className="mb-8">
             <div className="flex flex-wrap gap-5">
-              {filters.map((filter) => (
+              {restaurants.map((restaurant) => (
                 <ShowFlexWithoutImage
-                  key={filter.quickfilter_id}
-                  title={filter.filter_title}
-                  setSub={() => setCategoryName(filter.filter_title)}
+                  key={restaurant.quickfilter_id}
+                  title={restaurant.filter_name}
+                  setSub={() => setCategoryName(restaurant.filter_name)}
                   onEdit={() => {
-                    navigate("/menu/manage-screen/quick-filter-form", {
-                      state: { filters, filter, edit: true },
+                    navigate("/menu/manage-screen/quick-restaurant-form", {
+                      state: { restaurants, restaurant, edit: true },
                     });
                   }}
                   edit={true}
@@ -81,24 +78,31 @@ function ShowFilter() {
                     {console
                       .log(
                         "888sdfsdg",
-                        filters
+                        restaurants
                           .filter(
-                            (filter) => filter.filter_title == categoryname
+                            (restaurant) =>
+                              restaurant.filter_name == categoryname
                           )
-                          ?.map((filter) => filter.subcategories)
+                          ?.map((restaurant) => restaurant.resturants)
                       )
                       ?.flat()}
-                    {filters
-                      ?.filter((filter) => filter.filter_title == categoryname)
-                      ?.map((filter) => filter.subcategories)
+                    {restaurants
+                      ?.filter(
+                        (restaurant) => restaurant.filter_name == categoryname
+                      )
+                      ?.map((restaurant) => restaurant.restaurants)
                       ?.flat()
-                      ?.map((subcategory) => (
-                        <ShowFullElements
-                          category={subcategory}
-                          topName={true}
-                          style={"w-32 h-32"}
-                        />
-                      ))}
+                      ?.map((restaurant) => {
+                        console.log("restaurant restaurant", restaurant);
+                        return (
+                          <ShowFlexElements
+                            category={restaurant}
+                            topName={true}
+                            style={"w-36 h-30"}
+                            title={restaurant.name}
+                          />
+                        );
+                      })}
                   </div>
                 </div>
               </div>
@@ -111,4 +115,4 @@ function ShowFilter() {
     </MainLayout>
   );
 }
-export default ShowFilter;
+export default ShowQuickRestaurant;

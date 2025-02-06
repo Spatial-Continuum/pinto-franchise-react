@@ -16,7 +16,7 @@ const AddItem = ({ restaurantId, setShowAddItem, setRefresh, setAddMenuPopup }) 
     const error = useSelector(selectApiError);
     const addons = useSelector(selectGetAllAddonApiData)
     const selectedRestaurant = useSelector(selectSelectedRestaurant);
-
+    const [errors, setErrors] = useState({})
     const [categories, setCategories] = useState([]);
     const [subcategories, setSubcategories] = useState([]);
 
@@ -90,19 +90,44 @@ const AddItem = ({ restaurantId, setShowAddItem, setRefresh, setAddMenuPopup }) 
     }
     const handleFoodTypeSelect = (type) => {
         setFoodType(type);
+        setErrors((prev) => ({ ...prev, foodType: "" }));
+
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Form data on submit:", formData);
-
-        const postData = new FormData(); // Create FormData to handle both text and file uploads
         const basePrice = parseFloat(formData.basePrice, 10);  // Convert base price to integer
         const SellingPrice = parseFloat(sellingPrice, 10);
         const Quantity = parseFloat(formData.quantity, 10);
 
+        let newErrors = {};
+        if (!formData.itemName.trim()) newErrors.itemName = "Item Name is required";
+        if (!formData.menuCategory.trim()) newErrors.menuCategory = "Menu Category is required";
+        if (!formData.subCategory.trim()) newErrors.subCategory = "Subcategory is required";
+        if (!formData.itemDescription.trim()) newErrors.itemDescription = "Description is required";
+        if (!basePrice) newErrors.basePrice = "Base Price is required";
+        if (!formData.prepTime.trim()) newErrors.prepTime = "Preparation Time is required";
+        if (!Quantity) newErrors.quantity = " is required";
+        if (!foodType.trim()) newErrors.foodType = "Please select Food Type";
+        if (!itemImage) newErrors.itemImage = "Please upload an Item Image";
+
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+
+        // ✅ No errors, proceed with submission
+        setErrors({}); // Clear errors when form is valid
+        console.log("Form data on submit:", formData);
+
+
+        const postData = new FormData(); // Create FormData to handle both text and file uploads
+
+
         // Append text data
         postData.append('item_name', formData.itemName);
+        postData.append('restaurant_id', restaurantId)
         postData.append('item_type', foodType); // Append selected food type ('Veg' or 'Non-Veg')
         postData.append('description', formData.itemDescription);
         postData.append('base_price', basePrice);
@@ -142,16 +167,6 @@ const AddItem = ({ restaurantId, setShowAddItem, setRefresh, setAddMenuPopup }) 
         } catch (error) {
             console.error('Item creation failed:', error);
         }
-        // Add error toast/notification here
-        // try {
-        //     console.log("forming data is ", postData)
-        //     const response = await RestaurantService.createItemNew(postData); // API call to post the data
-        //     setRefresh1(!refresh1)
-        //     setRefresh(true)
-        //     setShowAddItem(false);
-        // } catch (error) {
-        //     console.error('Error adding item:', error);
-        // }
     };
 
 
@@ -167,23 +182,10 @@ const AddItem = ({ restaurantId, setShowAddItem, setRefresh, setAddMenuPopup }) 
         } else {
             setImageData(null)
             setPreviewItemImage(null)
+            setErrors((prevErrors) => ({ ...prevErrors, itemImage: "" }));
         }
     }
-    // const handleIconFileChange = (event) => {
-    //     const file = event.target.files[0];
-    //     if (file && file.type.startsWith('image/')) {
-    //         const reader = new FileReader();
-    //         reader.onloadend = () => {
-    //             setIconImage({
-    //                 file,
-    //                 preview: reader.result,
-    //             });
-    //         };
-    //         reader.readAsDataURL(file);
-    //     } else {
-    //         setIconImage({ file: null, preview: null })
-    //     }
-    // }
+
     const handleSubcategorySearch = async (e) => {
         try {
             setSubCategoryTitle(e);
@@ -250,8 +252,11 @@ const AddItem = ({ restaurantId, setShowAddItem, setRefresh, setAddMenuPopup }) 
                                     placeholder="Enter item name"
                                     value={formData.itemName}
                                     onChange={handleChange}
-                                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    //className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className={`px-3 py-2 border ${errors.itemName ? 'border-red-500' : 'border-gray-300'
+                                        } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                 />
+                                {errors.itemName && <p className="text-red-500 text-xs mt-1">{errors.itemName}</p>}
                             </div>
 
                             <div className="flex flex-col w-1/2">
@@ -263,7 +268,8 @@ const AddItem = ({ restaurantId, setShowAddItem, setRefresh, setAddMenuPopup }) 
                                     name="menuCategory"
                                     value={formData.menuCategory}
                                     onChange={handleChange}
-                                    className="px-3 py-2 border cursor-pointer border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className={`px-3 py-2 border ${errors.menuCategory ? 'border-red-500' : 'border-gray-300'
+                                        } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                 >
                                     <option className="cursor-pointer" value="">Select category</option>
                                     {categories.map((category) => (
@@ -274,6 +280,7 @@ const AddItem = ({ restaurantId, setShowAddItem, setRefresh, setAddMenuPopup }) 
                                     ))}
                                     <option className='text-[#014E8D] cursor-pointer p-3 mt-2' value="addNewMenu">Add a New Menu</option>
                                 </select>
+                                {errors.menuCategory && <p className="text-red-500 text-xs mt-1">{errors.menuCategory}</p>}
                             </div>
                         </div>
 
@@ -297,8 +304,10 @@ const AddItem = ({ restaurantId, setShowAddItem, setRefresh, setAddMenuPopup }) 
                                             setTimeout(() => setSubcategories([]), 50);
                                         }
                                     }} // Clear dropdown after input loses focus
-                                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className={`px-3 py-2 border ${errors.itemName ? 'border-red-500' : 'border-gray-300'
+                                        } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                 />
+                                {errors.subCategory && <p className="text-red-500 text-xs mt-1">{errors.subCategory}</p>}
                                 {/* Dropdown list for search results */}
                                 {subcategories.length > 0 && (
                                     <ul className=" absolute overflow-y-auto z-50 top-full  left-0 bg-white  border border-gray-300 rounded-md max-h-40  w-full">
@@ -346,7 +355,8 @@ const AddItem = ({ restaurantId, setShowAddItem, setRefresh, setAddMenuPopup }) 
                             <label className="text-sm font-xs text-gray-700 mb-1">Food Type</label>
                             <div className="flex gap-4 mt-2">
                                 <div
-                                    className={`flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md cursor-pointer ${foodType === 'Veg' ? 'bg-green-100' : ''}`}
+                                    //  className={`flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md cursor-pointer ${foodType === 'Veg' ? 'bg-green-100' : ''}`}
+                                    className={`flex items-center gap-2 px-4 py-2 border ${errors.foodType ? 'border-red-500' : 'border-gray-300'} rounded-md cursor-pointer ${foodType === 'Veg' ? 'bg-green-100' : ''}`}
                                     onClick={() => handleFoodTypeSelect('Veg')}
                                 >
                                     <div className="w-5 h-5 rounded-full flex items-center justify-center">
@@ -356,7 +366,7 @@ const AddItem = ({ restaurantId, setShowAddItem, setRefresh, setAddMenuPopup }) 
                                 </div>
 
                                 <div
-                                    className={`flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md cursor-pointer ${foodType === 'Non-Veg' ? 'bg-red-100' : ''}`}
+                                    className={`flex items-center gap-2 px-4 py-2 border ${errors.foodType ? 'border-red-500' : 'border-gray-300'} rounded-md cursor-pointer ${foodType === 'Non-Veg' ? 'bg-red-100' : ''}`}
                                     onClick={() => handleFoodTypeSelect('Non-Veg')}
                                 >
                                     <div className="w-5 h-5  flex items-center justify-center">
@@ -365,6 +375,8 @@ const AddItem = ({ restaurantId, setShowAddItem, setRefresh, setAddMenuPopup }) 
                                     <span className="text-sm text-gray-700 font-medium">Non-Veg</span>
                                 </div>
                             </div>
+
+                            {errors.foodType && <p className="text-red-500 text-xs mt-1">{errors.foodType}</p>}
                         </div>
 
                         {/* Item Description */}
@@ -379,8 +391,10 @@ const AddItem = ({ restaurantId, setShowAddItem, setRefresh, setAddMenuPopup }) 
                                 placeholder="Enter item description"
                                 value={formData.itemDescription}
                                 onChange={handleChange}
-                                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className={`px-3 py-2 border ${errors.itemDescription ? 'border-red-500' : 'border-gray-300'
+                                    } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                             />
+                            {errors.itemDescription && <p className="text-red-500 text-xs mt-1">{errors.itemDescription}</p>}
                         </div>
                         {/* Base Price, Commission, and Selling Price */}
 
@@ -401,8 +415,12 @@ const AddItem = ({ restaurantId, setShowAddItem, setRefresh, setAddMenuPopup }) 
                                     placeholder="Enter price in num"
                                     value={formData.basePrice}
                                     onChange={handleChange}
-                                    className="px-3 py-2 w-32 border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    // className="px-3 py-2 w-32 border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+
+                                    className={`px-3 py-2 border ${errors.itemName ? 'border-red-500' : 'border-gray-300'
+                                        } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                 />
+                                {errors.basePrice && <p className="text-red-500 text-xs mt-1">{errors.basePrice}</p>}
                             </div>
 
 
@@ -444,8 +462,11 @@ const AddItem = ({ restaurantId, setShowAddItem, setRefresh, setAddMenuPopup }) 
                                     value={formData.quantity}
                                     placeholder='Enter count'
                                     onChange={handleChange}
-                                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    //className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className={`px-3 py-2 border ${errors.itemName ? 'border-red-500' : 'border-gray-300'
+                                        } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                 />
+                                {errors.quantity && <p className="text-red-500 text-xs mt-1">{errors.quantity}</p>}
                             </div>
 
                             <div className="flex flex-col">
@@ -459,8 +480,11 @@ const AddItem = ({ restaurantId, setShowAddItem, setRefresh, setAddMenuPopup }) 
                                     placeholder="minutes"
                                     value={formData.prepTime}
                                     onChange={handleChange}
-                                    className="px-3 py-2 w-32 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    // className="px-3 py-2 w-32 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className={`px-3 py-2 border ${errors.prepTime ? 'border-red-500' : 'border-gray-300'
+                                        } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                 />
+                                {errors.prepTime && <p className="text-red-500 text-xs mt-1">{errors.prepTime}</p>}
                             </div>
                         </div>
 
@@ -468,8 +492,8 @@ const AddItem = ({ restaurantId, setShowAddItem, setRefresh, setAddMenuPopup }) 
                         <div className='flex flex-row gap-5 '>
                             <div className="flex flex-col w-3/6 ">
                                 <label className="text-sm font-xs text-gray-700 mb-1">Item Image</label>
-                                <div className="flex  items-center space-x-4 border border-gray-300 rounded-md py-7 px-5 cursor-pointer hover:bg-gray-100">
-
+                                <div className={`flex items-center space-x-4 border ${errors.itemImage ? 'border-red-500' : 'border-gray-300'
+                                    } rounded-md py-7 px-5 cursor-pointer hover:bg-gray-100`}>
                                     {previewItemImage ? (
                                         <img
                                             src={previewItemImage}
@@ -495,6 +519,9 @@ const AddItem = ({ restaurantId, setShowAddItem, setRefresh, setAddMenuPopup }) 
 
                                 </div>
                                 <p className="text-xs text-gray-500 mt-1">Image must be under 10 MB</p>
+                                {errors.itemImage && (
+                                    <p className="text-red-500 text-xs mt-1">{errors.itemImage}</p>
+                                )}
                             </div>
 
 

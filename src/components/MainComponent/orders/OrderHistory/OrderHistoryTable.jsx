@@ -1,12 +1,25 @@
 import React, { useEffect } from 'react'
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
+import { format } from "date-fns";
 import { getAllOrderHistory, selectAllOrderHistory, selectError,selectLoading } from '../../../../redux/slices/ordersHistory';
-const OrderHistoryTable = () => {
+const OrderHistoryTable = ({searchTerm}) => {
     const dispatch = useDispatch()
     const orderHistoryData = useSelector(selectAllOrderHistory)
     
 
+
+    const filteredOrderHistoryData =
+    !searchTerm || searchTerm.trim() === ""
+      ? orderHistoryData
+      : orderHistoryData?.filter((order) => {
+          const formattedDate = format(new Date(order.created_at), "dd-MM-yyyy"); // Format date
+          return (
+            order?.order_id?.toLowerCase().includes(searchTerm.toLowerCase()) || // Match Order ID
+            order?.restaurant_name?.toLowerCase().includes(searchTerm.toLowerCase()) || // Match Restaurant
+            formattedDate.includes(searchTerm) // Match Date
+          );
+        });
 
 
     useEffect(()=>{
@@ -15,7 +28,8 @@ const OrderHistoryTable = () => {
 
     const columns = [{
         name: "DATE",
-        selector: (row)=>row.created_at,
+        width:"200px",
+        selector: (row) => format(new Date(row.created_at), "dd-MM-yyyy hh:mm a"),
         sortable: true,
     },
 
@@ -53,11 +67,11 @@ const OrderHistoryTable = () => {
     },
     {
         name: "AMOUNT",
-        selector: ""
+        selector: (row) =>`${row.total_price} (${row.payment_method})`,
     },
     {
         name: "STATUS",
-        selector: ""
+        selector: (row)=>row.order_status,
     },
     {
         name: "PARTNER ID",
@@ -93,7 +107,8 @@ const OrderHistoryTable = () => {
             <DataTable
 
                 columns={columns}
-                data={orderHistoryData}
+                data={filteredOrderHistoryData.length > 0 ? filteredOrderHistoryData : []} 
+                noDataComponent={<div className="text-gray-500 text-center py-4">No orders found</div>} 
                 highlightOnHover
                 // fixedHeader
                 striped

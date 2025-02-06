@@ -18,14 +18,14 @@ const DateBox = () => {
   };
 
   return (
-    <div className=" bg-white-600 border-[1px]  rounded-md  h-10 ml-0 ">
+    <div className=" bg-white-600 border-[1px]  rounded-lg  h-10 ml-0 ">
       {/* Date Picker Button */}
       <DatePicker
         selected={selectedDate}
         onSelect={handleDateSelect} // When a day is clicked
         onChange={handleDateChange} // When the value changes
         dateFormat="yyyy-MM-dd"  // Format the date
-        className="  bg-[#FFFFFF] border-[#A7D7FF] border-[1px] rounded-sm  h-10 text-center "  // Custom styling for the date picker
+        className="  bg-[#FFFFFF] border-[#A7D7FF] border-[1px] rounded-lg  h-10 text-center "  // Custom styling for the date picker
         placeholderText="Select Date"
       />
 

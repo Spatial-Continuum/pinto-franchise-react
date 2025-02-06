@@ -14,6 +14,8 @@ const AddAddOn = ({ restaurantId,setRefresh, setShowAddAddon }) => {
     const [qty, setQty] = useState('')
     const [basePrice, setBasePrice] = useState(null);
     const dispatch = useDispatch();
+    const [errors, setErrors] = useState({});
+
     const restaurantDetails = useSelector(selectSelectedRestaurant)
 
     const [commissionPercentage, setCommissionPercentage] = useState(null);
@@ -55,10 +57,25 @@ const AddAddOn = ({ restaurantId,setRefresh, setShowAddAddon }) => {
 
 
     const handlePublish = async () => {
-        if (!addonName || !qty || !basePrice || !itemImage) {
-            alert('Please fill out all fields and upload an image.');
+        let newErrors = {};
+
+        // Validate required fields
+        if (!addonName.trim()) newErrors.addonName = "Addon name is required";
+        if (!foodType) newErrors.foodType = "Food type is required";
+        if (!qty) newErrors.qty = "Quantity is required";
+        if (!basePrice || basePrice <= 0) newErrors.basePrice = "Base price is required and must be greater than 0";
+        if (!itemImage.preview) newErrors.itemImage = "Please upload an image";
+    
+        // If there are errors, prevent submission
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
             return;
         }
+    
+        // If no errors, proceed with submission
+        setErrors({}); // Clear errors
+        console.log("Form data on publish:", { addonName, foodType, qty, basePrice, itemImage });
+    
         const addonData = new FormData()
         addonData.append('addon_name', addonName)
         addonData.append('item_type', foodType)
@@ -67,6 +84,7 @@ const AddAddOn = ({ restaurantId,setRefresh, setShowAddAddon }) => {
         addonData.append('base_price', basePrice)
         addonData.append('quantity', qty)
         addonData.append('image', itemImage.file)
+        addonData.append('restaurant_id',restaurantId)
         // addonData.append('selling_price', sellingPrice)
         // addonData.append('restaurant', restaurantId)
         for (const [key, value] of addonData.entries()) {
@@ -78,25 +96,12 @@ const AddAddOn = ({ restaurantId,setRefresh, setShowAddAddon }) => {
             } else {
               console.log(`${key}: ${value}`);
             }}
-        // try {
-        //     const response = await RestaurantService.createAddon(restaurantId, addonData)
-        //     alert('Addon created successfully!');
-        //     console.log('Response:', response);
-        // } catch (error) {
-        //     console.error('Error creating addon:', error);
-        //     alert('Failed to create addon. Please try again.');
-        // }
         dispatch(createAddonAPi({restaurantId, addonData}))
         setShowAddAddon(false);
         setRefresh(true)
         //
 
     }
-
-
-
-
-
 
     return (
         <div className="border border-gray-300 rounded-lg p-6 bg-white">
@@ -124,8 +129,10 @@ const AddAddOn = ({ restaurantId,setRefresh, setShowAddAddon }) => {
                     value={addonName}
                     onChange={(e) => setAddonName(e.target.value)}
                     placeholder="Enter addon name"
-                    className="w-1/2 border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500"
-                />
+                    //className="w-1/2 border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500"
+                    className={`w-1/2 border ${errors.addonName ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500`}
+                    />
+                    {errors.addonName && <p className="text-red-500 text-xs mt-1">{errors.addonName}</p>}
             </div>
 
             {/* Food Type and Qty */}
@@ -135,20 +142,25 @@ const AddAddOn = ({ restaurantId,setRefresh, setShowAddAddon }) => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Food Type</label>
                     <div className="flex flex-row gap-4">
                         <button
-                            className={`flex items-center px-4 py-2 border border-gray-300 rounded-md text-gray-700
-                                 ${foodType === 'Veg' ? 'border-orange-500' : 'border-gray-300'}`}
+                            // className={`flex items-center px-4 py-2 border border-gray-300 rounded-md text-gray-700
+                            //      ${foodType === 'Veg' ? 'border-orange-500' : 'border-gray-300'}`}
+                            //className={`flex items-center px-4 py-2 border ${errors.foodType ? 'border-red-500' : 'border-gray-300'} rounded-md text-gray-700`}
+                            className={`flex items-center gap-2 px-4 py-2 border ${errors.foodType ? 'border-red-500' : 'border-gray-300'} rounded-md cursor-pointer ${formData.foodType === 'Veg' ? 'bg-green-100' : ''}`}
                             onClick={() => setFoodType('Veg')}
                         >
                             <img src={veg} /> &nbsp;Veg
                         </button>
                         <button
-                            className={`flex items-center px-4 py-2 border rounded-md border-gray-300 text-gray-700 
-                             ${foodType === 'Non-Veg' ? 'border-orange-500' : 'border-gray-300'}`}
+                            // className={`flex items-center px-4 py-2 border rounded-md border-gray-300 text-gray-700 
+                            // ${foodType === 'Non-Veg' ? 'border-orange-500' : 'border-gray-300'}`}
+                           // className={`flex items-center px-4 py-2 border ${errors.foodType ? 'border-red-500' : 'border-gray-300'} rounded-md text-gray-700`}
+                           className={`flex items-center gap-2 px-4 py-2 border ${errors.foodType ? 'border-red-500' : 'border-gray-300'} rounded-md cursor-pointer ${formData.foodType === 'Non-Veg' ? 'bg-red-100' : ''}`}
                             onClick={() => setFoodType('Non-Veg')}
                         >
                             <img src={nonveg} />&nbsp;Non-veg
                         </button>
                     </div>
+                    {errors.foodType && <p className="text-red-500 text-xs mt-1">{errors.foodType}</p>}
                 </div>
                 
                 {/* Qty */}
@@ -159,8 +171,10 @@ const AddAddOn = ({ restaurantId,setRefresh, setShowAddAddon }) => {
                         placeholder="Enter quantity in number"
                         value={qty}
                         onChange={(e) => { setQty(e.target.value) }}
-                        className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500"
-                    />
+                       // className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500"
+                       className={`w-full border ${errors.qty ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500`}
+                       />
+                       {errors.qty && <p className="text-red-500 text-xs mt-1">{errors.qty}</p>}
                 </div>
             </div>
 
@@ -175,8 +189,10 @@ const AddAddOn = ({ restaurantId,setRefresh, setShowAddAddon }) => {
                         onChange={(e) => setBasePrice(e.target.value)}
 
                         placeholder="Enter base price"
-                        className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500"
-                    />
+                       // className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500"
+                       className={`w-full border ${errors.basePrice ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500`}
+                       />
+                       {errors.basePrice && <p className="text-red-500 text-xs mt-1">{errors.basePrice}</p>}
                 </div>
                 {/* Commission */} {/* Selling Price */}
                 <div className="flex-1">
@@ -205,7 +221,7 @@ const AddAddOn = ({ restaurantId,setRefresh, setShowAddAddon }) => {
             {/* Item Image */}
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Item Image</label>
-                <div className="w-60 h-48 bg-gray-100 border border-gray-300 rounded-md flex items-center justify-center">
+                <div className={`w-60 h-48 bg-gray-100 border ${errors.itemImage ? 'border-red-500' : 'border-gray-300'} rounded-md flex items-center justify-center`}>
                     {itemImage.preview ? (
                         <img
                             src={itemImage.preview}
@@ -228,6 +244,7 @@ const AddAddOn = ({ restaurantId,setRefresh, setShowAddAddon }) => {
                 </div>
                 <p className="text-xs text-gray-500 mt-1">Image must be under 5 MB</p>
             </div>
+            {errors.itemImage && <p className="text-red-500 text-xs mt-1">{errors.itemImage}</p>}
         </div>
     );
 };

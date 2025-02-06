@@ -17,11 +17,20 @@ const ManageScreen = React.lazy(() => import('../components/MainComponent/Menu/i
 const ShowCategory = React.lazy(() => import('../components/MainComponent/Menu/ManageScreen/Category/ShowCategory.jsx'))
 const CategoryForm = React.lazy(() => import("../components/MainComponent/Menu/ManageScreen/Category/CategoryForm.jsx"))
 const ShowQuickFilter = React.lazy(() => import("../components/MainComponent/Menu/ManageScreen/QuickFilter/showQuickFilter.jsx"))
+
+//const ShowCitySpot = React.lazy(() => import("../components/MainComponent/Menu/ManageScreen/CitySpotLight/showCitySpotLight.jsx"))
+//const ShowSubCategory = React.lazy(() => import("../components/MainComponent/Menu/ManageScreen/SubCategory/ShowSubCategory.jsx"))
+const PhoneOrder = React.lazy(() => import("../components/MainComponent/orders/PhoneOrders/index.jsx"))
+const ManageOrder = React.lazy(() => import("../components/MainComponent/orders/ManageOrders/ManageIndex.jsx"));
+
 const QuickFilterForm = React.lazy(() => import("../components/MainComponent/Menu/ManageScreen/QuickFilter/QuickFilterForm.jsx"))
 const ShowCitySpot = React.lazy(() => import("../components/MainComponent/Menu/ManageScreen/CitySpotLight/showCitySpotLight.jsx"))
 const ShowSubCategory = React.lazy(() => import("../components/MainComponent/Menu/ManageScreen/SubCategory/ShowSubCategory.jsx"))
-const PhoneOrder = React.lazy(() => import("../components/MainComponent/orders/PhoneOrders/index.jsx"))
-const ManageOrder = React.lazy(() => import("../components/MainComponent/orders/ManageOrders/ManageIndex.jsx"));
+const ShowCuisine = React.lazy(() => import("../components/MainComponent/Menu/ManageScreen/Cuisine/ShowCuisine.jsx"))
+const ShowAuthenticStyle = React.lazy(() => import("../components/MainComponent/Menu/ManageScreen/Authentic/ShowAuthentic.jsx"))
+const ShowTopBrand = React.lazy(() => import('../components/MainComponent/Menu/ManageScreen/TopBrand/showTopBrand.jsx'))
+const ShowQuickRestaurant = React.lazy(() => import('../components/MainComponent/Menu/ManageScreen/QuickRestaurant/showQuickRestaurant.jsx'))
+const QuickRestaurantForm = React.lazy(() => import("../components/MainComponent/Menu/ManageScreen/QuickRestaurant/QuickRestaurantForm.jsx"))
 const Routers = (props) => {
   return (
     <Routes>
@@ -76,6 +85,59 @@ const Routers = (props) => {
           </Suspense>
         }
       />
+      <Route path='/menu/manage-screen/show-subcuisine'
+        element={
+          <Suspense fallback={<div className="text-center m-t-15">Loading...</div>}>
+            <ShowCuisine />
+          </Suspense>
+        }
+      />
+   //
+      <Route path='/menu/manage-screen/show-authentic'
+        element={
+          <Suspense fallback={<div className="text-center m-t-15">Loading...</div>}>
+            <ShowAuthenticStyle />
+          </Suspense>
+        }
+      />
+   //
+      <Route
+        path="/menu/manage-screen/show-topbrand"
+        element={
+          <Suspense fallback={<div className="text-center m-t-15">Loading...</div>}>
+            <ShowTopBrand />
+          </Suspense>
+        }
+      />
+   //
+      <Route
+        path="/menu/manage-screen/show-quick-restaurant"
+        element={
+          <Suspense fallback={<div className="text-center m-t-15">Loading...</div>}>
+            <ShowQuickRestaurant />
+          </Suspense>
+        }
+      />
+   //
+      <Route
+        path="/menu/manage-screen/quick-restaurant-form"
+        element={<Suspense fallback={<div className="text-center m-t-15">Loading...</div>}><QuickRestaurantForm /></Suspense>}
+      />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       {/* <Route path="/homescreen/authenticstyle" element={<ManageScreen />} /> */}
 
       <Route path='/merchant/onboarding'
@@ -174,9 +236,9 @@ const Routers = (props) => {
           <Suspense fallback={<div className="text-center m-t-15">Loading...</div>}>
             <OrderHistoryIndex />
           </Suspense>
-        }/>
-        
-         <Route path='/merchant/managemerchant'
+        } />
+
+      <Route path='/merchant/managemerchant'
         element={
           <Suspense fallback={<div className="text-center m-t-15">Loading...</div>}>
             <ManageMerchant />

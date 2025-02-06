@@ -17,6 +17,7 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
   const itemById = useSelector(selectGetItemByIdApi)
   const loading = useSelector(selectApiLoading)
   const error = useSelector(selectApiError)
+  const [errors, setErrors] = useState({})
   const subcategories = useSelector(selectSubcategorybyName)
   const categories = useSelector(selectGetMenuRestaurant)
   const restaurantDetails = useSelector(selectSelectedRestaurant)
@@ -68,7 +69,7 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
       setFormData({
         name: itemById.item_name || '',
         category: itemById.menu_category?.menu_category_id || '',
-        subcategory_id: itemById.subcategory_id || '',
+        subcategory_id: itemById.subcategory?.subcategory_id || '',
         subcategory_title: itemById.subcategory?.subcategory_title || '',
         foodType: itemById.item_type || '',
         description: itemById.description || '',
@@ -117,7 +118,7 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
       subcategory_id: subcategory.subcategory_id,
       subcategory_title: subcategory.subcategory_title
     }));
-    
+
     setSearchQuery('');
     setShowSubcategoryDropdown(false);
   };
@@ -143,6 +144,8 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
         image: file,
         imagePreview: URL.createObjectURL(file)
       }));
+    }else{
+      setErrors((prevErrors) => ({ ...prevErrors, itemImage: "" }));
     }
   };
   const handleRemoveAddon = (addonId) => {
@@ -164,6 +167,7 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
       ...prev,
       foodType: type
     }));
+    setErrors((prev) => ({ ...prev, foodType: "" }));
   }
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -173,12 +177,33 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let newErrors = {};
+    if (!formData.name.trim()) newErrors.itemName = "Item Name is required";
+    if (!formData.category.trim()) newErrors.menuCategory = "Menu Category is required";
+    if (!formData.subcategory_id.trim()) newErrors.subCategory = "Subcategory is required";
+    if (!formData.description.trim()) newErrors.itemDescription = "Description is required";
+    if (!formData.basePrice) newErrors.basePrice = "Base Price is required";
+    if (!formData.prepTime) newErrors.prepTime = "Preparation Time is required";
+    if (!formData.quantity) newErrors.quantity = " is required";
+    if (!formData.foodType.trim()) newErrors.foodType = "Please select Food Type";
+    if (!formData.imagePreview) newErrors.itemImage = "Please upload an Item Image";
+
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // ✅ No errors, proceed with submission
+    setErrors({}); // Clear errors when form is valid
+    console.log("Form data on submit:", formData);
     const formPayload = new FormData();
     formPayload.append('item_name', formData.name)
     formPayload.append('menu_category', formData.category)
     formPayload.append('subcategory_id', formData.subcategory_id)
     // formPayload.append('subcategory_title',formData.subcategory_title)  
     formPayload.append('item_type', formData.foodType)
+    formPayload.append('restaurant_id', restaurantId)
     formPayload.append('description', formData.description)
     formPayload.append('base_price', formData.basePrice)
     formPayload.append('preparation_time', formData.prepTime)
@@ -202,7 +227,7 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
         console.log(`${key}: ${value}`);
       }
     }
-  
+
     console.log('formiing', formData)
     dispatch(updateItemByIdApi({ itemId, formPayload })).unwrap()
     console.log('itemiddata', itemId)
@@ -248,8 +273,12 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
                 placeholder="Enter item name"
                 value={formData.name}
                 onChange={handleChange}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                //className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`px-3 py-2 border ${errors.itemName ? 'border-red-500' : 'border-gray-300'
+                  } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
+              {errors.itemName && <p className="text-red-500 text-xs mt-1">{errors.itemName}</p>}
+
             </div>
 
             <div className="flex flex-col w-1/2">
@@ -295,8 +324,11 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
                   }
                 }}
                 placeholder="Search"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"
+                //className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10"
+                className={` w-full px-3 py-2 border ${errors.subCategory ? 'border-red-500' : 'border-gray-300'
+                  } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 pl-10`}
               />
+              {errors.subCategory && <p className="text-red-500 text-xs mt-1">{errors.subCategory}</p>}
               <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
 
               {showSubcategoryDropdown && (
@@ -319,7 +351,8 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
               <label className="text-sm font-xs text-gray-700 mb-1">Food Type</label>
               <div className="flex gap-4 mt-2">
                 <div
-                  className={`flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md cursor-pointer ${formData?.foodType === 'Veg' ? 'bg-green-100' : ''}`}
+                  //className={`flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md cursor-pointer ${formData?.foodType === 'Veg' ? 'bg-green-100' : ''}`}
+                  className={`flex items-center gap-2 px-4 py-2 border ${errors.foodType ? 'border-red-500' : 'border-gray-300'} rounded-md cursor-pointer ${formData.foodType === 'Veg' ? 'bg-green-100' : ''}`}
                   onClick={() => handleFoodTypeSelect('Veg')}
                 >
                   <div className="w-5 h-5 rounded-full flex items-center justify-center">
@@ -329,7 +362,8 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
                 </div>
 
                 <div
-                  className={`flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md cursor-pointer ${formData.foodType === 'Non-Veg' ? 'bg-red-100' : ''}`}
+                  // className={`flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md cursor-pointer ${formData.foodType === 'Non-Veg' ? 'bg-red-100' : ''}`}
+                  className={`flex items-center gap-2 px-4 py-2 border ${errors.foodType ? 'border-red-500' : 'border-gray-300'} rounded-md cursor-pointer ${formData.foodType === 'Non-Veg' ? 'bg-red-100' : ''}`}
                   onClick={() => handleFoodTypeSelect('Non-Veg')}
                 >
                   <div className="w-5 h-5  flex items-center justify-center">
@@ -338,6 +372,7 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
                   <span className="text-sm text-gray-700 font-medium">Non-Veg</span>
                 </div>
               </div>
+              {errors.foodType && <p className="text-red-500 text-xs mt-1">{errors.foodType}</p>}
             </div>
 
             {/* Item Description */}
@@ -352,8 +387,11 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
                 placeholder="Enter item description"
                 value={formData.description}
                 onChange={handleChange}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                //className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`px-3 py-2 border ${errors.itemDescription ? 'border-red-500' : 'border-gray-300'
+                  } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
+              {errors.itemDescription && <p className="text-red-500 text-xs mt-1">{errors.itemDescription}</p>}
             </div>
 
             {/* Base Price and Preparation Time */}
@@ -373,8 +411,11 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
                   placeholder="Enter price in num"
                   value={formData.basePrice}
                   onChange={handleChange}
-                  className="px-3 py-2 w-32 border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  // className="px-3 py-2 w-32 border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className={`px-3 py-2 border ${errors.itemName ? 'border-red-500' : 'border-gray-300'
+                    } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 />
+                {errors.basePrice && <p className="text-red-500 text-xs mt-1">{errors.basePrice}</p>}
               </div>
 
               <div className="flex flex-col w-1/3">
@@ -418,8 +459,11 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
                   value={formData?.quantity}
                   placeholder='Enter count'
                   onChange={handleChange}
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  // className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className={`px-3 py-2 border ${errors.itemName ? 'border-red-500' : 'border-gray-300'
+                    } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 />
+                {errors.quantity && <p className="text-red-500 text-xs mt-1">{errors.quantity}</p>}
               </div>
 
               <div className="flex flex-col">
@@ -433,8 +477,11 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
                   placeholder="minutes"
                   value={formData?.prepTime}
                   onChange={handleChange}
-                  className="px-3 py-2 w-32 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  //className="px-3 py-2 w-32 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className={`px-3 py-2 border ${errors.prepTime ? 'border-red-500' : 'border-gray-300'
+                    } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 />
+                {errors.prepTime && <p className="text-red-500 text-xs mt-1">{errors.prepTime}</p>}
               </div>
             </div>
 
@@ -483,6 +530,9 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
                     </label>
                   )}
                 </div>
+                {errors.itemImage && (
+                  <p className="text-red-500 text-xs mt-1">{errors.itemImage}</p>
+                )}
               </div>
 
 

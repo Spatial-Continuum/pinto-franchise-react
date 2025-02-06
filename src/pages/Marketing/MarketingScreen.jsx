@@ -1,8 +1,6 @@
 import React from 'react'
 import BannerSection from '../../modules/Marketing/bannerSection/BannerSection';
 import DealSection from '../../modules/Marketing/DealSection/DealSection';
-
-import PropsSearchBox from '../../components/GeneralComponent/SearchBox/PropsSearchBox';
 import search from "../../assets/images/prime_search.svg";
 import MainLayout from '../../components/GeneralComponent/Layout/MainLayout';
 import SearchBox from '../../components/GeneralComponent/SearchBox/SearchBox';

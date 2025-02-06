@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Menu as MenuIcon, PenSquare } from "lucide-react";
 import vector from "../../../assets/images/Vector_colorless.png";
-const ShowFlexElements = (props) => {
+const ShowImagewithBlackElement = (props) => {
   console.log("newdfasdfasdf", props);
   return (
     <div
@@ -30,7 +30,7 @@ const ShowFlexElements = (props) => {
       <div
         key={props?.category?.category_id || props?.key}
         className={`${
-          props.style ? props.style : "w-40 h-40"
+          props.style ? props.style : "w-32 h-32"
         }  relative group  bg-white border border-gray-200 rounded-lg hover:shadow-md`}
       >
         <div className="absolute  top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
@@ -43,20 +43,20 @@ const ShowFlexElements = (props) => {
             />
           )}
         </div>
-        <div className="flex flex-col h-full items-center p-4 ">
-          <div className="grid place-item-center object-fill ">
-            <img
-              src={props?.category?.image || props?.category?.logo}
-              alt={props.title}
-            />
-          </div>
 
-          {props.bottomName && (
-            <span className="text-sm absolute bottom-2">{props.title}</span>
-          )}
-        </div>
+        <img
+          className="w-full h-full object-cover"
+          src={props?.category?.image || props?.category?.logo}
+          alt={props.title}
+        />
+
+        {props.bottomName && (
+          <div className="text-sm text-white  text-center bg-black">
+            {props.title}
+          </div>
+        )}
       </div>
     </div>
   );
 };
-export default ShowFlexElements;
+export default ShowImagewithBlackElement;
