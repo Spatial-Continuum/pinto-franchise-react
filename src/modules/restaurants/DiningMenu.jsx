@@ -13,8 +13,9 @@ import { selectSelectedRestaurant, getRestaurantById, selectApiError, selectApiL
 import { useDispatch, useSelector } from 'react-redux';
 import { deletedAddonIdApi, selectDeleteAddonData, updateAddonApi } from '../../redux/slices/addons';
 import { getAllAddonApi, createAddonAPi, selectCreateAddonApiData, selectGetAllAddonApiData, } from '../../redux/slices/addons';
-import { updateItemByIdApi, deleteItemByIdApi, selectUpdateItemByIdApi } from '../../redux/slices/item';
+import { updateItemByIdApi, recommendedUpdateApi, selectRecommendedUpdate, deleteItemByIdApi, selectUpdateItemByIdApi } from '../../redux/slices/item';
 import menuicon from '../../assets/images/menuIcon.svg';
+import { getAllRecommendedItem, selectRecommendedAllItemApi } from '../../redux/slices/recommended';
 import { createMenuCategoryApi, selectCreateMenuCategroy, } from '../../redux/slices/menucategory';
 import EditAddOn from './EditAddOn';
 const DiningMenu = ({ restaurantId }) => {
@@ -26,6 +27,7 @@ const DiningMenu = ({ restaurantId }) => {
     const loading = useSelector(selectApiLoading)
     const error = useSelector(selectApiError)
     const dispatch = useDispatch();
+    const recommendation = useSelector(selectRecommendedAllItemApi)
     const [addonId, setAddonId] = useState(null)
     const [menuTitle, setMenuTitle] = useState("")
     const [addMenuPopup, setAddMenuPopup] = useState(false)
@@ -49,6 +51,8 @@ const DiningMenu = ({ restaurantId }) => {
         if (restaurantId) {
             dispatch(getRestaurantById(restaurantId))
             dispatch(getAllAddonApi(restaurantId))
+            dispatch(getAllRecommendedItem(restaurantId))
+
 
         }
 
@@ -92,28 +96,14 @@ const DiningMenu = ({ restaurantId }) => {
     };
 
     const handleRecommondationToggle = (item) => {
-        const newRecommendedStatus = !item.recommended;
-        const formPayload = new FormData();
-        formPayload.append("recommended", newRecommendedStatus);
-
-        // try {
-        //     dispatch(
-        //       updateItemByIdApi({ itemId: item.item_id, formPayload })
-        //     ).unwrap();
-        //     // No need to refresh - Redux state is already updated
-        //   } catch (error) {
-        //     console.error('Availability update failed:', error);
-        //   }
-
-        dispatch(updateItemByIdApi({ itemId: item.item_id, formPayload }))
+        dispatch(recommendedUpdateApi({ itemId: item.item_id, currentStatus: item.recommended }))
             .then(() => {
                 dispatch(getRestaurantById(restaurantId));
                 //setRefresh(true);
             })
             .catch(error => {
                 console.error("Failed to update recommendation:", error);
-            });
-
+            })
         setRefresh(!refresh);
     };
 
@@ -159,15 +149,6 @@ const DiningMenu = ({ restaurantId }) => {
             })
 
     }
-    // const handleAvailabilityToggle = (item) => {
-    //     console.log("Before toggle:", item.is_available);
-    //     const formData = new FormData();
-    //         formData.append("is_available", !item.is_available);
-    //     dispatch(updateItemByIdApi({ itemId: item.item_id, formData }));
-    //     console.log("After toggle:", formData)
-    //     }
-
-    // const numMenuCategories = categories.menu_categories.length;
     const handleEditClick = (itemid) => {
         setEditItemId(itemid)
         setShowEditItem(true)
@@ -258,45 +239,7 @@ const DiningMenu = ({ restaurantId }) => {
                 </button>
             </div>
 
-            {/* Progress Bar - Active Tab Indicator
- <div className="relative w-full h-[4px] bg-gray-300">
-    <div
-      className="absolute h-full bg-orange-600 transition-all"
-      style={{
-        width: activeTab === "dining" ? "33.33%" : activeTab === "charges" ? "66.66%" : "100%",
-      }}
-    ></div>
-  </div> */}
 
-
-            {/* <div className={` ${activeTab === "dining" ? "" : "hidden"}`}>
-                <div className="flex justify-between items-center p-4 bg-gray-100 border-b border-gray-300">
-                    <div className="flex items-center  space-x-4">
-                        <button
-                            className={` py-2  text-lg font-medium ${activeTab === "dining" ? "  underline" : "text-black-700"}`}
-                            onClick={() => handleTabClick("dining")}
-                        >
-                            Dining Menu
-                        </button>
-                        <button
-                            className={`px-4 py-2 text-lg font-medium ${activeTab === "charges" ? " text-orange-600 underline" : "text-black-700"}`}
-                            onClick={() => handleTabClick("charges")}
-                        >
-                            Charges
-                        </button>
-                        <button
-                            className={`px-4 py-2 text-lg font-medium ${activeTab === "recommended" ? "text-orange-600 underline" : "text-black-700"}`}
-                            onClick={() => handleTabClick("recommended")}
-                        >
-                            Recommended
-                        </button>
-
-                    </div>
-                    <button className="px-4 py-2 bg-orange-500 text-white font-bold rounded-md hover:bg-blue-600"
-                        onClick={() => handleAddClick(restaurantId)}>
-                        + Add Item
-                    </button>
-                </div> */}
 
 
             {/* in dining: menu */}
@@ -618,7 +561,7 @@ const DiningMenu = ({ restaurantId }) => {
                                                     <Switch
                                                         size="small"
                                                         checked={addon.is_available}
-                                                        
+
                                                         onChange={() => handleAddonAvailablityChange(addon.is_available)}
                                                     />
                                                     <PencilIcon
@@ -690,11 +633,61 @@ const DiningMenu = ({ restaurantId }) => {
             {/* recommendedTab */}
             <div className={`p-4 ${activeTab === "recommended" ? "" : "hidden"}`}>
                 {/* The content for Charges tab */}
-                <div className="flex flex-col lg:flex-row gap-5 mt-5 ">
-                    <div className="w-full lg:w-4/6 bg-gray-100  border border-gray-300 rounded-lg">
-                        <div className="flex justify-between py-3  items-center mb-0">
-                            <h1 className="text-lg font-bold px-4 text-gray-800">Menu</h1>
+                <div className="flex w-4/6  gap-5 bg-[#FFFFFF] mt-5 rounded-lg ">
+                    <div className="w-full lg:w-full  flex flex-col border border-gray-300 rounded-lg">
+                        <div className="flex justify-between py-4  items-center">
+                            <h1 className="text-lg font-bold px-4 text-gray-800">Recommended Menu</h1>
+
                         </div>
+                        <div className='flex px-4 py-3 bg-[#F1F5F9] items-center  justify-between '>
+                            <h1 className="text-md font-semibold  text-[#A3A3A3]">{recommendation.length} ITEMS</h1>
+                        </div>
+                        {recommendation && recommendation.length > 0 ? (
+                            <div className="flex flex-col px-4 py-3 bg-white">
+                                {recommendation.map((item, index) => (
+                                    <div
+                                        key={index}
+                                        className="flex items-center justify-between w-full py-3 border-gray-200"
+                                    >
+                                        {/* Left Section: Image, Name, Type */}
+                                        <div className="flex items-center gap-5">
+                                            {/* Item Image */}
+                                            <img
+                                                src={item.image}
+                                                alt={item.item_name}
+                                                className="w-8 h-8 object-cover rounded-full"
+                                            />
+
+                                            {/* Item Name & Type */}
+                                            <div className="flex items-center gap-3 text-slate-700">
+                                                <strong className="text-gray-800">{item.item_name}</strong>
+
+                                                {/* Item Type */}
+                                                <div className="flex items-center gap-2">
+                                                    {item.item_type === "Veg" ? (
+                                                        <img src={veg} alt="Veg" className="w-5 h-5" />
+                                                    ) : item.item_type === "Non-Veg" ? (
+                                                        <img src={nonveg} alt="Non-Veg" className="w-5 h-5" />
+                                                    ) : null}
+                                                    <span className="text-gray-600">{item.item_type}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Right Section: Price & Remove Button */}
+                                        <div className="grid grid-cols-2 gap-36 items-center ">
+                                            <p className="text-black font-medium">₹{item.selling_price}</p>
+                                            <button className="px-2 py-0  border-[0.5px] border-[#FF2323] text-[#FF2323] rounded-lg cursor-pointer hover:bg-red-100 transition">
+                                                Remove
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="text-gray-500 px-4 py-3">No recommended items available</p>
+                        )}
+
 
                     </div>
                 </div>
