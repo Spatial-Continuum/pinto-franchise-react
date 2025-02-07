@@ -677,7 +677,8 @@ const DiningMenu = ({ restaurantId }) => {
                                         {/* Right Section: Price & Remove Button */}
                                         <div className="grid grid-cols-2 gap-36 items-center ">
                                             <p className="text-black font-medium">₹{item.selling_price}</p>
-                                            <button className="px-2 py-0  border-[0.5px] border-[#FF2323] text-[#FF2323] rounded-lg cursor-pointer hover:bg-red-100 transition">
+                                            <button className="px-2 py-0  border-[0.5px] border-[#FF2323] text-[#FF2323] rounded-lg cursor-pointer hover:bg-red-100 transition"
+                                            onClick={()=>handleRecommondationToggle(item)}>
                                                 Remove
                                             </button>
                                         </div>
