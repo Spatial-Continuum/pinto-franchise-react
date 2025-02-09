@@ -10,6 +10,7 @@ import dishReducer from './slices/dishes';
 import menuCategoryReducer from './slices/menucategory'
 import orderHistoryReducer from './slices/ordersHistory'
 import recommendedItemReducer from './slices/recommended'
+import extraApisReducer from './slices/extraApis'
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
     menuCategory:menuCategoryReducer,
     orderHistory:orderHistoryReducer,
     recommendedItem:recommendedItemReducer,
+    extraApis:extraApisReducer
 
 
   },
