@@ -25,7 +25,7 @@ function ShowAuthentic() {
     console.log("Dispatching fetchAuthenticateApi");
     dispatch(fetchAuthenticateApi()).then((response) => {
       if (response && response.payload) {
-        setCategories(response.payload); // Updates cuisines
+        setAuthentic(response.payload); // Updates cuisines
       }
     });
   }, [dispatch]);
@@ -59,7 +59,7 @@ function ShowAuthentic() {
               </div>
               <button
                 onClick={() =>
-                  navigate("/menu/manage-screen/show-authentic", {
+                  navigate("/menu/manage-screen/authentic-form", {
                     state: { Authentic },
                   })
                 }
