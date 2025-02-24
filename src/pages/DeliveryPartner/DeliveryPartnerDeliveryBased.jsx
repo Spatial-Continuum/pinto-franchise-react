@@ -2,24 +2,48 @@ import React from "react";
 
 import MetricsCard from "../../components/GeneralComponent/MetricsCard/MetricsCard";
 import SearchBox from "../../components/GeneralComponent/SearchBox/SearchBox";
-import Main from "../../layouts/Main";
-import DateBox from "../../components/GeneralComponent/Dropdown/DateBox";
-import FilterDropdown from "../../components/GeneralComponent/Dropdown/FilterDropdown";
-import DeliveryBasedTable from "../../modules/deliveryPartners/DeliveryBased/DeliveryBasedTable";
+
+
+import DateBox from '../../components/GeneralComponent/Dropdown/DateBox';
+import FilterDropdown from '../../components/GeneralComponent/Dropdown/FilterDropdown';
+
+import DeliveryBasedTable from '../../modules/deliveryPartners/DeliveryBased/DeliveryBasedTable';
+import MainLayout from "../../components/GeneralComponent/Layout/MainLayout";
 
 const DeliveryPartnerDeliveryBased = () => {
+  const cardsData = [
+    { value: 75, label: 'Active Restaurants', textColor: 'text-blue-600', borderColor: 'border-[#1E99FF]' },
+    { value: '2k', label: 'Total Orders', textColor: 'text-orange-600', borderColor: 'border-[#FF6B00]' },
+    { value: 200, label: 'New Signups', textColor: 'text-green-700', borderColor: 'border-[#008B0E]' },
+    { value: '+', label: 'New Restaurant', textColor: 'text-gray-500', borderColor: 'border-gray-300', route: '/onboardingform' },
+  ];
+  const filterOptions = [
+    // { label: 'success', value: "Success" },
+    { label: 'live orders', value: "Pending" },
+    { label: 'rejected', value: "Rejected" },
+  ]
+  const handleCardClick = (card) => {
+    // if (card.route){
+    //     navigate(card.route)
+    // }
+  }
+
   return (
-    <Main>
+    <MainLayout headerName="Delivery Partner Delivery Based">
       <div>
         <div className="">
-          <MetricsCard />
-          <div className=" flex  gap-5 mb-5">
-            {/* Search Box */}
-            <SearchBox />
-            {/* Date Box */}
-            <DateBox />
-            {/* Filter Dropdown */}
-            <FilterDropdown />
+          <MetricsCard cards={cardsData} onCardClick={handleCardClick} />
+          <div className=" flex justify-between mb-5">
+            <div>
+              <SearchBox placeholder="search by name" />
+            </div>
+            <div className="flex grid-cols-2 gap-5">
+              {/* Filter Dropdown */}
+              <FilterDropdown options={filterOptions} />
+              {/* Date Box */}
+              <DateBox />
+
+            </div>
           </div>
           <div className="mb-44">
             {/* Table below with gap */}
@@ -27,7 +51,9 @@ const DeliveryPartnerDeliveryBased = () => {
           </div>
         </div>
       </div>
-    </Main>
+
+    </MainLayout>
+
   );
 };
 

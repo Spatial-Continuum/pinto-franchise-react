@@ -33,6 +33,13 @@ const SalariedTable = () => {
               );
             },
           },
+
+          {
+            name:'Type',
+            selector:  "",
+            sortable: true,
+          },
+
         {
             name:"JOIN DATE",
             selector: (row)=> row.joinDate,
@@ -40,23 +47,27 @@ const SalariedTable = () => {
 
         }, 
         {
+
             name:"PHONE",
+
             selector: (row)=> row.phone,
             sortable:true,
 
         },
-        {
-            name:"ORDERS",
-            selector: (row)=> row.orders,
-            sortable:true,
 
-        },
+       
         {
-            name:"ORDER VALUE",
+            name:"T.ORDER VALUE",
             selector: (row)=> row.orderValue,
             sortable:true,
 
         },
+        {
+          name:"REVENUE",
+          selector: "",
+          sortable:true,
+
+      },
         {
             name:"SALARY",
             selector: (row)=> row.salary,
@@ -91,13 +102,16 @@ const SalariedTable = () => {
     };
    
   return (
-    <div className="hide-scrollbar rounded-md gap-5 w-3/4 border-[1px] border-green-600 ml-5">
+
+    <div className="hide-scrollbar rounded-md gap-5 w-full border-[1px] border-green-600 ">
+
       <DataTable 
         columns={columns}
         data={salariedData}
         highlightOnHover
         striped
-        fixedHeader
+
+        // fixedHeader
         customStyles={customStyles}
        
       />

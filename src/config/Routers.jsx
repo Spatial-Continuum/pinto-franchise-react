@@ -1,15 +1,20 @@
 import { Routes, Route } from "react-router";
+
 import React, { Suspense } from "react";
 import MainLayout from "../components/GeneralComponent/Layout/MainLayout.jsx";
 import ShowAuthentic from "../components/MainComponent/Menu/ManageScreen/Authentic/ShowAuthentic.jsx";
-// import Onboarding from '../pages/Merchant/Onboarding.jsx';
-// import MarketingScreen from "../pages/Marketing/MarketingScreen.jsx";
-// import DeliveryPartnerSalaried from "../pages/DeliveryPartner/DeliveryPartnerSalaried.jsx";
-// import DeliveryPartnerDeliveryBased from "../pages/DeliveryPartner/DeliveryPartnerDeliveryBased.jsx";
-// import DeliveryPartnerOnboarding from "../pages/DeliveryPartner/DeliveryPartnerOnboarding.jsx";
-// import Restaurants from "../pages/Menu/Restaurants.jsx";
-// import AddItem from "../modules/restaurants/AddItem.jsx";
-// import Addmenu from "../pages/Menu/Addmenu.jsx";
+import Onboarding from "../pages/Merchant/Onboarding.jsx";
+import OnboardingForm from "../pages/Merchant/NewMerchantForm/OnboardingForm.jsx";
+import MarketingScreen from "../pages/Marketing/MarketingScreen.jsx";
+
+import Restaurants from "../pages/Menu/Restaurants.jsx";
+import Addmenu from "../pages/Menu/Addmenu.jsx";
+import QuickSearch from "../components/MainComponent/Menu/QuickSearch/index.jsx";
+import CustomerDetail from "../components/MainComponent/orders/PhoneOrders/restaurants/CustomerDetail.jsx";
+import ManageMerchant from "../pages/Merchant/ManageMerchant/ManageMerchant.jsx";
+import OnboardingFormView from "../pages/Merchant/MerchantViewForm/OnboardingFormView.jsx";
+import ManagePartners from "../pages/DeliveryPartner/ManagePartners.jsx";
+import OrderHistoryIndex from "../components/MainComponent/orders/OrderHistory/OrderHistoryIndex.jsx";
 const ManageScreen = React.lazy(() =>
   import("../components/MainComponent/Menu/index")
 );
@@ -27,6 +32,12 @@ const ShowQuickFilter = React.lazy(() =>
   import(
     "../components/MainComponent/Menu/ManageScreen/QuickFilter/showQuickFilter.jsx"
   )
+);
+const PhoneOrder = React.lazy(() =>
+  import("../components/MainComponent/orders/PhoneOrders/index.jsx")
+);
+const ManageOrder = React.lazy(() =>
+  import("../components/MainComponent/orders/ManageOrders/ManageIndex.jsx")
 );
 const QuickFilterForm = React.lazy(() =>
   import(
@@ -73,10 +84,12 @@ const AuthenticForm = React.lazy(() =>
     "../components/MainComponent/Menu/ManageScreen/Authentic/AuthenticForm.jsx"
   )
 );
+
 const Routers = (props) => {
   return (
     <Routes>
       <Route path="/" element={<MainLayout />}></Route>
+
       <Route
         path="/menu/manage-screen"
         element={
@@ -87,6 +100,7 @@ const Routers = (props) => {
           </Suspense>
         }
       />
+
       <Route
         path="/menu/manage-screen/show-category"
         element={
@@ -97,6 +111,7 @@ const Routers = (props) => {
           </Suspense>
         }
       />
+
       <Route
         path="/menu/manage-screen/categoty-form"
         element={
@@ -117,6 +132,7 @@ const Routers = (props) => {
           </Suspense>
         }
       />
+
       <Route
         path="/menu/manage-screen/quick-filter-form"
         element={
@@ -127,6 +143,7 @@ const Routers = (props) => {
           </Suspense>
         }
       />
+
       <Route
         path="/menu/manage-screen/show-city-sopts"
         element={
@@ -137,6 +154,7 @@ const Routers = (props) => {
           </Suspense>
         }
       />
+
       <Route
         path="/menu/manage-screen/show-subcategory"
         element={
@@ -147,6 +165,7 @@ const Routers = (props) => {
           </Suspense>
         }
       />
+
       <Route
         path="/menu/manage-screen/show-subcuisine"
         element={
@@ -167,6 +186,7 @@ const Routers = (props) => {
           </Suspense>
         }
       />
+
       <Route
         path="/menu/manage-screen/show-topbrand"
         element={
@@ -187,6 +207,7 @@ const Routers = (props) => {
           </Suspense>
         }
       />
+
       <Route
         path="/menu/manage-screen/quick-restaurant-form"
         element={
@@ -207,76 +228,142 @@ const Routers = (props) => {
           </Suspense>
         }
       />
-      {/* <Route path="/homescreen/authenticstyle" element={<ManageScreen />} /> */}
 
-      {/* <Route path='/merchant/onboarding'
+      <Route
+        path="/merchant/onboarding"
         element={
-          <Suspense fallback={<div className="text-center m-t-15">Loading...</div>}>
-            <Onboarding/>
+          <Suspense
+            fallback={<div className="text-center m-t-15">Loading...</div>}
+          >
+            <Onboarding />
           </Suspense>
-        
         }
+      />
+      <Route
+        path="/onboardingform"
+        element={
+          <Suspense
+            fallback={<div className="text-center m-t-15">Loading...</div>}
+          >
+            <OnboardingForm />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/onboarding-form-view/:restaurantId"
+        element={
+          <Suspense
+            fallback={<div className="text-center m-t-15">Loading...</div>}
+          >
+            <OnboardingFormView />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/marketing"
+        element={
+          <Suspense
+            fallback={<div className="text-center m-t-15">Loading...</div>}
+          >
+            <MarketingScreen />
+          </Suspense>
+        }
+      />
 
-        />
-        <Route path='/onboardingform'
+      <Route
+        path="/deliverypartner/manage-partners"
         element={
-          <Suspense fallback={<div className="text-center m-t-15">Loading...</div>}>
-            <OnboardingForm/>
+          <Suspense
+            fallback={<div className="text-center m-t-15">Loading...</div>}
+          >
+            <ManagePartners />
           </Suspense>
         }
-        />
+      />
 
-        <Route path='/marketing'
+      <Route
+        path="/menu/quick-search"
         element={
-          <Suspense fallback={<div className="text-center m-t-15">Loading...</div>}>
-            <MarketingScreen/>
+          <Suspense
+            fallback={<div className="text-center m-t-15">Loading...</div>}
+          >
+            <QuickSearch />
           </Suspense>
         }
-        />
-
-
-        <Route path='/deliverypartner/salaried'
+      />
+      <Route
+        path="/menu/restaurant-item"
         element={
-          <Suspense fallback={<div className="text-center m-t-15">Loading...</div>}>
-            < DeliveryPartnerSalaried/>
-          </Suspense>
-        }
-        />
-        <Route path='/deliverypartner/deliverybased'
-        element={
-          <Suspense fallback={<div className="text-center m-t-15">Loading...</div>}>
-            < DeliveryPartnerDeliveryBased/>
-          </Suspense>
-        }
-        />
-        <Route path='/deliverypartner/onboarding'
-        element={
-          <Suspense fallback={<div className="text-center m-t-15">Loading...</div>}>
-            < DeliveryPartnerOnboarding/>
-          </Suspense>
-        }
-        />
-        <Route path='/menu/quick-search'
-        element={
-          <Suspense fallback={<div className="text-center m-t-15">Loading...</div>}>
-            <QuickSearch/>
-          </Suspense>
-        }
-        />
-        <Route path='/menu/restaurant-item'
-        element={
-          <Suspense fallback={<div className="text-center m-t-15">Loading...</div>}>
+          <Suspense
+            fallback={<div className="text-center m-t-15">Loading...</div>}
+          >
             <Restaurants />
           </Suspense>
         }
-        /> 
-        <Route path='/menu/restaurant-item/addmenu/:restaurantId'
+      />
+
+      <Route
+        path="/menu/restaurant-item/addmenu/:restaurantId"
         element={
-          <Suspense fallback={<div className="text-center m-t-15">Loading...</div>}>
+          <Suspense
+            fallback={<div className="text-center m-t-15">Loading...</div>}
+          >
             <Addmenu />
           </Suspense>
         }
-        />    */}
+      />
+      <Route
+        path="/orders/phone-orders"
+        element={
+          <Suspense
+            fallback={<div className="text-center m-t-15">Loading...</div>}
+          >
+            <PhoneOrder />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/orders/phone-orders/searchrestaurant/customerdetail/:id"
+        element={
+          <Suspense
+            fallback={<div className="text-center m-t-15">Loading...</div>}
+          >
+            <CustomerDetail />
+          </Suspense>
+        }
+      />
+
+      <Route
+        path="/orders/order-history"
+        element={
+          <Suspense
+            fallback={<div className="text-center m-t-15">Loading...</div>}
+          >
+            <OrderHistoryIndex />
+          </Suspense>
+        }
+      />
+
+      <Route
+        path="/merchant/managemerchant"
+        element={
+          <Suspense
+            fallback={<div className="text-center m-t-15">Loading...</div>}
+          >
+            <ManageMerchant />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/orders/manage-orders"
+        element={
+          <Suspense
+            fallback={<div className="text-center m-t-15">Loading...</div>}
+          >
+            <ManageOrder />
+          </Suspense>
+        }
+      />
     </Routes>
   );
 };

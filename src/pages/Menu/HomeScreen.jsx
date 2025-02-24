@@ -6,7 +6,9 @@ import ShowFilter from '../../modules/menu/QuickFilterDish/ShowFilter'
 import ShowTopBrand from '../../modules/menu/TopBrand/ShowTopBrand'
 import QuickFilterRestaurant from '../../modules/menu/QuickFilterRestaurant/QuickFilterRestaurant'
 import AuthenticCookingStyle from '../../modules/menu/AuthenticCooking/AuthenticCookingStyle'
-import PropsSearchBox from '../../components/GeneralComponent/SearchBox/PropsSearchBox'
+
+import PropsSearchBox from '../../components/SearchBox/PropsSearchBox'
+
 import search from '../../assets/images/prime_search.svg'
 import ShowSpotLight from '../../modules/menu/spotlight/ShowSpotLight'
 import ShowCityBanquets from '../../modules/menu/Banquets/ShowCityBanquets'
