@@ -1,16 +1,19 @@
 import React from 'react'
-import Main from '../../layouts/Main'
-import DiningMenu from '../../modules/menu/DiningMenu'
-import { useParams } from 'react-router-dom'
+
+
+import DiningMenu from '../../modules/restaurants/DiningMenu';
+import { useParams } from 'react-router-dom';
+import MainLayout from '../../components/GeneralComponent/Layout/MainLayout';
+
 const Addmenu = () => {
     const {restaurantId} = useParams()
     return (
         <div>
-            <Main>
+            <MainLayout >
                 <div>
                     <DiningMenu restaurantId={restaurantId}/>
                 </div>
-            </Main>
+            </MainLayout>
         </div>
     )
 }

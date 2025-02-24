@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";  // Import CSS for the date picker
+import "react-datepicker/dist/react-datepicker.css"; // Import CSS for the date picker
 // import '../../assets/styles/dateBox.css';
 
 const DateBox = () => {
@@ -18,18 +18,16 @@ const DateBox = () => {
   };
 
   return (
-    <div className=" bg-white-600 border-[1px]  rounded-md  h-10 ml-0 ">
+    <div className=" bg-white-600 border-[1px]  rounded-lg  h-10 ml-0 ">
       {/* Date Picker Button */}
       <DatePicker
         selected={selectedDate}
         onSelect={handleDateSelect} // When a day is clicked
         onChange={handleDateChange} // When the value changes
-        dateFormat="yyyy-MM-dd"  // Format the date
-        className="  bg-gray-200 border-[1px] border-[#a8a4a4] rounded-sm  h-10 text-center "  // Custom styling for the date picker
+        dateFormat="yyyy-MM-dd" // Format the date
+        className="  bg-[#FFFFFF] border-[#A7D7FF] border-[1px] rounded-lg  h-10 text-center " // Custom styling for the date picker
         placeholderText="Select Date"
       />
-
-      
     </div>
   );
 };

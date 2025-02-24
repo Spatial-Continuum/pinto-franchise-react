@@ -27,6 +27,10 @@ const AddCategoryForm = () => {
   console.log("asdfklasdfladsflasd;", formState);
 
   console.log("asdfasdf", singleCategory);
+<<<<<<< HEAD
+=======
+  const [newCuisine, setNewCuisine] = useState("");
+>>>>>>> 31c00e009c71d4782d3d0820b6deb1c18084795b
   const [selectedCuisineIds, setSelectedCuisineIds] = useState([]);
   const [allCategory, setAllCategory] = useState([]);
 

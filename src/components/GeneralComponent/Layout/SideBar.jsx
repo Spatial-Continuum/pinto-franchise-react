@@ -36,7 +36,9 @@ const SideBar = ({isExpanded,setIsExpanded}) => {
     const hasSubmenu = submenu && submenu.length > 0;
     // console.log("giuygfffgjhgh",submenu)
     return (
-      <div className={`relative ${text=="Dashboard"? '' : "mb-4"}`}>
+
+
+      <div className={`relative text-sm ${text=="Dashboard"? '' : "mb-4"}`}>
         <div 
           className={`flex items-center justify-between cursor-pointer hover:bg-[#2B2954] rounded-lg p-2 ${
             location.pathname === to ? 'bg-[#2B2954]' : ''
@@ -119,7 +121,9 @@ const SideBar = ({isExpanded,setIsExpanded}) => {
       submenu: [
         { text: "Manage order", to: "/orders/manage-orders" },
         { text: "Phone orders", to: "/orders/phone-orders" },
-        { text: "Order history" }
+
+        { text: "Order history", to:"/orders/order-history" }
+
       ]
     },
     {
@@ -127,8 +131,12 @@ const SideBar = ({isExpanded,setIsExpanded}) => {
       text: "Merchant",
       menuKey: "merchant",
       submenu: [
-        { text: "Delivery partner" },
-        { text: "Menu" }
+        // { text: "Delivery partner" },
+        // { text: "Menu" },
+        {text:"Manage Merchant", to: "/merchant/managemerchant"},
+        {text: "Onboarding", to: "/merchant/onboarding" },
+        
+
       ]
     },
     {
@@ -136,9 +144,12 @@ const SideBar = ({isExpanded,setIsExpanded}) => {
       text: "Delivery partner",
       menuKey: "delivery",
       submenu: [
-        { text: "Salaried" },
-        { text: "Delivery based" },
-        { text: "Onboarding" }
+
+        // { text: "Salaried" ,to: '/deliverypartner/salaried'},
+        // { text: "Delivery based" ,to:'/deliverypartner/deliverybased' },
+        {text:"Manage Partners", to:'/deliverypartner/manage-partners'},
+        { text: "Onboarding" ,to:'/deliverypartner/onboarding'}
+
       ]
     },
     { 
@@ -147,8 +158,9 @@ const SideBar = ({isExpanded,setIsExpanded}) => {
       menuKey: "menu",
       submenu: [
         { text: "Home Screen", to: "/menu/manage-screen" },
-        { text: "Explore Screen" },
-        { text: "Quick Search" },
+
+        // { text: "Explore Screen" },
+        { text: "Quick Search", to:'/menu/quick-search'},
         {text:"Restaurant Item",to:"/menu/restaurant-item"},
       ]
     },
@@ -160,7 +172,9 @@ const SideBar = ({isExpanded,setIsExpanded}) => {
     { 
       icon: SpeakerWaveIcon, 
       text: "Marketing",
-      menuKey: "marketing"
+
+      menuKey: "marketing",
+      to: "/marketing"
     },
     { 
       icon: ChartBarIcon, 
