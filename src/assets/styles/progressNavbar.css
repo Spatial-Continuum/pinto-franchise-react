@@ -1,0 +1,41 @@
+.progress-navbar {
+    display: flex;
+    /* justify-content: space-around; */
+    /* align-items: center; */
+    margin-bottom: 20px;
+  }
+  
+  .step-heading {
+    font-size:x-large;
+    font-weight: 500;
+    color: #2B2954; /* Gray for inactive steps */
+    cursor: pointer;
+    opacity:0.5    /*light blur for inactive steps */
+   
+  }
+  
+  .step-heading.active {
+    color: #2B2954; /* Bright blue for active step */
+    opacity: 1; /* Remove blur for active step */
+    
+  }
+  .step-heading.completed {
+    color: #00840D;/* Optional: Use a different color for completed steps */
+    opacity: 1; /* Ensure completed steps are not faded */
+    filter:none;
+  }
+  
+  .step-heading:hover {
+    color: #2B2954; /* Optional hover effect */
+    opacity:1;
+  }
+  
+
+  .step-heading img {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  

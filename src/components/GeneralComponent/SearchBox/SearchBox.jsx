@@ -1,14 +1,24 @@
-import React from 'react'
 
+import React from 'react';
 
-const SearchBox = () => {
+const SearchBox = ({ placeholder, img, onSearch, value ,className }) => {
   return (
-      <div className="ml-5 w-80 h-10 bg-slate-900  lg:flex  hover:border-[#FAFAFA] ">
-        
-          <input className= "  w-80 h-10 bg-slate-200 border-[1px] border-[#a5bbcc]" type="text" placeholder=" Search partner name,Id,phonenumber" />
+    <div className={`flex w-80 h-10 border-[#A7D7FF] border-[1px] rounded-lg overflow-hidden ${className}`}>
+      {img && (
+        <span className="flex items-center justify-center w-10 h-full bg-white">
+          <img src={img} alt="icon" className="w-6 h-6 object-contain" />
+        </span>
+      )}
+      <input
+        type="text"
+        placeholder={placeholder}
+        className="flex-grow h-full px-2 text-gray-700 bg-white focus:outline-none"
+        onChange={(e) => onSearch(e.target.value)}
+        value={value}
+      />
+    </div>
+  );
+};
 
-      </div>
-  )
-}
+export default SearchBox;
 
-export default SearchBox
