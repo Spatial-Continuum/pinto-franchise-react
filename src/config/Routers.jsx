@@ -6,7 +6,6 @@ import ShowAuthentic from "../components/MainComponent/Menu/ManageScreen/Authent
 import Onboarding from "../pages/Merchant/Onboarding.jsx";
 import OnboardingForm from "../pages/Merchant/NewMerchantForm/OnboardingForm.jsx";
 import MarketingScreen from "../pages/Marketing/MarketingScreen.jsx";
-
 import Restaurants from "../pages/Menu/Restaurants.jsx";
 import Addmenu from "../pages/Menu/Addmenu.jsx";
 import QuickSearch from "../components/MainComponent/Menu/QuickSearch/index.jsx";
@@ -15,6 +14,7 @@ import ManageMerchant from "../pages/Merchant/ManageMerchant/ManageMerchant.jsx"
 import OnboardingFormView from "../pages/Merchant/MerchantViewForm/OnboardingFormView.jsx";
 import ManagePartners from "../pages/DeliveryPartner/ManagePartners.jsx";
 import OrderHistoryIndex from "../components/MainComponent/orders/OrderHistory/OrderHistoryIndex.jsx";
+import Dashboard from "../components/MainComponent/Dashboard";
 const ManageScreen = React.lazy(() =>
   import("../components/MainComponent/Menu/index")
 );
@@ -88,7 +88,7 @@ const AuthenticForm = React.lazy(() =>
 const Routers = (props) => {
   return (
     <Routes>
-      <Route path="/" element={<MainLayout />}></Route>
+      <Route path="/" element={<Dashboard />}></Route>
 
       <Route
         path="/menu/manage-screen"

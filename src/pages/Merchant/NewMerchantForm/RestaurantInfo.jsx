@@ -4,6 +4,8 @@ import RestaurantService from "../../../modules/restaurants/RestaurantService";
 import { useRef } from "react";
 import {
   GoogleMap,
+  LoadScript,
+  Marker,
   useJsApiLoader,
   StandaloneSearchBox,
 } from "@react-google-maps/api";
@@ -14,18 +16,23 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
   const [createUserPopup, setCreateUserPopup] = useState(false);
   const [message, setMessage] = useState(false);
   const [newOwnerDetails, setNewOwnerDetails] = useState();
+  const mapContainerStyle = { width: "100%", height: "400px" };
+  const defaultCenter = { lat: 28.7041, lng: 77.1025 };
+  const [mapCenter, setMapCenter] = useState(defaultCenter);
+  const [markerPosition, setMarkerPosition] = useState(defaultCenter);
   const [newUserDetails, setNewUserDetails] = useState({
     username: "",
     email: "",
     phone: "",
     role: "restaurant_owner",
   });
+  const [phoneNo, setPhoneNo] = useState("");
   const [ownerPopup, setOwnerPopup] = useState(false);
-  const [phoneNo, setPhoneNo] = useState();
+  const [serach_for_address, setSearchForAddress] = useState();
   const [validFields, setValidFields] = useState({
     name: true, // Assuming 'name' is a field
     pincode: true,
-    door_no: true,
+    search_for_address: true,
     street_address_1: true,
     street_address_2: true,
     landmark: true,
@@ -124,6 +131,54 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
     googleMapsApiKey: "AIzaSyANMc42fXDaBF3bYBdHQFbWsquKht3arak",
     libraries: ["places"],
   });
+
+  const handleOnPlaceChanged = () => {
+    let places = inputref.current.getPlaces();
+    if (places.length > 0) {
+      const place = places[0];
+      const address = place.formatted_address;
+      console.log("klasdjfljwe", address);
+      const lat = place.geometry.location.lat();
+      const lng = place.geometry.location.lng();
+      console.log("kasjdfiojwoewe");
+      let state = "";
+      let city = "";
+      let pincode = "";
+
+      place.address_components.forEach((component) => {
+        if (component.types.includes("administrative_area_level_1")) {
+          state = component.long_name; // State
+        }
+        if (
+          component.types.includes("locality") ||
+          component.types.includes("sublocality_level_1")
+        ) {
+          city = component.long_name; // City
+        }
+        if (component.types.includes("postal_code")) {
+          pincode = component.long_name; // Pincode
+        }
+      });
+
+      const updatedData = {
+        ...data,
+        search_for_address: address,
+        latitude: lat,
+        longitude: lng,
+        state: state,
+        city: city,
+        pincode: pincode,
+      };
+      console.log("kjasdhiwioew", updatedData);
+
+      setData(updatedData);
+      setMapCenter({ lat, lng });
+      setMarkerPosition({ lat, lng });
+      console.log("juieieioe", data);
+      console.log("aisjiofwe", address);
+    }
+  };
+  console.log("klsajdfoeopeop", data);
   return (
     <div className="p-6 ">
       <div className="flex justify-between ">
@@ -170,18 +225,34 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
           </div>
 
           {/* Door Number */}
-          {/* <div className="w-1/6  flex flex-col mb-4">
-                        <label htmlFor="doorNumber" className="text-sm font-medium text-gray-700">Door No</label>
-                        <input
-                            id="doorNumber"
-                            name="door_no"
-                            value={data.door_no}
-                            onChange={handleInputChange}
-                            type="text"
-                            placeholder="Enter door number"
-                            className={`w-full px-3 py-2 border ${validFields.door_no ? 'border-gray-300' : 'border-red-500'} rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                        />
-                    </div> */}
+          <div className="w-3/6  flex flex-col mb-4">
+            <label
+              htmlFor="search for address"
+              className="text-sm font-medium text-gray-700"
+            >
+              Search for Address
+            </label>
+            {isLoaded && (
+              <StandaloneSearchBox
+                onLoad={(ref) => (inputref.current = ref)}
+                onPlacesChanged={handleOnPlaceChanged}
+              >
+                <input
+                  id="search_for_address"
+                  name="search_for_address"
+                  value={data.search_for_address}
+                  onChange={handleInputChange}
+                  type="text"
+                  placeholder="Enter search_for_address"
+                  className={`w-full px-3 py-2 border ${
+                    validFields.search_for_address
+                      ? "border-gray-300"
+                      : "border-red-500"
+                  } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                />
+              </StandaloneSearchBox>
+            )}
+          </div>
           {/*email*/}
 
           {/* Street Address 1 and 2 */}
@@ -193,23 +264,21 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
               >
                 Street Address 1
               </label>
-              {isLoaded && (
-                <StandaloneSearchBox>
-                  <input
-                    id="streetAddress1"
-                    type="text"
-                    name="street_address_1"
-                    value={data.street_address_1 || ""}
-                    onChange={handleInputChange}
-                    placeholder="Enter street address 1"
-                    className={`w-full px-3 py-2 border ${
-                      validFields.street_address_1
-                        ? "border-gray-300"
-                        : "border-red-500"
-                    } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                  />
-                </StandaloneSearchBox>
-              )}
+
+              <input
+                id="streetAddress1"
+                type="text"
+                name="street_address_1"
+                value={data.street_address_1 || ""}
+                onChange={handleInputChange}
+                placeholder="Enter street address 1"
+                className={`w-full px-3 py-2 border ${
+                  validFields.street_address_1
+                    ? "border-gray-300"
+                    : "border-red-500"
+                } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              />
+
               {!validFields.street_address_1 && (
                 <span className="text-red-500 text-sm mt-1">
                   This field is required
@@ -355,9 +424,15 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
         {/* Right Box */}
 
         <div className="w-1/3 bg-gray-100 p-4 border border-gray-300 rounded-lg flex justify-center items-center">
-          <div className="w-24 h-24 border-2 border-gray-300 rounded-lg flex justify-center items-center cursor-pointer hover:bg-gray-200">
-            <span className="text-sm text-gray-700">Detect</span>
-          </div>
+          {isLoaded && (
+            <GoogleMap
+              mapContainerStyle={mapContainerStyle}
+              center={mapCenter}
+              zoom={14}
+            >
+              <Marker position={markerPosition} />
+            </GoogleMap>
+          )}
         </div>
       </div>
 
