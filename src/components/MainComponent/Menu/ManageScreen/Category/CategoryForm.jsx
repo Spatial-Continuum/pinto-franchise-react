@@ -407,15 +407,15 @@ const AddCategoryForm = () => {
           {edit ? "Edit " : "Add "}Category
         </h2>
         <form onSubmit={handleSubmit}>
-          <div className="p-6 border rounded-lg m-2">
+          <div className="p-6 m-2 border rounded-lg">
             <div className="flex ">
               <div className="mb-6">
-                <label className="block text-sm mb-2">Add category title</label>
+                <label className="block mb-2 text-sm">Add category title</label>
                 <input
                   id="title"
                   type="text"
                   placeholder="Type here.."
-                  className="border border-gray-300 rounded-lg px-3 py-2 w-54"
+                  className="px-3 py-2 border border-gray-300 rounded-lg w-54"
                   value={formState.title}
                   onChange={(e) =>
                     setFormState((prevState) => ({
@@ -426,19 +426,19 @@ const AddCategoryForm = () => {
                 />
               </div>
 
-              <div className="mb-6 ml-8 relative ">
-                <label className="block text-sm mb-2">Add sub category</label>
+              <div className="relative mb-6 ml-8 ">
+                <label className="block mb-2 text-sm">Add sub category</label>
                 <input
                   type="text"
                   placeholder="Enter to add"
-                  className="border border-gray-300 rounded-lg px-3 py-2 w-56"
+                  className="w-56 px-3 py-2 border border-gray-300 rounded-lg"
                   value={searchTerm}
                   onChange={handleInputChange}
                 />
                 {/* Dropdown */}
-                {loading && <p className="text-gray-400 mt-2">Loading...</p>}
+                {loading && <p className="mt-2 text-gray-400">Loading...</p>}
                 {subCategories.length > 0 && (
-                  <ul className="absolute z-2 top-full border rounded mt-2 shadow-md max-h-48 overflow-auto bg-gray-100">
+                  <ul className="absolute mt-2 overflow-auto bg-gray-100 border rounded shadow-md z-2 top-full max-h-48">
                     {subCategories.map((item) => (
                       <li
                         key={item.subcategory_id}
@@ -460,12 +460,12 @@ const AddCategoryForm = () => {
                   </ul>
                 )}
               </div>
-              <div className="mb-6 ml-12 relative">
-                <label className="block text-sm mb-2 w-40 ">
+              <div className="relative mb-6 ml-12">
+                <label className="block w-40 mb-2 text-sm ">
                   Select Cuisine
                 </label>
 
-                <div className="flex border rounded-lg px-2 py-1 justify-between  bg-white cursor-pointer">
+                <div className="flex justify-between px-2 py-1 bg-white border rounded-lg cursor-pointer">
                   <div>
                     {formState?.selectedCuisines?.length > 0
                       ? formState?.selectedCuisines[0]
@@ -481,12 +481,11 @@ const AddCategoryForm = () => {
                   </span>
                 </div>
                 {formState.dropdownOpen && (
-                  <div className="absolute  top-full z-2 border bg-white shadow-lg mt-1 w-40 rounded bg-gray-100">
-                    <div className="p-2">
+                  <div className="absolute w-40 p-2 mt-1 bg-gray-100 border rounded shadow-lg top-full z-2">
                       {formState?.allcuisine?.map((cuisine) => (
                         <div
                           key={cuisine?.cuisine_id}
-                          className="flex items-center space-x-2 mb-1"
+                          className="flex items-center mb-1 space-x-2"
                         >
                           {console.log("asfasd", cuisine)}
                           <input
@@ -507,7 +506,6 @@ const AddCategoryForm = () => {
                       >
                         Add new cuisine
                       </label>
-                    </div>
                   </div>
                 )}
               </div>
@@ -538,7 +536,7 @@ const AddCategoryForm = () => {
               />
               {!formState.image ? (
                 <Upload
-                  className="w-8 h-8 text-gray-400 mb-2"
+                  className="w-8 h-8 mb-2 text-gray-400"
                   onClick={() => {
                     document.getElementById("Choose image").click();
                   }}
@@ -556,7 +554,7 @@ const AddCategoryForm = () => {
                     <img
                       src={formState.imagePreview}
                       alt="Preview"
-                      className=" object-fit rounded-lg mb-2"
+                      className="mb-2 rounded-lg object-fit"
                     />
                   </div>
                 </>
@@ -565,14 +563,14 @@ const AddCategoryForm = () => {
               )}
             </div>
             <div className="mt-10">
-              <label className="block text-sm mb-4">Add Cuisine</label>
-              <div className="flex flex-wrap gap-4  m-4">
+              <label className="block mb-4 text-sm">Add Cuisine</label>
+              <div className="flex flex-wrap gap-4 m-4">
                 {formState?.allcuisine
                   ?.filter((cuisine) => cuisine.value == true)
                   .map((cuisine) => (
                     <span
                       key={cuisine.cuisine_id}
-                      className="px-2 py-1 bg-gray-200 rounded-full flex items-center"
+                      className="flex items-center px-2 py-1 bg-gray-200 rounded-full"
                     >
                       {cuisine.cuisine_title}
                       <button
@@ -591,7 +589,7 @@ const AddCategoryForm = () => {
             </div>
 
             <div>
-              <label className="block text-sm mt-6 mb-4">
+              <label className="block mt-6 mb-4 text-sm">
                 Add Sub category
               </label>
 
@@ -623,23 +621,23 @@ const AddCategoryForm = () => {
                     <img
                       src={item?.image}
                       alt={item?.subcategory_title}
-                      className="border border-2 z-1 rounded-md  w-44 h-40"
+                      className="h-40 border-2 rounded-md z-1 w-44"
                     />
                   </div>
                 ))}
               </div>
             </div>
-            <div className="flex flex-row items-end space-x-4 m-8">
+            <div className="flex flex-row items-end m-8 space-x-4">
               <button
                 type="submit"
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+                className="px-4 py-2 text-white bg-blue-600 rounded-lg"
                 onClick={handleSubmit}
               >
                 {edit ? "Update " : "Add "} Category
               </button>
               <button
                 type="reset"
-                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg"
+                className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg"
                 onClick={handleCacel}
               >
                 Cancel
@@ -649,9 +647,9 @@ const AddCategoryForm = () => {
         </form>
       </div>
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white rounded-lg p-6 w-96">
-            <div className="flex justify-between items-center mb-4">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="p-6 bg-white rounded-lg w-96">
+            <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold">Add New {type}</h2>
               <button
                 onClick={() => {
@@ -667,7 +665,7 @@ const AddCategoryForm = () => {
               <label className="block mb-1">Enter {type} title</label>
               <input
                 type="text"
-                className="w-full border p-2 rounded"
+                className="w-full p-2 border rounded"
                 placeholder={`${type} title`}
                 value={newitem}
                 onChange={(e) => setNewItem(e.target.value)}
@@ -715,11 +713,11 @@ const AddCategoryForm = () => {
                       <img
                         src={newLogoPreview}
                         alt="Preview"
-                        className=" object-fit rounded-lg h-28"
+                        className="rounded-lg object-fit h-28"
                       />
                     ) : (
                       <div>
-                        <span className="text-gray-500 text-sm">
+                        <span className="text-sm text-gray-500">
                           Choose Logo
                         </span>
                       </div>
@@ -765,11 +763,11 @@ const AddCategoryForm = () => {
                     <img
                       src={newImagePreview}
                       alt="Preview"
-                      className=" h-28 object-full rounded-lg "
+                      className="rounded-lg h-28 object-full"
                     />
                   ) : (
                     <div>
-                      <span className="text-gray-500 text-sm">
+                      <span className="text-sm text-gray-500">
                         Choose Image
                       </span>
                     </div>
@@ -794,7 +792,7 @@ const AddCategoryForm = () => {
                   console.log("Image:", newimage);
                   handleSubmitModal(type, e);
                 }}
-                className="px-4 py-2 bg-blue-500 text-white rounded"
+                className="px-4 py-2 text-white bg-blue-500 rounded"
               >
                 DONE
               </button>

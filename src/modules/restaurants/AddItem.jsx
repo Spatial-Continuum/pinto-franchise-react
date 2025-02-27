@@ -86,7 +86,7 @@ const AddItem = ({
 
   let sellingPrice = parseInt(
     parseFloat(basePrices) +
-      parseFloat((basePrices * commissionPercentage) / 100)
+      parseFloat(basePrices * (commissionPercentage / 100))
   );
 
   const handleChange = (e) => {
@@ -233,18 +233,18 @@ const AddItem = ({
 
   return (
     <div>
-      <div className="w-full bg-gray-100 p-6 border border-gray-300 rounded-lg">
-        <div className="flex justify-between items-center">
-          <p className="text-start text-gray-800 font-medium">+ Add item</p>
+      <div className="w-full p-6 bg-gray-100 border border-gray-300 rounded-lg">
+        <div className="flex items-center justify-between">
+          <p className="font-medium text-gray-800 text-start">+ Add item</p>
           <div className="flex flex-row gap-2">
             <button
-              className="px-5 py-2 bg-white text-black font-medium rounded-md hover:border-grey-700"
+              className="px-5 py-2 font-medium text-black bg-white rounded-md hover:border-grey-700"
               onClick={handleClose}
             >
               cancel
             </button>
             <button
-              className="px-5 py-2 bg-blue-500 text-white font-medium rounded-md hover:bg-blue-700"
+              className="px-5 py-2 font-medium text-white bg-blue-500 rounded-md hover:bg-blue-700"
               onClick={handleSubmit}
             >
               Publish
@@ -260,7 +260,7 @@ const AddItem = ({
               <div className="flex flex-col w-1/2">
                 <label
                   htmlFor="itemName"
-                  className="text-sm font-xs text-gray-700 mb-1"
+                  className="mb-1 text-sm text-gray-700 font-xs"
                 >
                   Item Name
                 </label>
@@ -277,14 +277,14 @@ const AddItem = ({
                   } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 />
                 {errors.itemName && (
-                  <p className="text-red-500 text-xs mt-1">{errors.itemName}</p>
+                  <p className="mt-1 text-xs text-red-500">{errors.itemName}</p>
                 )}
               </div>
 
               <div className="flex flex-col w-1/2">
                 <label
                   htmlFor="menuCategory"
-                  className="text-sm font-xs text-gray-700 mb-1"
+                  className="mb-1 text-sm text-gray-700 font-xs"
                 >
                   Menu Category
                 </label>
@@ -316,7 +316,7 @@ const AddItem = ({
                   </option>
                 </select>
                 {errors.menuCategory && (
-                  <p className="text-red-500 text-xs mt-1">
+                  <p className="mt-1 text-xs text-red-500">
                     {errors.menuCategory}
                   </p>
                 )}
@@ -326,10 +326,10 @@ const AddItem = ({
             <div className="flex items-center space-x-4">
               {/* Subcategory Search */}
               {/* Subcategory Search */}
-              <div className="flex flex-col relative">
+              <div className="relative flex flex-col">
                 <label
                   htmlFor="subCategory"
-                  className="text-sm font-xs text-gray-700 mb-1"
+                  className="mb-1 text-sm text-gray-700 font-xs"
                 >
                   Subcategory
                 </label>
@@ -354,13 +354,13 @@ const AddItem = ({
                   } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 />
                 {errors.subCategory && (
-                  <p className="text-red-500 text-xs mt-1">
+                  <p className="mt-1 text-xs text-red-500">
                     {errors.subCategory}
                   </p>
                 )}
                 {/* Dropdown list for search results */}
                 {subcategories.length > 0 && (
-                  <ul className=" absolute overflow-y-auto z-50 top-full  left-0 bg-white  border border-gray-300 rounded-md max-h-40  w-full">
+                  <ul className="absolute left-0 z-50 w-full overflow-y-auto bg-white border border-gray-300 rounded-md top-full max-h-40">
                     {subcategories.map((sub) => (
                       <li
                         key={sub.subcategory_id}
@@ -372,7 +372,7 @@ const AddItem = ({
                           setSubCategoryTitle(sub.subcategory_title);
                           setSubcategories([]); // Clear dropdown after selection
                         }}
-                        className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                        className="px-4 py-2 cursor-pointer hover:bg-gray-200"
                       >
                         {sub.subcategory_title}
                       </li>
@@ -382,7 +382,7 @@ const AddItem = ({
               </div>
               {/* mealtype */}
               {/* <div className="flex flex-col w-1/2">
-                                <label htmlFor="mealType" className="text-sm font-xs text-gray-700 mb-1">
+                                <label htmlFor="mealType" className="mb-1 text-sm text-gray-700 font-xs">
                                     Meal Type
                                 </label>
                                 <select
@@ -402,7 +402,7 @@ const AddItem = ({
 
             {/* Food Type */}
             <div>
-              <label className="text-sm font-xs text-gray-700 mb-1">
+              <label className="mb-1 text-sm text-gray-700 font-xs">
                 Food Type
               </label>
               <div className="flex gap-4 mt-2">
@@ -415,10 +415,10 @@ const AddItem = ({
                   }`}
                   onClick={() => handleFoodTypeSelect("Veg")}
                 >
-                  <div className="w-5 h-5 rounded-full flex items-center justify-center">
-                    <img src={veg} className="h-4 w-4 text-white" />
+                  <div className="flex items-center justify-center w-5 h-5 rounded-full">
+                    <img src={veg} className="w-4 h-4 text-white" />
                   </div>
-                  <span className="text-sm text-gray-700 font-medium">Veg</span>
+                  <span className="text-sm font-medium text-gray-700">Veg</span>
                 </div>
 
                 <div
@@ -429,17 +429,17 @@ const AddItem = ({
                   }`}
                   onClick={() => handleFoodTypeSelect("Non-Veg")}
                 >
-                  <div className="w-5 h-5  flex items-center justify-center">
-                    <img src={nonveg} className="h-4 w-4 text-white" />
+                  <div className="flex items-center justify-center w-5 h-5">
+                    <img src={nonveg} className="w-4 h-4 text-white" />
                   </div>
-                  <span className="text-sm text-gray-700 font-medium">
+                  <span className="text-sm font-medium text-gray-700">
                     Non-Veg
                   </span>
                 </div>
               </div>
 
               {errors.foodType && (
-                <p className="text-red-500 text-xs mt-1">{errors.foodType}</p>
+                <p className="mt-1 text-xs text-red-500">{errors.foodType}</p>
               )}
             </div>
 
@@ -447,7 +447,7 @@ const AddItem = ({
             <div className="flex flex-col">
               <label
                 htmlFor="itemDescription"
-                className="text-sm font-xs text-gray-700 mb-1"
+                className="mb-1 text-sm text-gray-700 font-xs"
               >
                 Item Description
               </label>
@@ -463,7 +463,7 @@ const AddItem = ({
                 } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
               {errors.itemDescription && (
-                <p className="text-red-500 text-xs mt-1">
+                <p className="mt-1 text-xs text-red-500">
                   {errors.itemDescription}
                 </p>
               )}
@@ -475,7 +475,7 @@ const AddItem = ({
               <div className="flex flex-col w-1/3">
                 <label
                   htmlFor="basePrice"
-                  className="text-sm font-xs text-gray-700 mb-1"
+                  className="mb-1 text-sm text-gray-700 font-xs"
                 >
                   Base Price
                 </label>
@@ -488,14 +488,14 @@ const AddItem = ({
                   placeholder="Enter price in num"
                   value={formData.basePrice}
                   onChange={handleChange}
-                  // className="px-3 py-2 w-32 border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  // className="w-32 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
 
                   className={`px-3 py-2 border ${
                     errors.itemName ? "border-red-500" : "border-gray-300"
                   } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 />
                 {errors.basePrice && (
-                  <p className="text-red-500 text-xs mt-1">
+                  <p className="mt-1 text-xs text-red-500">
                     {errors.basePrice}
                   </p>
                 )}
@@ -504,14 +504,14 @@ const AddItem = ({
               <div className="flex flex-col w-1/3">
                 <label
                   htmlFor="commission"
-                  className="text-sm font-xs text-gray-700 mb-1"
+                  className="mb-1 text-sm text-gray-700 font-xs"
                 >
                   Commission
                 </label>
 
                 <div className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                   <span className="text-sm text-gray-700">
-                    {commissionPercentage}
+                    {commissionPercentage} %
                   </span>
                 </div>
               </div>
@@ -519,7 +519,7 @@ const AddItem = ({
               <div className="flex flex-col w-1/3">
                 <label
                   htmlFor="sellingPrice"
-                  className="text-sm font-xs text-gray-700 mb-1"
+                  className="mb-1 text-sm text-gray-700 font-xs"
                 >
                   Selling Price
                 </label>
@@ -534,7 +534,7 @@ const AddItem = ({
               <div className="flex flex-col w-1/4">
                 <label
                   htmlFor="quantity"
-                  className="text-sm font-xs text-gray-700 mb-1"
+                  className="mb-1 text-sm text-gray-700 font-xs"
                 >
                   Quantity
                 </label>
@@ -551,14 +551,14 @@ const AddItem = ({
                   } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 />
                 {errors.quantity && (
-                  <p className="text-red-500 text-xs mt-1">{errors.quantity}</p>
+                  <p className="mt-1 text-xs text-red-500">{errors.quantity}</p>
                 )}
               </div>
 
               <div className="flex flex-col">
                 <label
                   htmlFor="prepTime"
-                  className="text-sm font-xs text-gray-700 mb-1"
+                  className="mb-1 text-sm text-gray-700 font-xs"
                 >
                   Preparation Time
                 </label>
@@ -569,13 +569,13 @@ const AddItem = ({
                   placeholder="minutes"
                   value={formData.prepTime}
                   onChange={handleChange}
-                  // className="px-3 py-2 w-32 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  // className="w-32 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   className={`px-3 py-2 border ${
                     errors.prepTime ? "border-red-500" : "border-gray-300"
                   } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 />
                 {errors.prepTime && (
-                  <p className="text-red-500 text-xs mt-1">{errors.prepTime}</p>
+                  <p className="mt-1 text-xs text-red-500">{errors.prepTime}</p>
                 )}
               </div>
             </div>
@@ -583,7 +583,7 @@ const AddItem = ({
             {/* Item Image */}
             <div className="flex flex-row gap-5 ">
               <div className="flex flex-col w-3/6 ">
-                <label className="text-sm font-xs text-gray-700 mb-1">
+                <label className="mb-1 text-sm text-gray-700 font-xs">
                   Item Image
                 </label>
                 <div
@@ -595,14 +595,14 @@ const AddItem = ({
                     <img
                       src={previewItemImage}
                       alt="Item Image"
-                      className="object-cover   rounded-mdd"
+                      className="object-cover rounded-mdd"
                     />
                   ) : (
                     <label
                       htmlFor="upload-item-image"
                       className="flex flex-col items-center cursor-pointer"
                     >
-                      <img src={upload} className="h-10 w-10" />
+                      <img src={upload} className="w-10 h-10" />
                       <span className="text-sm font-medium text-[#008BFF]">
                         Choose Image
                       </span>
@@ -617,19 +617,19 @@ const AddItem = ({
                     onChange={handleImageFileChange}
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="mt-1 text-xs text-gray-500">
                   Image must be under 10 MB
                 </p>
                 {errors.itemImage && (
-                  <p className="text-red-500 text-xs mt-1">
+                  <p className="mt-1 text-xs text-red-500">
                     {errors.itemImage}
                   </p>
                 )}
               </div>
 
               {/* <div className="flex flex-col w-2/6 ">
-                                <label className="text-sm font-xs text-gray-700 mb-1">Add Icon</label>
-                                <div className="flex h-36 w-full items-center justify-center space-x-4 border border-gray-300 rounded-md py-7 px-5 cursor-pointer hover:bg-gray-100">
+                                <label className="mb-1 text-sm text-gray-700 font-xs">Add Icon</label>
+                                <div className="flex items-center justify-center w-full px-5 space-x-4 border border-gray-300 rounded-md cursor-pointer h-36 py-7 hover:bg-gray-100">
                                     {iconImage.preview ? (
                                         <img
                                             src={iconImage.preview}
@@ -639,7 +639,7 @@ const AddItem = ({
                                     ) : (
                                         <label htmlFor="upload-icon-image" className="flex flex-col items-center cursor-pointer">
 
-                                            <img src={upload} className="h-10 w-10" />
+                                            <img src={upload} className="w-10 h-10" />
 
                                         </label>
                                     )
@@ -657,8 +657,8 @@ const AddItem = ({
                             </div> */}
             </div>
 
-            <div className="flex flex-col  ">
-              <div className="flex items-center space-x-4 mt-10">
+            <div className="flex flex-col ">
+              <div className="flex items-center mt-10 space-x-4">
                 <input
                   id="addOn"
                   name="addOn"
@@ -670,11 +670,11 @@ const AddItem = ({
                       addonChecked: !formData.addonChecked,
                     })
                   }
-                  className="h-4 w-4 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                  className="w-4 h-4 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
                 />
                 <label
                   htmlFor="addOn"
-                  className="text-sm font-xs text-gray-700"
+                  className="text-sm text-gray-700 font-xs"
                 >
                   Add On
                 </label>
@@ -696,7 +696,7 @@ const AddItem = ({
 
                   {/* Dropdown List */}
                   {formData.showAddonDropdown && (
-                    <div className=" z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg">
+                    <div className="z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg ">
                       {loading ? (
                         <p className="p-2">Loading...</p>
                       ) : error ? (
@@ -716,7 +716,7 @@ const AddItem = ({
                               onChange={() =>
                                 handleCheckboxChange(addon.addon_id)
                               }
-                              className="h-4 w-4"
+                              className="w-4 h-4"
                             />
                             <label
                               htmlFor={`addon-${addon.addon_id}`}
@@ -735,7 +735,7 @@ const AddItem = ({
               )}
 
               {formData.selectedAddons.length > 0 && (
-                <div className="mt-4 flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 mt-4">
                   {formData.selectedAddons.map((addonId) => {
                     const addon = addons?.find((a) => a.addon_id === addonId);
                     return (
@@ -745,7 +745,7 @@ const AddItem = ({
                       >
                         {addon?.addon_name}
                         <span
-                          className="text-xl top-4 items-center cursor-pointer justify-center -mt-0 ml-2"
+                          className="items-center justify-center ml-2 -mt-0 text-xl cursor-pointer top-4"
                           onClick={() => handleRemoveAddon(addonId)}
                         >
                           &times;
