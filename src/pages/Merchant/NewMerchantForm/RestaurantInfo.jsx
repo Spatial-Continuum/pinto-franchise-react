@@ -88,9 +88,7 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
   };
   const handleInputChange = (e) => {
     e.preventDefault();
-    // try{
-    //     e.target.value >= 0
-    // }
+    
     const { name, value } = e.target;
     setData((prev) => ({ ...prev, [name]: value }));
 
@@ -99,6 +97,7 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
       [name]: value.trim() !== "", // Mark as invalid if the field is empty
     }));
   };
+  
   const handleUserDetailsChange = (e) => {
     const { name, value } = e.target;
     setNewUserDetails((prev) => ({ ...prev, [name]: value }));
@@ -199,21 +198,21 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
   return (
     <div className="p-6 ">
       <div className="flex justify-between ">
-        <div className="w-4/6">
-          <h2 className="text-lg font-medium text-gray-800 mb-4">
+        <div className="w-4/6 ml-2">
+          <h2 className="mb-4 text-base font-semibold text-gray-800">
             Restaurant Name & Address
           </h2>
         </div>
-        <div className="w-2/6 ">
-          <h2 className="text-lg font-medium  text-gray-800 mb-4">
-            Restaurant Location2
+        <div className="w-2/6 ml-2">
+          <h2 className="mb-4 text-base font-semibold text-gray-800">
+            Restaurant Location
           </h2>
         </div>
       </div>
 
       <div className="flex justify-between gap-4">
         {/* Left Box */}
-        <div className="w-2/3 bg-gray-100 p-4 border border-gray-300 rounded-lg">
+        <div className="w-2/3 p-4 bg-gray-100 border border-gray-300 rounded-lg">
           {/* Restaurant Name */}
           <div className="flex flex-col mb-4">
             <label
@@ -235,14 +234,14 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
               } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
             />
             {!validFields.name && (
-              <span className="text-red-500 text-sm mt-1">
+              <span className="mt-1 text-sm text-red-500">
                 This field is required
               </span>
             )}
           </div>
 
-          {/* Door Number */}
-          <div className="w-3/6  flex flex-col mb-4">
+          {/* Search Address */}
+          <div className="flex flex-col w-5/6 mb-4">
             <label
               htmlFor="search for address"
               className="text-sm font-medium text-gray-700"
@@ -294,10 +293,11 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                     ? "border-gray-300"
                     : "border-red-500"
                 } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                required
               />
 
               {!validFields.street_address_1 && (
-                <span className="text-red-500 text-sm mt-1">
+                <span className="mt-1 text-sm text-red-500">
                   This field is required
                 </span>
               )}
@@ -322,9 +322,10 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                     ? "border-gray-300"
                     : "border-red-500"
                 } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                disabled
               />
               {!validFields.street_address_2 && (
-                <span className="text-red-500 text-sm mt-1">
+                <span className="mt-1 text-sm text-red-500">
                   This field is required
                 </span>
               )}
@@ -333,7 +334,7 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
 
           {/* City and Pincode */}
           <div className="flex justify-between gap-4 mb-4">
-            <div className="w-1/2">
+            <div className="w-4/6">
               <label
                 htmlFor="city"
                 className="text-sm font-medium text-gray-700"
@@ -351,15 +352,16 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                 className={`w-full px-3 py-2 border ${
                   validFields.city ? "border-gray-300" : "border-red-500"
                 } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                disabled
               />
               {!validFields.city && (
-                <span className="text-red-500 text-sm mt-1">
+                <span className="mt-1 text-sm text-red-500">
                   This field is required
                 </span>
               )}
             </div>
 
-            <div className="w-1/2">
+            <div className="w-1/6">
               <label
                 htmlFor="pincode"
                 className="text-sm font-medium text-gray-700"
@@ -376,13 +378,42 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                 className={`w-full px-3 py-2 border ${
                   validFields.pincode ? "border-gray-300" : "border-red-500"
                 } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                disabled
               />
               {!validFields.pincode && (
-                <span className="text-red-500 text-sm mt-1">
+                <span className="mt-1 text-sm text-red-500">
                   This field is required
                 </span>
               )}
             </div>
+            
+            {/*State */}
+          <div className="flex flex-col w-1/6 mb-4">
+            <label
+              htmlFor="state"
+              className="text-sm font-medium text-gray-700"
+            >
+              State
+            </label>
+            <input
+              id="state"
+              name="state"
+              value={data.state || ""}
+              onChange={(e) => handleInputChange(e)}
+              // disabled={!isEditable}
+              type="text"
+              placeholder="Enter state"
+              className={`w-full px-3 py-2 border ${
+                validFields.state ? "border-gray-300" : "border-red-500"
+              } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              disabled
+            />
+            {!validFields.state && (
+              <span className="mt-1 text-sm text-red-500">
+                This field is required
+              </span>
+            )}
+          </div>
           </div>
 
           {/* Landmark */}
@@ -405,42 +436,17 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
               } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
             />
             {!validFields.landmark && (
-              <span className="text-red-500 text-sm mt-1">
+              <span className="mt-1 text-sm text-red-500">
                 This field is required
               </span>
             )}
           </div>
-          {/*State */}
-          <div className="flex flex-col mb-4 w-1/2">
-            <label
-              htmlFor="state"
-              className="text-sm font-medium text-gray-700"
-            >
-              State
-            </label>
-            <input
-              id="state"
-              name="state"
-              value={data.state || ""}
-              onChange={(e) => handleInputChange(e)}
-              // disabled={!isEditable}
-              type="text"
-              placeholder="Enter state"
-              className={`w-full px-3 py-2 border ${
-                validFields.state ? "border-gray-300" : "border-red-500"
-              } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
-            />
-            {!validFields.state && (
-              <span className="text-red-500 text-sm mt-1">
-                This field is required
-              </span>
-            )}
-          </div>
+  
         </div>
 
         {/* Right Box */}
 
-        <div className="w-1/3 bg-gray-100 p-2 border border-gray-300 rounded-lg flex justify-center items-center shadow-lg hover:shadow-2xl ">
+        <div className="flex items-center justify-center w-1/3 p-2 bg-gray-100 border border-gray-300 rounded-lg shadow-lg hover:shadow-xl ">
           {isLoaded && (
             <GoogleMap
               mapContainerStyle={mapContainerStyle}
@@ -454,22 +460,22 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
       </div>
 
       {/* Contact Numbers */}
-      <h2 className="font-medium text-gray-800 mt-6">
+      <h2 className="mt-6 font-medium text-gray-800">
         Contact Number of Restaurant
       </h2>
-      <div className="w-2/3 bg-gray-100 p-4 border border-gray-300 rounded-lg mt-2">
+      <div className="w-2/3 p-4 mt-2 bg-gray-100 border border-gray-300 rounded-lg">
         <div className="">
-          <div className="flex gap-6 w-1/2  ">
+          <div className="flex w-1/2 gap-6 ">
             <div className="flex flex-col w-1/2">
               <label
                 htmlFor="mobileNumber"
-                className="text-sm text-gray-700 mb-1"
+                className="mb-1 text-sm text-gray-700"
               >
                 Primary Mobile Number
               </label>
               <input
                 id="mobileNumber"
-                type="number"
+                type="text"
                 name="primary_phone"
                 value={data.primary_phone || ""}
                 onChange={handleInputChange}
@@ -482,7 +488,7 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                 } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
               {!validFields.primary_phone && (
-                <span className="text-red-500 text-sm mt-1">
+                <span className="mt-1 text-sm text-red-500">
                   This field is required
                 </span>
               )}
@@ -490,7 +496,7 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
             <div className="flex flex-col w-1/2">
               <label
                 htmlFor="landlineNumber"
-                className="text-sm text-gray-700 mb-1"
+                className="mb-1 text-sm text-gray-700"
               >
                 Secondary Mobile Number
               </label>
@@ -500,25 +506,17 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                 value={data.secondary_phone || ""}
                 onChange={handleInputChange}
                 maxLength="10"
-                type="number"
+                type="text"
                 placeholder="Enter Secondary Mobile Number"
-                className={`px-3 py-2 border ${
-                  validFields.secondary_phone
-                    ? "border-gray-300"
-                    : "border-red-500"
-                } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                className={`px-3 py-2 border border-gray-300 rounded-md 
+                focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
-              {!validFields.secondary_phone && (
-                <span className="text-red-500 text-sm mt-1">
-                  This field is required
-                </span>
-              )}
             </div>
           </div>
           <div className="flex flex-col w-1/2 mt-4 mb-4">
             <label
               htmlFor="email"
-              className="text-sm font-sm text-gray-700 mb-1"
+              className="mb-1 text-sm text-gray-700 font-sm"
             >
               Email
             </label>
@@ -534,7 +532,7 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
               } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
             />
             {!validFields.email && (
-              <span className="text-red-500 text-sm mt-1">
+              <span className="mt-1 text-sm text-red-500">
                 This field is required
               </span>
             )}
@@ -543,45 +541,16 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
       </div>
 
       {/* Pinto Commission and GST Number */}
-      <h2 className="font-medium text-gray-800 mt-6">
-        Pinto Commission and GST Number
+      <h2 className="mt-6 font-medium text-gray-800">
+        Pinto GST Number
       </h2>
 
-      <div className="w-2/3  flex flex-row gap-7 border-gray-300 rounded-lg mt-2">
-        <div className="flex gap-6 w-2/10 bg-gray-100 p-4 border border-gray-300 rounded-lg mt-2">
-          {/* Pinto Commission */}
-          <div className="flex flex-col w-full">
-            <label
-              htmlFor="commission_percentage"
-              className="text-sm text-gray-700 mb-1"
-            >
-              Pinto Commission (%)
-            </label>
-            <input
-              id="commission_percentage"
-              type="number"
-              name="commission_percentage"
-              value={data.commission_percentage || ""}
-              onChange={(e) => handleInputChange(e)}
-              placeholder="Enter Pinto Commission"
-              className={`px-3 py-2 border ${
-                validFields.commission_percentage
-                  ? "border-gray-300"
-                  : "border-red-500"
-              } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
-            />
-            {!validFields.commission_percentage && (
-              <span className="text-red-500 text-sm mt-1">
-                This field is required
-              </span>
-            )}
-          </div>
-        </div>
+      <div className="flex flex-row w-2/3 mt-2 border-gray-300 rounded-lg gap-7">
 
         {/* GST Number */}
-        <div className="w-5/6 bg-gray-100 p-4 border border-gray-300 rounded-lg mt-2">
+        <div className="w-5/6 p-4 mt-2 bg-gray-100 border border-gray-300 rounded-lg">
           <div className="flex flex-col w-3/6">
-            <label htmlFor="gstin" className="text-sm text-gray-700 mb-1">
+            <label htmlFor="gstin" className="mb-1 text-sm text-gray-700">
               GSTIN
             </label>
             <input
@@ -598,7 +567,7 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
               } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
             />
             {!validFields.gstin && (
-              <span className="text-red-500 text-sm mt-1">
+              <span className="mt-1 text-sm text-red-500">
                 This field is required
               </span>
             )}
@@ -606,12 +575,12 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
         </div>
       </div>
       {/* Restaurant Owner Details */}
-      <h2 className="font-medium text-gray-800 mt-6">
+      <h2 className="mt-6 font-medium text-gray-800">
         Restaurant Owner Details
       </h2>
-      <div className="w-2/3 bg-gray-100 p-4 border border-gray-300 rounded-lg mt-2">
-        <div className="flex flex-row space-x-4 w-1/2 ">
-          <div className="flex justify-start gap-0 w-full  ">
+      <div className="w-2/3 p-4 mt-2 bg-gray-100 border border-gray-300 rounded-lg">
+        <div className="flex flex-row w-1/2 space-x-4 ">
+          <div className="flex justify-start w-full gap-0 ">
             <div className="flex flex-col w-full">
               <label>Mobile no</label>
               <input
@@ -624,12 +593,12 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                 } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
               {!validFields.mobile_no && (
-                <span className="text-red-500 text-sm mt-1">
+                <span className="mt-1 text-sm text-red-500">
                   This field is required
                 </span>
               )}
             </div>
-            <div className="flex w-1/2 items-center justify-center  mt-6">
+            <div className="flex items-center justify-center w-1/2 mt-6">
               <button
                 className="border-[1px] px-2        py-1 text-[#FFFFFF] bg-[#030714] rounded-md"
                 onClick={handleOwnerSearch}
@@ -641,8 +610,8 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
         </div>
         {ownerPopup && ownerDetail ? (
           <div className="z-5  top-full left-0 w-96 bg-[#FFFFFF] border-1px rounded-lg border-[#d6cbcb] justify-center items-center z-50 mt-10">
-            <div className="flex p-3 flex-col">
-              <label className="text-green-600 mb-3 ">User Found!!</label>
+            <div className="flex flex-col p-3">
+              <label className="mb-3 text-green-600 ">User Found!!</label>
               <div className="grid grid-cols-1">
                 <div>
                   <label>Name : {ownerDetail.username}</label>
@@ -659,8 +628,8 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
         ) : null}
         {createUserPopup ? (
           <div className="z-5 top-full left-0 w-4/6 bg-[#FFFFFF] border-1px rounded-lg border-[#d6cbcb] justify-center items-center z-50 mt-10">
-            <div className="flex p-3 flex-col">
-              <label className="text-red-600 mb-4">User Not Found!!</label>
+            <div className="flex flex-col p-3">
+              <label className="mb-4 text-red-600">User Not Found!!</label>
               <div className="flex grid-cols-2 gap-5">
                 {/* Owner Name Input */}
                 <div className="flex flex-col mb-4">
@@ -705,7 +674,7 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                     placeholder="email"
                     value={newUserDetails.email}
                     onChange={handleUserDetailsChange}
-                    className="px-3 py-2 border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
@@ -717,13 +686,13 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
                                     placeholder="password"
                                     value={newUserDetails.password}
                                     onChange={handleUserDetailsChange}
-                                    className="px-3 py-2 border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 /> */}
                 </div>
               </div>
               {/* Create User Button */}
               <button
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg w-2/6 hover:bg-blue-700"
+                className="w-2/6 px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
                 onClick={handleCreateUser}
               >
                 Create User
@@ -732,8 +701,8 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
           </div>
         ) : null}
         {message && (
-          <div className="left-0 w-4/6 justify-center items-center z-50">
-            <p className="text-xs text-green-600 font-medium ">
+          <div className="left-0 z-50 items-center justify-center w-4/6">
+            <p className="text-xs font-medium text-green-600 ">
               User created Successfully!
             </p>
           </div>

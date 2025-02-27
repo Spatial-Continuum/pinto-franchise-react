@@ -39,7 +39,6 @@ const OnboardingForm = () => {
       search_for_address: "",
       latitude: "",
       longitude: "",
-      // door_no: '',
       street_address_1: "",
       street_address_2: "",
       email: "",
@@ -127,16 +126,6 @@ const OnboardingForm = () => {
         setShowPopup(true);
         return false;
       }
-      if (!formData.restaurantInfo.secondary_phone) {
-        setPopupMessage("Please fill in the secondary phone number.");
-        setShowPopup(true);
-        return false;
-      }
-      if (!/^\d{10}$/.test(formData.restaurantInfo.secondary_phone)) {
-        setPopupMessage("Primary phone number must be exactly 10 digits.");
-        setShowPopup(true);
-        return false;
-      }
 
       if (!/^\d{10}$/.test(formData.restaurantInfo.primary_phone)) {
         setPopupMessage("Primary phone number must be exactly 10 digits.");
@@ -212,7 +201,6 @@ const OnboardingForm = () => {
       "search_for_address",
       formData.restaurantInfo.search_for_address
     );
-    //dataToSubmit.append('door_no', formData.restaurantInfo.door_no);
     dataToSubmit.append("email", formData.restaurantInfo.email);
     dataToSubmit.append(
       "street_address_1",
@@ -333,10 +321,10 @@ const OnboardingForm = () => {
     <MainLayout>
       <div className="mb-36">
         {/* Progress Navbar */}
-        <div className="progress-navbar flex gap-6 mx-5 my-4 relative">
+        <div className="relative flex gap-6 mx-5 my-4 progress-navbar">
           <hr className="absolute top-8 left-0 w-2/4 flex  border-[#E6E6E6] border-[1px]" />
           <div
-            className={`step-heading relative cursor-pointer  text-xl ${
+            className={`step-heading relative cursor-pointer text-xl ${
               currentStep === 1
                 ? "active"
                 : completedSteps.includes(1)
@@ -365,7 +353,7 @@ const OnboardingForm = () => {
 
           {/* Step 2: Restaurant Type & Timings */}
           <div
-            className={`step-heading relative cursor-pointer text-lg ${
+            className={`step-heading relative cursor-pointer text-xl ${
               currentStep === 2
                 ? "active"
                 : completedSteps.includes(2)
@@ -380,7 +368,7 @@ const OnboardingForm = () => {
             )}
             {/* Dynamic Underline for Step 2 */}
             <div
-              className={`underline-offset-8  h-1 rounded-xl bg-orange-500 transition-all duration-300 ${
+              className={`underline-offset-8 h-1 rounded-xl bg-orange-500 transition-all duration-300 ${
                 currentStep === 2 || completedSteps.includes(2)
                   ? "w-full"
                   : "w-0"
@@ -466,17 +454,17 @@ const OnboardingForm = () => {
         </div>
       </div>
       {modalVisible && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
           <div className="bg-white w-[470px] h-[378px] rounded-lg p-6">
             <img
               src={tick}
               alt="Tick"
-              className="w-24 h-11 mx-auto mt-20 mb-6"
+              className="w-24 mx-auto mt-20 mb-6 h-11"
             />
-            <h2 className="text-center text-2xl font-semibold mb-4">
+            <h2 className="mb-4 text-2xl font-semibold text-center">
               Restaurant Details Submitted
             </h2>
-            <p className="text-center text-sm mb-4">
+            <p className="mb-4 text-sm text-center">
               Our team will verify the details and reach you shortly!
             </p>
             <div className="flex justify-center">
@@ -495,9 +483,9 @@ const OnboardingForm = () => {
       )}
 
       {showPopup && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
           <div className="bg-white w-[320px] h-[160px] rounded-lg p-6">
-            <h2 className="text-center text-xl font-semibold mb-4">
+            <h2 className="mb-4 text-xl font-semibold text-center">
               Error Occurred
             </h2>
             <p>{popupMessage}</p>
@@ -513,9 +501,9 @@ const OnboardingForm = () => {
         </div>
       )}
       {errorPopup && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
           <div className="bg-white w-[400px] h-[200px] rounded-lg p-6">
-            <h2 className="text-center text-xl font-semibold mb-4">
+            <h2 className="mb-4 text-xl font-semibold text-center">
               Error Occurred
             </h2>
             <p>{errorMessage}</p>
