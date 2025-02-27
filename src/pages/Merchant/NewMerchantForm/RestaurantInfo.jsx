@@ -16,7 +16,7 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
   const [createUserPopup, setCreateUserPopup] = useState(false);
   const [message, setMessage] = useState(false);
   const [newOwnerDetails, setNewOwnerDetails] = useState();
-  const mapContainerStyle = { width: "100%", height: "400px" };
+  const mapContainerStyle = { width: "100%", height: "100%" };
   const defaultCenter = { lat: 28.7041, lng: 77.1025 };
   const [mapCenter, setMapCenter] = useState(defaultCenter);
   const [markerPosition, setMarkerPosition] = useState(defaultCenter);
@@ -136,30 +136,44 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
     let places = inputref.current.getPlaces();
     if (places.length > 0) {
       const place = places[0];
+      console.log("hjgjyfkyufy", place);
       const address = place.formatted_address;
       console.log("klasdjfljwe", address);
       const lat = place.geometry.location.lat();
       const lng = place.geometry.location.lng();
       console.log("kasjdfiojwoewe");
       let state = "";
-      let city = "";
+      let locality = "";
+      let sublocality = "";
       let pincode = "";
-
+      let city = "";
+      let street = "";
+      place.address_components.forEach((com) => {
+        console.log("klasjeoiwle", com);
+      });
       place.address_components.forEach((component) => {
         if (component.types.includes("administrative_area_level_1")) {
-          state = component.long_name; // State
+          state = component.short_name; // State
         }
-        if (
-          component.types.includes("locality") ||
-          component.types.includes("sublocality_level_1")
-        ) {
-          city = component.long_name; // City
+        if (component.types.includes("locality")) {
+          locality = component.long_name; // City
+        }
+
+        if (component.types.includes("sublocality_level_1")) {
+          sublocality = component.long_name;
         }
         if (component.types.includes("postal_code")) {
           pincode = component.long_name; // Pincode
         }
+        if (component.types.includes("route")) {
+          street = component.long_name; // Pincode
+        }
+        if (component.types.includes("administrative_area_level_3")) {
+          city = component.long_name;
+        }
       });
-
+      let street1 = `${street},${sublocality}`;
+      sublocality = `${locality},${sublocality}`;
       const updatedData = {
         ...data,
         search_for_address: address,
@@ -168,6 +182,9 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
         state: state,
         city: city,
         pincode: pincode,
+        street_address_2: street1,
+        street: street,
+        sublocality: sublocality,
       };
       console.log("kjasdhiwioew", updatedData);
 
@@ -423,7 +440,7 @@ const RestaurantInfo = ({ formData, onDataChange }) => {
 
         {/* Right Box */}
 
-        <div className="w-1/3 bg-gray-100 p-4 border border-gray-300 rounded-lg flex justify-center items-center">
+        <div className="w-1/3 bg-gray-100 p-2 border border-gray-300 rounded-lg flex justify-center items-center shadow-lg hover:shadow-2xl ">
           {isLoaded && (
             <GoogleMap
               mapContainerStyle={mapContainerStyle}

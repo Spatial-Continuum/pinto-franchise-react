@@ -274,8 +274,10 @@ const OnboardingForm = () => {
       dataToSubmit.append("fassai", fassai);
     }
 
-    dataToSubmit.append("latitude", "12.971598");
-    dataToSubmit.append("longitude", "77.594566");
+    dataToSubmit.append("latitude", formData.restaurantInfo.latitude);
+    dataToSubmit.append("longitude", formData.restaurantInfo.longitude);
+    dataToSubmit.append("street", formData.restaurantInfo.street);
+    dataToSubmit.append("sublocality", formData.restaurantInfo.sublocality);
     // console.log('Form Data submitted:', formData);
     for (const [key, value] of dataToSubmit.entries()) {
       if (value instanceof File) {
