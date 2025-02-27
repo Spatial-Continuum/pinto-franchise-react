@@ -359,7 +359,7 @@ const DiningMenu = ({ restaurantId }) => {
                       htmlFor="prepTime"
                       className="text-sm font-xs text-gray-700 mb-1"
                     >
-                      Preparation Time1
+                      Preparation Time
                     </label>
                     <input
                       id="prepTime"

@@ -93,11 +93,9 @@ const DeliveryBasedTable = () => {
     };
    
   return (
-<<<<<<< HEAD
-    <div className="hide-scrollbar rounded-md gap-5 w-3/4 border-[1px] border-green-600 ml-5">
-=======
+
     <div className="hide-scrollbar rounded-md gap-5 w-3/4 border-[1px] border-green-600 ">
->>>>>>> 31c00e009c71d4782d3d0820b6deb1c18084795b
+
     <DataTable 
       columns={columns}
       data={DeliveryBasedData}
