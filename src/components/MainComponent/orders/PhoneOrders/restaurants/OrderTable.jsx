@@ -4,7 +4,7 @@ const OrderTable = () => {
   const order = { id: "12345" }; // Example order ID
   const tableData = [
     {
-      partnerId: "P001",
+      partnerId: "P0018",
       name: "John Doe",
       type: "Salaried",
       orders: 10,
@@ -27,7 +27,9 @@ const OrderTable = () => {
           />
           <div>
             <h2 className="font-bold text-lg">Restaurant Name</h2>
-            <p className="text-sm text-gray-500">123, Sample Street, Coimbatore</p>
+            <p className="text-sm text-gray-500">
+              123, Sample Street, Coimbatore
+            </p>
           </div>
         </div>
         <div className="text-right">
@@ -46,7 +48,9 @@ const OrderTable = () => {
           />
           <div>
             <h2 className="font-bold text-lg">Customer Name</h2>
-            <p className="text-sm text-gray-500">456, Another Street, Coimbatore</p>
+            <p className="text-sm text-gray-500">
+              456, Another Street, Coimbatore
+            </p>
           </div>
         </div>
         <div className="text-right">
