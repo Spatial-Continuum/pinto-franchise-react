@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-import SalariedTable from '../../modules/deliveryPartners/Salaried/SalariedTable';
+import SalariedTable from "../../modules/deliveryPartners/Salaried/SalariedTable";
 import MetricsCard from "../../components/GeneralComponent/MetricsCard/MetricsCard";
 import SearchBox from "../../components/GeneralComponent/SearchBox/SearchBox";
 import Main from "../../layouts/Main";
 import DateBox from "../../components/GeneralComponent/Dropdown/DateBox";
 import FilterDropdown from "../../components/GeneralComponent/Dropdown/FilterDropdown";
 
-
 const DeliveryPartnerSalaried = () => {
+  const dispatch = useDispatch();
+  const onboardingSuccess = useSelector(selectOnboardingSuccess);
+  console.log("kjashefoihweiojw", onboardingSuccess);
+  console.log("jkhsdoiensdmfl;s");
   return (
     <Main>
       <div>

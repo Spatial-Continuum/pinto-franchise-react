@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
-import cardPhone from '../../../assets/images/cardPhone.svg';
-import cardSpeaker from '../../../assets/images/cardSpeaker.svg';
-import PropTypes from 'prop-types';
+import cardPhone from "../../../assets/images/cardPhone.svg";
+import cardSpeaker from "../../../assets/images/cardSpeaker.svg";
+import PropTypes from "prop-types";
 
 const MetricsCard = ({ cards, onCardClick }) => {
   return (
@@ -10,14 +10,13 @@ const MetricsCard = ({ cards, onCardClick }) => {
       {cards.map((card, index) => (
         <div
           key={index}
-          className={`bg-white border-[1px] shadow-md rounded-lg w-[188px] h-[124px] flex flex-col justify-center items-center ${card.textColor
-            } ${card.borderColor}`}
+          className={`bg-white border-[1px] shadow-md rounded-lg w-[188px] h-[124px] flex flex-col justify-center items-center ${card.textColor} ${card.borderColor}`}
           onClick={() => onCardClick(card)}
         >
           <h1 className="text-2xl font-bold">{card.value}</h1>
           <p className="text-[#030714]">{card.label}</p>
           <p className={`text-xs  ${card.text1Color}`}>{card.text1}</p>
-          <div className="flex justify-between gap-6">
+          {/* <div className="flex justify-between gap-6">
             <p className={`text-xs flex items-center gap-1 ${card.text2Color}`}>
               <img src={cardPhone} alt="Phone Icon" className="w-4 h-4" />
               {card.text2}
@@ -26,19 +25,18 @@ const MetricsCard = ({ cards, onCardClick }) => {
               <img src={cardSpeaker} alt="Speaker Icon" className="w-4 h-4" />
               {card.text3}
             </p>
-          </div>
-
+          </div> */}
         </div>
       ))}
     </div>
   );
 };
 
-
 MetricsCard.propTypes = {
   cards: PropTypes.arrayOf(
     PropTypes.shape({
-      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired,
       label: PropTypes.string.isRequired,
       text1: PropTypes.string.isRequired,
       text2: PropTypes.string.isRequired,
@@ -52,7 +50,7 @@ MetricsCard.propTypes = {
       route: PropTypes.string,
     })
   ).isRequired,
-  onCardClick: PropTypes.func.isRequired
+  onCardClick: PropTypes.func.isRequired,
 };
 
 export default MetricsCard;
