@@ -69,12 +69,6 @@ const dishSlice = createSlice({
 
 export const selectMostLovedDishes = (state)=> state.dish.mostLovedDishes;
 export const selectNewDish = (state)=>state.dish.newDish;
-
-
-
-
 export const selectApiError = (state) => state.dish.error;
 export const selectApiLoading = (state)=> state.dish.loading;
-
-
 export default dishSlice.reducer

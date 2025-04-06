@@ -8,10 +8,7 @@ import DateBox from "../../components/GeneralComponent/Dropdown/DateBox";
 import FilterDropdown from "../../components/GeneralComponent/Dropdown/FilterDropdown";
 
 const DeliveryPartnerSalaried = () => {
-  const dispatch = useDispatch();
-  const onboardingSuccess = useSelector(selectOnboardingSuccess);
-  console.log("kjashefoihweiojw", onboardingSuccess);
-  console.log("jkhsdoiensdmfl;s");
+
   return (
     <Main>
       <div>
