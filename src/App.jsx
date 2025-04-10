@@ -1,26 +1,46 @@
-import React,{useEffect} from "react";
-import './App.css'
+import React, { useEffect } from "react";
+import "./App.css";
+import Routers from "./config/Routers.jsx";
+import { requestNotificationPermission, onMessageListener } from "./firebase";
 
- import Routers from "./config/Routers.jsx"
+const App = () => {
+  useEffect(() => {
+    Update();
+    initializeFCM();
+  }, []);
 
-const App = () => { 
-  useEffect (()=>{
-    Update()
+  const Update = async () => {};
 
+  const initializeFCM = async () => {
+    try {
+      // Request permission and get FCM token
+      const token = await requestNotificationPermission();
 
-  },[]) 
-  const Update = async()=>{
+      if (token) {
+        // Here you can send this token to your backend
+        console.log("FCM Token received:", token);
 
-  }
-  return ( 
+        // Set up foreground message handler
+        onMessageListener()
+          .then((payload) => {
+            console.log("Received foreground message:", payload);
+            // Handle the message (e.g., show a notification)
+            new Notification(payload.notification.title, {
+              body: payload.notification.body,
+              icon: payload.notification.icon,
+            });
+          })
+          .catch((err) => console.log("Failed to receive message:", err));
+      }
+    } catch (error) {
+      console.error("Error initializing FCM:", error);
+    }
+  };
 
+  return (
     <React.Fragment>
-      <Routers/>
-  
+      <Routers />
     </React.Fragment>
-
-    
-
   );
 };
 
