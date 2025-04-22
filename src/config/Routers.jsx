@@ -15,6 +15,8 @@ import OnboardingFormView from "../pages/Merchant/MerchantViewForm/OnboardingFor
 import ManagePartners from "../pages/DeliveryPartner/ManagePartners.jsx";
 import OrderHistoryIndex from "../components/MainComponent/orders/OrderHistory/OrderHistoryIndex.jsx";
 import Dashboard from "../components/MainComponent/Dashboard";
+import LoginPage from "../components/MainComponent/Login/login";
+// import Login from "../../../src/pages/Auth/Login.jsx";
 const ManageScreen = React.lazy(() =>
   import("../components/MainComponent/Menu/index")
 );
@@ -119,6 +121,17 @@ const Routers = (props) => {
             fallback={<div className="text-center m-t-15">Loading...</div>}
           >
             <CategoryForm />
+          </Suspense>
+        }
+      />
+
+      <Route
+        path="/login"
+        element={
+          <Suspense
+            fallback={<div className="text-center m-t-15">Loading...</div>}
+          >
+            <LoginPage />
           </Suspense>
         }
       />

@@ -5,108 +5,37 @@ import RectangleCard from "../../../../GeneralComponent/FlexElement/RectangleCar
 import MainLayout from "../../../../GeneralComponent/Layout/MainLayout.jsx";
 import { Menu as MenuIcon, Search, Upload } from "lucide-react";
 import vector from "../../../../../assets/images/Vector_colorless.png";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { GripVertical } from "lucide-react"; // For the drag handle
 import axios from "axios";
 import { fetchSubCategoryApi } from "../../../../../redux/slices/menu.js";
-import {
-  searchRestaurantByName,
-  selectSearchResults,
-  selectApiLoading,
-} from "../../../../../redux/slices/restaurant.js";
-
+import { selectSearchRestaurant } from "../../../../../redux/slices/restaurant.js";
 function ShowTopBrand() {
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [TopBrands, setTopBrands] = useState(location?.state?.topbrands || []);
-  const [loading, setLoading] = useState(false);
+
   const [singleSubCategory, setSingleSubCategory] = useState({});
   const [allEdit, setAllEdit] = useState(false);
   const [singleEdit, setSingleEdit] = useState(false);
   const [newitem, setNewItem] = useState("");
   const [newimage, setNewImage] = useState(null);
-  const propsShowModal = location?.state?.showModal || false;
+  const propsShowModal = location?.state.showModal || false;
   const [newImagePreview, setNewImagePreview] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(""); // Input value
   const [selectedRestaurant, setSelectedRestaurant] = useState([]);
   const [showmodal, setShowModal] = useState(false);
   const [allRestaurant, setAllRestaurant] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [rearrangedList, setRearrangedList] = useState([]);
   let debounceTimeout = 0;
 
-  const searchResults = useSelector(selectSearchResults);
-  console.log("klsdjfpowekw", searchResults);
-  useEffect(() => {
-    if (propsShowModal) {
-      setShowModal(true);
+  const searchResults = useSelector((state) => {
+    try {
+      return selectSearchRestaurant(state) || [];
+    } catch (error) {
+      console.error("Error accessing Redux state:", error);
+      return [];
     }
-  }, []);
-  const reorder = (list, startIndex, endIndex) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-    return result;
-  };
-
-  const handleOnDragEnd = (result) => {
-    console.log("jkshilowje", result);
-    if (!result.destination) return;
-    const items = reorder(
-      TopBrands,
-      result.source.index,
-      result.destination.index
-    );
-    let source_index = result.source.index;
-    let destination_index = result.destination.index;
-
-    const updatedItems = items.map((item, index) => {
-      if (index === source_index) {
-        return {
-          ...item,
-          ranking: source_index + 1,
-        };
-      } else if (index === destination_index) {
-        return {
-          ...item,
-          ranking: destination_index + 1,
-        };
-      } else {
-        return item;
-      }
-    });
-    let updated_soc = updatedItems[source_index];
-    let updated_des = updatedItems[destination_index];
-    let updated_re = [...(rearrangedList || [])].filter(
-      (item) =>
-        item.restaurant_id !== updated_soc.restaurant.restaurant_id &&
-        item.restaurant_id !== updated_des.restaurant.restaurant_id
-    );
-
-    updated_re.push({
-      restaurant_id: updated_soc.restaurant.restaurant_id,
-      ranking: updated_soc.ranking,
-    });
-
-    updated_re.push({
-      restaurant_id: updated_des.restaurant.restaurant_id,
-      ranking: updated_des.ranking,
-    });
-
-    setRearrangedList(updated_re);
-    setTopBrands(updatedItems);
-  };
-  useEffect(() => {
-    console.log("Dispatching fetchSubCategoryApi");
-    dispatch(fetchSubCategoryApi());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (searchResults && Array.isArray(searchResults)) {
-      setAllRestaurant(searchResults);
-    }
-  }, [searchResults]);
+  });
 
   const handleEditSubCatgory = (subcategory) => {
     console.log("akjsdfhkjashasdj;d");
@@ -156,13 +85,10 @@ function ShowTopBrand() {
         });
     }
   };
-  const handleRearrange = () => {
-    console.log("aklsdjw", rearrangedList);
-  };
   const handleChangeSearch = (e) => {
     const value = e.target.value;
     setNewItem(value);
-    setLoading(true);
+    setIsLoading(true);
 
     if (debounceTimeout) clearTimeout(debounceTimeout);
     debounceTimeout = setTimeout(() => {
@@ -172,11 +98,11 @@ function ShowTopBrand() {
         } catch (error) {
           console.error("Error searching restaurants:", error);
         } finally {
-          setLoading(false);
+          setIsLoading(false);
         }
       } else {
         setAllRestaurant([]);
-        setLoading(false);
+        setIsLoading(false);
       }
     }, 500);
   };
@@ -185,6 +111,28 @@ function ShowTopBrand() {
     setNewItem("");
     setAllRestaurant([]);
   };
+  useEffect(() => {
+    if (searchResults && Array.isArray(searchResults)) {
+      setAllRestaurant(searchResults);
+    }
+  }, [searchResults]);
+
+  useEffect(() => {
+    if (propsShowModal) {
+      setShowModal(true);
+    }
+  }, [propsShowModal]);
+
+  useEffect(() => {
+    try {
+      dispatch(fetchSubCategoryApi());
+      const a = dispatch(selectSearchRestaurant());
+      console.log("next data", a);
+    } catch (error) {
+      console.error("Error fetching subcategories:", error);
+    }
+  }, [dispatch]);
+
   return (
     <MainLayout
       headerName={"Back"}
@@ -195,7 +143,7 @@ function ShowTopBrand() {
       <div className="p-6">
         <div>
           <div className="relative mb-8">
-            <h2 className="text-lg font-semibold"> New hotels/Top brands</h2>
+            <h2 className="text-lg font-semibold"> Top brands</h2>
             <div className="flex justify-between items-center">
               <div>
                 <input
@@ -206,10 +154,13 @@ function ShowTopBrand() {
                   onChange={handleChangeSearch}
                 />
                 <Search className="w-5 h-5 absolute left-3 top-10 text-gray-400" />
+                {isLoading && (
+                  <div className="text-sm text-gray-500 mt-1">Loading...</div>
+                )}
               </div>
               <div className="flex space-x-4">
                 <button
-                  onClick={() => setAllEdit(!allEdit)}
+                  onClick={() => setAllEdit(true)}
                   className="p-2 text-black rounded-lg border border-black flex item-center"
                 >
                   <img src={vector} alt="Edit" className="mt-2 mr-2" />
@@ -225,72 +176,29 @@ function ShowTopBrand() {
             </div>
           </div>
           <div className="mb-8">
-            <div className="pl-4 flex justify-between items-center w-[600px]">
-              <h3 className="text-lg font-semibold">Top brands</h3>
-              {allEdit ? (
-                <button
-                  className="px-4 py-2 text-sm font-medium border border-gray-300 rounded-md bg-white "
-                  onClick={handleRearrange}
-                >
-                  Rearrange
-                </button>
-              ) : (
-                ""
-              )}
-            </div>
-
-            <DragDropContext onDragEnd={handleOnDragEnd}>
-              <Droppable droppableId="topBrands">
-                {(provided) => (
-                  <div
-                    className="p-4 flex flex-col gap-2"
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                  >
-                    {TopBrands.map((topbrand, index) => (
-                      <Draggable
-                        key={topbrand.restaurant.restaurant_id}
-                        draggableId={topbrand.restaurant.restaurant_id.toString()}
-                        index={index}
-                      >
-                        {(provided) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            className="flex items-center gap-2"
-                          >
-                            {console.log("aklsdjoiwje", provided)}
-                            {allEdit && (
-                              <div {...provided.dragHandleProps}>
-                                <GripVertical className="cursor-grab" />
-                              </div>
-                            )}
-                            <RectangleCard
-                              title={topbrand.restaurant.name}
-                              image={topbrand.restaurant.logo}
-                              props={topbrand}
-                              doorNo={topbrand.restaurant.door_no}
-                              address1={topbrand.restaurant.street_address_1}
-                              address2={topbrand.restaurant.street_address_2}
-                              city={topbrand.restaurant.city}
-                              pincode={topbrand.restaurant.pincode}
-                              primaryphone={topbrand.restaurant.primary_phone}
-                              secondaryphone={
-                                topbrand.restaurant.secondary_phone
-                              }
-                              number_of_ratings={topbrand.ranking}
-                              headerstyle={"min-w-[600px] max-w-[500px]"}
-                              opening_hours={topbrand.opening_hours}
-                            />
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </DragDropContext>
+            <h3 className="text-lg font-semibold">Top brands</h3>
+            {/* <div className="flex flex-wrap gap-5"> */}
+            {TopBrands.map((topbrand) => {
+              console.log("top brand top brand top brand", topbrand);
+              return (
+                <RectangleCard
+                  key={topbrand.restaurant.restaurant_id}
+                  title={topbrand.restaurant.name}
+                  image={topbrand.restaurant.logo}
+                  props={topbrand}
+                  doorNo={topbrand.restaurant.door_no}
+                  address1={topbrand.restaurant.street_address_1}
+                  address2={topbrand.restaurant.street_address_2}
+                  city={topbrand.restaurant.city}
+                  pincode={topbrand.restaurant.pincode}
+                  primaryphone={topbrand.restaurant.primary_phone}
+                  secondaryphone={topbrand.restaurant.secondary_phone}
+                  number_of_ratings={topbrand.ranking}
+                  opening_hours={topbrand.opening_hours}
+                />
+              );
+            })}
+            {/* </div> */}
           </div>
         </div>
       </div>
@@ -322,33 +230,30 @@ function ShowTopBrand() {
                 />
                 <Search className="w-5 h-5 absolute left-2 top-10 text-gray-400" />
               </div>
-              {/* {loading && <p className="text-gray-400 mt-2">Loading...</p>} */}
+              {isLoading && <p className="text-gray-400 mt-2">Loading...</p>}
               {allRestaurant.length > 0 && (
                 <ul className=" z-2 top-full border rounded mt-2 shadow-md max-h-48 overflow-auto bg-gray-100">
                   {allRestaurant.map((topbrand) => (
-                    <>
-                      {console.log("akjsdoie", topbrand)}
-                      <li
-                        key={topbrand.top_restaurant_id}
-                        className="p-2 cursor-pointer hover:bg-gray-100"
-                        onClick={() => {
-                          console.log("rested name");
-                          handleAddRestaurat(topbrand);
-                        }}
-                      >
-                        <RectangleCard
-                          key={topbrand.restaurant_id}
-                          title={topbrand.name}
-                          image={topbrand.logo}
-                          props={topbrand}
-                          doorNo={topbrand.door_no}
-                          address1={topbrand.street_address_1}
-                          address2={topbrand.street_address_2}
-                          city={topbrand.city}
-                          pincode={topbrand.pincode}
-                        />
-                      </li>
-                    </>
+                    <li
+                      key={topbrand.top_restaurant_id}
+                      className="p-2 cursor-pointer hover:bg-gray-100"
+                      onClick={() => {
+                        console.log("rested name");
+                        handleAddRestaurat(topbrand.restaurant);
+                      }}
+                    >
+                      <RectangleCard
+                        key={topbrand.restaurant.restaurant_id}
+                        title={topbrand.restaurant.name}
+                        image={topbrand.restaurant.logo}
+                        props={topbrand}
+                        doorNo={topbrand.restaurant.door_no}
+                        address1={topbrand.restaurant.street_address_1}
+                        address2={topbrand.restaurant.street_address_2}
+                        city={topbrand.restaurant.city}
+                        pincode={topbrand.restaurant.pincode}
+                      />
+                    </li>
                   ))}
                 </ul>
               )}
