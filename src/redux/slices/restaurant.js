@@ -156,7 +156,36 @@ export const searchRestaurantByName = createAsyncThunk(
     }
   }
 );
+export const PostUpdateRestaurantRanking = createAsyncThunk(
+  "data/sendData",
+  async (formData, { rejectWithValue }) => {
+    try {
+      console.log("other data here and there", formData);
+      const response = await axios.put(
+        `${API_URL}/restaurant/merchant/toprestaurants`,
+        formData
+      );
+      return response.data; // return what you want to save in the store
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 
+export const DeleteRestaurant = createAsyncThunk(
+  "data/sendData",
+  async (res_id, { rejectWithValue }) => {
+    console.log("aklsdjfoe22333", res_id);
+    try {
+      const response = await axios.delete(
+        `${API_URL}/restaurant/merchant/toprestaurants/${res_id?.ranking_updates}`
+      );
+      return response.data; // return what you want to save in the store
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 // Slice name
 const restaurantSlice = createSlice({
   name: "restaurant",

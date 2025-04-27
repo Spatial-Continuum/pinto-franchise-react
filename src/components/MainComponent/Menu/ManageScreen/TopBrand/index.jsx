@@ -53,8 +53,8 @@ function TopBrand() {
           add={true}
           isAdd={true}
           onEdit={() => {
-            navigate("/menu/manage-screen/show-subcuisine", {
-              state: { topBrand, showModal: true },
+            navigate("/menu/manage-screen/show-topbrand", {
+              state: { topbrands: topBrand, showModal: true },
             });
           }}
         />

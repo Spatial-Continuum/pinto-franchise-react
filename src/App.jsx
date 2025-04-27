@@ -41,13 +41,13 @@ const App = () => {
   };
 
   return (
-    <ErrorBoundary>
-      <Provider store={store}>
-        <React.Fragment>
-          <Routers />
-        </React.Fragment>
-      </Provider>
-    </ErrorBoundary>
+    // <ErrorBoundary>
+    <Provider store={store}>
+      <React.Fragment>
+        <Routers />
+      </React.Fragment>
+    </Provider>
+    // </ErrorBoundary>
   );
 };
 

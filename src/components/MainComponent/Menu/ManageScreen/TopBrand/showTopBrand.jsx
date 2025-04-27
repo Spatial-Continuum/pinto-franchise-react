@@ -12,9 +12,12 @@ import { fetchSubCategoryApi } from "../../../../../redux/slices/menu.js";
 import {
   searchRestaurantByName,
   selectSearchResults,
+  PostUpdateRestaurantRanking,
+  DeleteRestaurant,
   selectApiLoading,
 } from "../../../../../redux/slices/restaurant.js";
-
+import { selectTopBrand } from "../../../../../redux/slices/menu.js";
+import { fetchTopBrandApi } from "../../../../../redux/slices/menu.js";
 function ShowTopBrand() {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -34,6 +37,7 @@ function ShowTopBrand() {
   const [allRestaurant, setAllRestaurant] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [rearrangedList, setRearrangedList] = useState([]);
+
   let debounceTimeout = 0;
 
   const searchResults = useSelector(selectSearchResults);
@@ -93,7 +97,7 @@ function ShowTopBrand() {
       restaurant_id: updated_des.restaurant.restaurant_id,
       ranking: updated_des.ranking,
     });
-
+    console.log("alksdfjpoweo", updated_re);
     setRearrangedList(updated_re);
     setTopBrands(updatedItems);
   };
@@ -145,10 +149,20 @@ function ShowTopBrand() {
           console.log("jsdjflasl", response.data.data);
 
           console.log(response);
+
           setNewItem("");
           setAllRestaurant([]);
           setSelectedRestaurant([]);
           setShowModal(false);
+          dispatch(fetchTopBrandApi())
+            .unwrap()
+            .then((data) => {
+              console.log("ksaljdflkw", data);
+              setTopBrands(data);
+            })
+            .catch((err) => {
+              console.log("alksdjflksd");
+            });
         })
         .catch(function (error) {
           console.log("error one");
@@ -156,8 +170,39 @@ function ShowTopBrand() {
         });
     }
   };
-  const handleRearrange = () => {
+  const handleRearrange = (e) => {
     console.log("aklsdjw", rearrangedList);
+    e.preventDefault();
+    dispatch(PostUpdateRestaurantRanking({ ranking_updates: rearrangedList }))
+      .unwrap()
+      .then((response) => {
+        console.log("Update successful!", response);
+      })
+      .catch((error) => {
+        console.error("Update failed:", error);
+        // show error message
+      });
+  };
+  const handleDelete = (e, data) => {
+    console.log("aklsdfjoie", data);
+    e.preventDefault();
+    dispatch(DeleteRestaurant({ ranking_updates: data.top_restaurant_id }))
+      .unwrap()
+      .then((response) => {
+        dispatch(fetchTopBrandApi())
+          .unwrap()
+          .then((data) => {
+            console.log("ksaljdflkw", data);
+            setTopBrands(data);
+          })
+          .catch((err) => {
+            console.log("alksdjflksd");
+          });
+      })
+      .catch((error) => {
+        console.error("Update failed:", error);
+        // show error message
+      });
   };
   const handleChangeSearch = (e) => {
     const value = e.target.value;
@@ -189,13 +234,13 @@ function ShowTopBrand() {
     <MainLayout
       headerName={"Back"}
       headerClick={() =>
-        navigate("/menu/manage-screen", { state: { subcategories } })
+        navigate("/menu/manage-screen", { state: { TopBrands } })
       }
     >
       <div className="p-6">
         <div>
           <div className="relative mb-8">
-            <h2 className="text-lg font-semibold"> New hotels/Top brands</h2>
+            <h2 className="text-lg font-semibold"> Top brands</h2>
             <div className="flex justify-between items-center">
               <div>
                 <input
@@ -225,7 +270,11 @@ function ShowTopBrand() {
             </div>
           </div>
           <div className="mb-8">
-            <div className="pl-4 flex justify-between items-center w-[600px]">
+            <div
+              className={`${
+                allEdit ? "pl-12" : "pl-4"
+              } flex justify-between items-center w-[600px]`}
+            >
               <h3 className="text-lg font-semibold">Top brands</h3>
               {allEdit ? (
                 <button
@@ -282,6 +331,16 @@ function ShowTopBrand() {
                               headerstyle={"min-w-[600px] max-w-[500px]"}
                               opening_hours={topbrand.opening_hours}
                             />
+                            {allEdit ? (
+                              <button
+                                className="h-10 px-4 text-sm border border-red-500 text-red-500 rounded hover:bg-red-500 hover:text-white transition-all mt-2"
+                                onClick={(e) => handleDelete(e, topbrand)} // optional if you want to implement delete
+                              >
+                                Delete
+                              </button>
+                            ) : (
+                              ""
+                            )}
                           </div>
                         )}
                       </Draggable>
