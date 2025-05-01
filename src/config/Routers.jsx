@@ -16,6 +16,12 @@ import ManagePartners from "../pages/DeliveryPartner/ManagePartners.jsx";
 import OrderHistoryIndex from "../components/MainComponent/orders/OrderHistory/OrderHistoryIndex.jsx";
 import Dashboard from "../components/MainComponent/Dashboard";
 import LoginPage from "../components/MainComponent/Login/login";
+const GenerateOtp = React.lazy(() =>
+  import("../components/MainComponent/Login/generateOtp.jsx")
+);
+const SetNewPassword = React.lazy(() =>
+  import("../components/MainComponent/Login/setNewPassword.jsx")
+);
 // import Login from "../../../src/pages/Auth/Login.jsx";
 const ManageScreen = React.lazy(() =>
   import("../components/MainComponent/Menu/index")
@@ -90,7 +96,7 @@ const AuthenticForm = React.lazy(() =>
 const Routers = (props) => {
   return (
     <Routes>
-      <Route path="/" element={<Dashboard />}></Route>
+      <Route path="/dashboard" element={<Dashboard />}></Route>
 
       <Route
         path="/menu/manage-screen"
@@ -126,12 +132,38 @@ const Routers = (props) => {
       />
 
       <Route
+        path="/"
+        element={
+          <Suspense
+            fallback={<div className="text-center m-t-15">Loading...</div>}
+          >
+            <LoginPage />
+          </Suspense>
+        }
+      />
+      <Route
         path="/login"
         element={
           <Suspense
             fallback={<div className="text-center m-t-15">Loading...</div>}
           >
             <LoginPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/login/generate-otp"
+        element={
+          <Suspense fallback={<div>Loading....</div>}>
+            <GenerateOtp />
+          </Suspense>
+        }
+      />
+      <Route
+        path="login/set-new-password"
+        element={
+          <Suspense fallback={<div>Loading....</div>}>
+            <SetNewPassword />
           </Suspense>
         }
       />

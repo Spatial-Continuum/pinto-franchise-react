@@ -1,12 +1,31 @@
 import React, { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import logo from "../../../assets/images/logo.png";
+import { selectLoginDetails, getLoginAdmin } from "../../../redux/slices/login";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [login, SetLogin] = useState({ phone_number: "", password: "" });
+  const [login, SetLogin] = useState({ phone: "", password: "" });
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handleLogin = (e) => {
     e.preventDefault();
+    console.log("data sdwe", e);
     console.log("asjdfljelsd", login);
+    dispatch(getLoginAdmin(login))
+      .unwrap()
+      .then((response) => {
+        console.log("otsadfad", response);
+        if (response.message == "Login successful") {
+          navigate("/dashboard");
+        } else {
+          alert("Login failed. Please check your credentials.");
+        }
+      })
+      .catch((error) => {
+        alert("Login failed. Please try again.");
+      });
   };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -37,10 +56,10 @@ export default function LoginPage() {
         {/* Phone Number Input */}
         <input
           type="text"
-          name="phone_number"
+          name="phone"
           placeholder="Phone number"
           className="w-full px-4 py-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          value={login.phone_number}
+          value={login.phone}
           onChange={handleInputChange}
         />
 
@@ -73,12 +92,12 @@ export default function LoginPage() {
 
         {/* Links */}
         <div className="flex justify-between mt-4 text-sm text-orange-500">
-          <a href="#" className="hover:underline">
+          <a href="/login/generate-otp" className="hover:underline">
             Forgot Password?
           </a>
-          <a href="#" className="hover:underline">
+          {/* <a href="login/set-new-password" className="hover:underline">
             OTP
-          </a>
+          </a> */}
         </div>
       </div>
     </div>
