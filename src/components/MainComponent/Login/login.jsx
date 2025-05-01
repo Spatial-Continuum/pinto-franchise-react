@@ -18,6 +18,14 @@ export default function LoginPage() {
       .then((response) => {
         console.log("otsadfad", response);
         if (response.message == "Login successful") {
+          localStorage.setItem("access_token", response.tokens.access);
+          localStorage.setItem("refresh_token", response.tokens.refresh);
+          localStorage.setItem("user_id", response.user.user_id);
+          localStorage.setItem(
+            "franchise_id",
+            response.franchises[0].franchise_id
+          );
+
           navigate("/dashboard");
         } else {
           alert("Login failed. Please check your credentials.");
