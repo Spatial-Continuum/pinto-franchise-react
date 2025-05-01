@@ -1,5 +1,16 @@
-import React from "react";
-
+import React, { useState, useEffect } from "react";
+const [login, SetLogin] = useState({ phone_number: "", password: "" });
+const handleLogin = (e) => {
+  e.preventDefault();
+  console.log("asjdfljelsd", login);
+};
+const handleInputChange = (e) => {
+  const { name, value } = e.target;
+  SetLogin((prevLogin) => ({
+    ...prevLogin,
+    [name]: value,
+  }));
+};
 export default function LoginPage() {
   return (
     <div className="flex items-center justify-center h-screen bg-gradient-to-r from-blue-900 to-blue-700">
@@ -18,7 +29,9 @@ export default function LoginPage() {
         {/* Phone Number Input */}
         <input
           type="text"
+          value={login.phone_number}
           placeholder="Phone number"
+          onChange={handleInputChange}
           className="w-full px-4 py-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
@@ -26,7 +39,9 @@ export default function LoginPage() {
         <div className="relative mb-4">
           <input
             type="password"
+            value={login.password}
             placeholder="Password"
+            onChange={handleInputChange}
             className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {/* Eye Icon Placeholder */}
@@ -36,7 +51,10 @@ export default function LoginPage() {
         </div>
 
         {/* Login Button */}
-        <button className="w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600 transition">
+        <button
+          className="w-full bg-orange-500 text-white py-2 rounded hover:bg-orange-600 transition"
+          onClick={handleLogin}
+        >
           LOGIN
         </button>
 

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import SearchBox from "../../../GeneralComponent/SearchBox/SearchBox";
 import {
-  searchRestaurantByName,
-  selectSearchResults,
+  selectSearchRestaurant,
   resetRestaurants,
   selectApiLoading,
   selectApiError,
@@ -16,8 +15,8 @@ const RestaurantPopup = ({ onClose }) => {
   const [selectedRestaurants, setSelectedRestaurants] = useState([]);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const restaurants = useSelector(selectSearchResults);
-
+  const restaurants = useSelector(selectSearchRestaurant);
+  console.log("what is the other restaurant", restaurants);
   // Fetch restaurants based on search input
   useEffect(() => {
     const fetchRestaurants = async () => {
@@ -26,7 +25,7 @@ const RestaurantPopup = ({ onClose }) => {
         return;
       }
 
-      dispatch(searchRestaurantByName(searchTerm));
+      dispatch(selectSearchRestaurant(searchTerm));
       console.log(restaurants);
     };
 

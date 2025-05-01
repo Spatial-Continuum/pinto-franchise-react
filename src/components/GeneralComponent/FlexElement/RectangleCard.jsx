@@ -19,9 +19,11 @@ const ReactangleCard = ({
   setSub = "",
   key = "",
   opening_hours = {},
+  headerstyle = {},
   props,
 }) => {
   console.log("In the rectangleCard", props);
+  console.log("aklsdfjlwe", headerstyle);
   const setUpdateOne = useContext(UpdateContext);
   console.log("UpdateContext1111:", setUpdateOne);
   const navigate = useNavigate();
@@ -30,7 +32,9 @@ const ReactangleCard = ({
   return (
     <div
       key={key}
-      className="flex items-center justify-between bg-white shadow p-4 mb-4 rounded"
+      className={`flex items-center justify-between bg-white shadow p-4 mb-4 rounded ${
+        headerstyle || ""
+      }`}
     >
       <img src={image} alt={title} className="w-16 h-16 rounded-full" />
       <div className="flex-1 ml-4">

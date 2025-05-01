@@ -2,6 +2,9 @@ import React, { useEffect } from "react";
 import "./App.css";
 import Routers from "./config/Routers.jsx";
 import { requestNotificationPermission, onMessageListener } from "./firebase";
+import ErrorBoundary from "./components/ErrorBoundary";
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
 
 const App = () => {
   useEffect(() => {
@@ -38,9 +41,13 @@ const App = () => {
   };
 
   return (
-    <React.Fragment>
-      <Routers />
-    </React.Fragment>
+    // <ErrorBoundary>
+    <Provider store={store}>
+      <React.Fragment>
+        <Routers />
+      </React.Fragment>
+    </Provider>
+    // </ErrorBoundary>
   );
 };
 

@@ -14,6 +14,7 @@ import recommendedItemReducer from "./slices/recommended";
 import extraApisReducer from "./slices/extraApis";
 import onboardingApi from "./slices/onboardingDeliveryPartner";
 import manageOrder from "./slices/order";
+import Login from "./slices/login";
 
 export const store = configureStore({
   reducer: {
@@ -30,5 +31,6 @@ export const store = configureStore({
     extraApis: extraApisReducer,
     onboardingApis: onboardingApi,
     manageOrderApis: manageOrder,
+    loginApis: Login,
   },
 });
