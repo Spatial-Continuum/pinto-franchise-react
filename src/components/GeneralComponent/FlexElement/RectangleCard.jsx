@@ -32,7 +32,7 @@ const ReactangleCard = ({
   return (
     <div
       key={key}
-      className={`flex items-center justify-between bg-white shadow p-4 mb-4 rounded ${
+      className={`flex items-center justify-between bg-white shadow p-4 mb-1 rounded ${
         headerstyle || ""
       }`}
     >
