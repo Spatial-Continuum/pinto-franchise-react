@@ -47,9 +47,12 @@ function AuthenticStyle() {
                 <div className="p-2">
                   {" "}
                   <h5 className="text-sm bold">{authentic.name}</h5>
+                  <p style={{ fontSize: "10px" }}>{authentic.street}</p>
                   <p style={{ fontSize: "10px" }}>
-                    {authentic.short_description}
+                    {authentic.street_address_1}
                   </p>
+                  <p style={{ fontSize: "10px" }}>{authentic.sublocality}</p>
+                  <p style={{ fontSize: "10px" }}>{authentic.city}</p>
                 </div>
               }
               // onEdit={()=>{navigate("/menu/manage-screen/categoty-form" , { state: { category,categories } })}}

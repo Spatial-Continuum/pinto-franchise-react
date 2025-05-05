@@ -112,15 +112,6 @@ function ShowTopBrand() {
     }
   }, [searchResults]);
 
-  const handleEditSubCatgory = (subcategory) => {
-    console.log("akjsdfhkjashasdj;d");
-    setSingleEdit(true);
-    setShowModal(true);
-    setNewItem(subcategory.subcategory_title);
-    setNewImage(subcategory.image);
-    setNewImagePreview(subcategory.image);
-    setSingleSubCategory(subcategory);
-  };
   const handleCancel = () => {
     setNewItem("");
     setAllRestaurant([]);
@@ -253,13 +244,27 @@ function ShowTopBrand() {
                 <Search className="w-5 h-5 absolute left-3 top-10 text-gray-400" />
               </div>
               <div className="flex space-x-4">
-                <button
-                  onClick={() => setAllEdit(!allEdit)}
-                  className="p-2 text-black rounded-lg border border-black flex item-center"
-                >
-                  <img src={vector} alt="Edit" className="mt-2 mr-2" />
-                  Edit
-                </button>
+                {!allEdit ? (
+                  <button
+                    onClick={() => setAllEdit(!allEdit)}
+                    className="p-2 text-black rounded-lg border border-black flex item-center"
+                  >
+                    <img src={vector} alt="Edit" className="mt-2 mr-2" />
+                    Edit
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setRearrangedList([]);
+                      setTopBrands(location?.state?.topbrands);
+                      setAllEdit(!allEdit);
+                    }}
+                    className="p-2 text-black rounded-lg border border-black flex item-center bg-red-600"
+                  >
+                    Cancel
+                  </button>
+                )}
+
                 <button
                   onClick={() => setShowModal(true)}
                   className=" px-2 bg-green-600 text-white rounded-lg "
@@ -389,7 +394,7 @@ function ShowTopBrand() {
                       {console.log("akjsdoie", topbrand)}
                       <li
                         key={topbrand.top_restaurant_id}
-                        className="p-2 cursor-pointer hover:bg-gray-100"
+                        className="cursor-pointer hover:bg-gray-100"
                         onClick={() => {
                           console.log("rested name");
                           handleAddRestaurat(topbrand);

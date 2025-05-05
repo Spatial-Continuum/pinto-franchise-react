@@ -37,15 +37,6 @@ function ShowTopBrand() {
     }
   });
 
-  const handleEditSubCatgory = (subcategory) => {
-    console.log("akjsdfhkjashasdj;d");
-    setSingleEdit(true);
-    setShowModal(true);
-    setNewItem(subcategory.subcategory_title);
-    setNewImage(subcategory.image);
-    setNewImagePreview(subcategory.image);
-    setSingleSubCategory(subcategory);
-  };
   const handleCancel = () => {
     setNewItem("");
     setAllRestaurant([]);
@@ -159,13 +150,27 @@ function ShowTopBrand() {
                 )}
               </div>
               <div className="flex space-x-4">
-                <button
-                  onClick={() => setAllEdit(true)}
-                  className="p-2 text-black rounded-lg border border-black flex item-center"
-                >
-                  <img src={vector} alt="Edit" className="mt-2 mr-2" />
-                  Edit
-                </button>
+                {!allEdit ? (
+                  <button
+                    onClick={() => {
+                      setAllEdit(true);
+                    }}
+                    className="p-2 text-black rounded-lg border border-black flex item-center"
+                  >
+                    <img src={vector} alt="Edit" className="mt-2 mr-2" />
+                    Edit
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setAllEdit(false);
+                    }}
+                    className="p-2 text-black rounded-lg border border-black flex item-center bg-red-600"
+                  >
+                    Cancel
+                  </button>
+                )}
+
                 <button
                   onClick={() => setShowModal(true)}
                   className=" px-2 bg-green-600 text-white rounded-lg "
