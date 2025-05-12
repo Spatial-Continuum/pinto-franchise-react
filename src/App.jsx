@@ -12,7 +12,7 @@ const App = () => {
     initializeFCM();
   }, []);
 
-  const Update = async () => {};
+  const Update = async () => { };
 
   const initializeFCM = async () => {
     try {

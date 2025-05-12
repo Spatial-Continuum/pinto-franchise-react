@@ -84,6 +84,9 @@ const AddItem = ({
 
   const basePrices = formData.basePrice;
 
+  console.log("basePrices",basePrices);
+  
+
   let sellingPrice = parseInt(
     parseFloat(basePrices) +
       parseFloat(basePrices * (commissionPercentage / 100))
@@ -235,7 +238,7 @@ const AddItem = ({
     <div>
       <div className="w-full p-6 bg-gray-100 border border-gray-300 rounded-lg">
         <div className="flex items-center justify-between">
-          <p className="font-medium text-gray-800 text-start">+ Add item</p>
+          <p className="font-medium text-gray-800 text-start">Add item</p>
           <div className="flex flex-row gap-2">
             <button
               className="px-5 py-2 font-medium text-black bg-white rounded-md hover:border-grey-700"
@@ -308,8 +311,9 @@ const AddItem = ({
                       {category.menu_title}
                     </option>
                   ))}
+                  <option className="bg-black"></option>
                   <option
-                    className="text-[#014E8D] cursor-pointer p-3 mt-2"
+                    className="text-[#014E8D]cursor-pointer p-3 mt-2 w-full"
                     value="addNewMenu"
                   >
                     Add a New Menu
@@ -524,7 +528,7 @@ const AddItem = ({
                   Selling Price
                 </label>
                 <div className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                  <span className="text-sm text-gray-700">{sellingPrice}</span>
+                  <span className="text-sm text-gray-700">{sellingPrice || 0}</span>
                 </div>
               </div>
             </div>
@@ -587,7 +591,7 @@ const AddItem = ({
                   Item Image
                 </label>
                 <div
-                  className={`flex items-center space-x-4 border ${
+                  className={`flex items-center space-x-4 border justify-center ${
                     errors.itemImage ? "border-red-500" : "border-gray-300"
                   } rounded-md py-7 px-5 cursor-pointer hover:bg-gray-100`}
                 >
@@ -606,7 +610,7 @@ const AddItem = ({
                       <span className="text-sm font-medium text-[#008BFF]">
                         Choose Image
                       </span>
-                      <span className="text-xs">Image must be under 10mb*</span>
+                      {/* <span className="text-xs">Image must be under 10mb*</span> */}
                     </label>
                   )}
                   <input
@@ -683,7 +687,7 @@ const AddItem = ({
                 <div className="relative">
                   {/* Dropdown Button */}
                   <div
-                    className="w-4/12 px-3 py-2 mt-4 border cursor-pointer border-gray-400 text-[#9CA3B6] rounded-md bg-white text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-1/2 px-3 py-2 mt-4 border cursor-pointer border-gray-400 text-[#9CA3B6] rounded-md bg-white text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
                     onClick={() =>
                       setFormData((prev) => ({
                         ...prev,

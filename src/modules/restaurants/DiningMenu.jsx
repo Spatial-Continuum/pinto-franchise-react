@@ -14,10 +14,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deletedAddonIdApi, selectDeleteAddonData, updateAddonApi } from '../../redux/slices/addons';
 import { getAllAddonApi, createAddonAPi, selectCreateAddonApiData, selectGetAllAddonApiData, } from '../../redux/slices/addons';
 import { updateItemByIdApi, recommendedUpdateApi, selectRecommendedUpdate, deleteItemByIdApi, selectUpdateItemByIdApi } from '../../redux/slices/item';
-import menuicon from '../../assets/images/menuIcon.svg';
+import menuicon from '../../assets/images/menuicon.png';
 import { getAllRecommendedItem, selectRecommendedAllItemApi } from '../../redux/slices/recommended';
 import { createMenuCategoryApi, selectCreateMenuCategroy, } from '../../redux/slices/menucategory';
 import EditAddOn from './EditAddOn';
+import { LoadingSpinners } from '../../Elements/Spinners';
 const DiningMenu = ({ restaurantId }) => {
     const [activeSubTab, setActiveSubTab] = useState("menu")
     const [openCategories, setOpenCategories] = useState([]); // Track open categories
@@ -88,7 +89,8 @@ const DiningMenu = ({ restaurantId }) => {
         return `${currentDayName}: ${CurrentDayHours}`;
     };
 
-    if (loading) return <p className="text-center text-gray-500">Loading menu...</p>;
+    // if (loading) return <p className="text-center text-gray-500">Loading menu...</p>;
+    // if (loading) return <LoadingSpinners/>;
     if (error) return <p className="text-center text-red-500">{error}</p>;
 
     const handleTabClick = (tab) => {
@@ -176,7 +178,7 @@ const DiningMenu = ({ restaurantId }) => {
 
     return (
         <div>
-            <div className="h-32  mt-5 flex  bg-[#FAFAFA] border-[#D4D4D4] border-[1px] rounded-md  items-center p-4">
+            <div className="h-32  mt-5 flex justify-between  bg-[#FAFAFA] border-[#D4D4D4] border-[1px] rounded-md  items-center p-4">
                 {/* Left Section: Image, Restaurant Name, and Address */}
                 <div className="flex   items-center w-4/6">
                     <div className='flex justify-center items-center'>
@@ -196,9 +198,9 @@ const DiningMenu = ({ restaurantId }) => {
                 </div>
 
                 {/* Right Section: Phone Number and Timings */}
-                <div className="w-1/4 flex flex-col items-center justify-center">
+                <div className="w-1/4 flex flex-col items-start justify-start">
                     {/* Phone Number */}
-                    <p className="text-lg  text-gray-800 font-medium">{categories.primary_phone} &nbsp;-&nbsp;{categories.secondary_phone}</p>
+                    <p className="text-lg  text-gray-800 font-medium">{categories.primary_phone} &nbsp; { categories.secondary_phone && `${- categories.secondary_phone}`}</p>
                     {/* Timings */}
                     <h5 className="text-md text-gray-600">
                         ⏰ {categories.opening_hours && getCurrentDayHours(categories.opening_hours)}
@@ -214,29 +216,33 @@ const DiningMenu = ({ restaurantId }) => {
             <div className="flex justify-between items-center p-4">
                 {/* Progress Bar - Tabs */}
                 <div className="flex items-center space-x-6 relative">
-                    {["dining", "recommended", "charges"].map((tab, index) => (
+                    {["dining", "recommended"].map((tab, index) => (
                         <button
                             key={tab}
-                            className={`relative py-2 text-lg font-medium ${activeTab === tab ? "text-orange-600" : "text-gray-700"
-                                }`}
+                            className={`relative py-2 text-lg  ${activeTab === tab ? "text-textDarkBlue font-bold" : "text-textGray"}`}
                             onClick={() => handleTabClick(tab)}
                         >
-                            {tab.charAt(0).toUpperCase() + tab.slice(1)} {/* Capitalizes first letter */}
+                            {/* Capitalizes first letter */}
+                            {tab.charAt(0).toUpperCase() + tab.slice(1)} 
                             {/* Underline effect for active tab */}
                             {activeTab === tab && (
-                                <div className="absolute left-0 bottom-0 w-full h-[2px] bg-orange-600 transition-all"></div>
+                                <div className="absolute left-0 bottom-0 w-full h-[4px] rounded-lg bg-orange-600 transition-all"></div>
                             )}
                         </button>
                     ))}
                 </div>
 
                 {/* Add Item Button */}
-                <button
+                {
+                    activeTab === "dining" && activeSubTab === "menu" && (
+                        <button
                     className="px-4 py-2 bg-orange-500 text-white font-bold rounded-md hover:bg-orange-600 transition-all"
                     onClick={() => handleAddClick(restaurantId)}
                 >
                     + Add Item
                 </button>
+                    )
+                }
             </div>
 
 
@@ -245,22 +251,51 @@ const DiningMenu = ({ restaurantId }) => {
             {/* in dining: menu */}
             <div className={` ${activeTab === "dining" ? "" : "hidden"}`}>
                 <div className="flex flex-col lg:flex-row gap-5 mt-5 ">
-                    <div className="w-full lg:w-4/6 bg-gray-100  border border-gray-300 rounded-lg">
+                    <div className="w-full lg:w-4/6 min-h-96 bg-gray-100  border border-gray-300 rounded-lg">
 
                         {/* subtab navigation */}
-                        <div className="flex justify-start items-center p-4 bg-gray-50 border-b border-gray-300">
+                        <div className="flex justify-between rounded-tl-xl rounded-tr-xl items-center p-4 bg-gray-50 border-b border-gray-300">
+                            <div>
                             <button
                                 className={`py-2 px-4 text-md font-medium mr-4 ${activeSubTab === "menu" ? "underline-offset-8 text-[#2B2954]" : "text-[#8D8D90]"}`}
-                                onClick={() => handleSubTabClick("menu")}
+                                onClick={() => {
+                                    handleSubTabClick("menu")
+                                    setShowAddAddon(false)
+                                                setShowEditItem(false)
+                                                setShowEditAddon(false)
+                                                setShowAddItem(false)
+                                }}
                             >
-                                Menu
+                                Menus
                             </button>
                             <button
                                 className={`py-2 px-4 text-md font-medium ${activeSubTab === "addons" ? "underline-offset-8 text-[#2B2954]" : "text-[#8D8D90]"}`}
-                                onClick={() => handleSubTabClick("addons")}
+                                onClick={() => {
+                                    handleSubTabClick("addons")
+                                    setShowAddItem(false)
+                                }}
                             >
-                                Add-ons
+                                Addons
                             </button>
+                            </div>
+                            <button className="px-4 py-2 text-orange-500 font-medium rounded-md"
+                                        onClick={() => {
+                                            if(activeSubTab === "menu"){
+                                                setAddMenuPopup(true)
+                                                setShowAddAddon(false)
+                                                setShowEditItem(false)
+                                                setShowEditAddon(false)
+                                                setShowAddItem(false)
+                                            }else{
+                                                setShowAddAddon(true)
+                                                setShowEditItem(false)
+                                                setShowEditAddon(false)
+                                                setShowAddItem(false)
+                                            }
+                                            }}
+                                    >
+                                      + {activeSubTab == "menu" ? "ADD MENU" : "ADD"}
+                                    </button>
                         </div>
 
 
@@ -277,11 +312,7 @@ const DiningMenu = ({ restaurantId }) => {
 
                                             {categories && categories.menu_categories?.length} Menu Categories</h2>
                                     </div>
-                                    <button className="px-4 py-2 text-orange-500 font-medium rounded-md"
-                                        onClick={() => setAddMenuPopup(true)}
-                                    >
-                                        + Add Menu
-                                    </button>
+                                   
                                 </div>
                                 {/* Category Navbar */}
                                 <div className="flex flex-col bg-[#F8F8F8] mb-4  gap-2">
@@ -385,10 +416,9 @@ const DiningMenu = ({ restaurantId }) => {
                                                                 </div>
                                                             </ul>
                                                         ))}
-                                                        <p className="mb-2 ml-10 text-xs font-bold text-green-700 cursor-pointer"
-
+                                                        <p className="mb-2 ml-20 text-xs font-bold text-green-700 cursor-pointer"
                                                             onClick={() => handleAddClick(restaurantId)}>
-                                                            + Add new item
+                                                             Add new item
                                                         </p>
                                                     </ul>
                                                 </div>
@@ -405,10 +435,13 @@ const DiningMenu = ({ restaurantId }) => {
                             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                                 <div className="bg-white w-96 rounded-lg shadow-lg p-6 relative">
                                     {/* Header with Title and Close Button */}
-                                    <button onClick={() => setAddMenuPopup(false)}
+                                    <button type='button' onClick={() => {
+                                        console.log("click");
+                                        setAddMenuPopup(false)
+                                    }}
 
-                                        className="absolute cursor-pointer top-2 right-5 text-gray-500 text-4xl hover:text-gray-700">
-                                        &times;
+                                        className="z-50 absolute cursor-pointer top-3 h-10 right-5 text-gray-500 text-4xl hover:text-gray-700">
+                                        <span> &times;</span>
                                     </button>
                                     <div className="flex items-center border-b pb-3 relative">
                                         <h2 className="text-lg font-semibold text-gray-800">Add New Menu</h2>
@@ -456,8 +489,8 @@ const DiningMenu = ({ restaurantId }) => {
                         {
                             deletePopup && (
                                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                                    <div className="bg-white w-96 rounded-lg shadow-lg flex flex-col p-6 relative">
-                                        <h3>Are yu sure want to delete ?</h3>
+                                    <div className="bg-white w-94 rounded-lg shadow-lg flex justify-center items-center flex-col p-6 relative">
+                                        <h3>Are you sure want to delete ?</h3>
                                         <div className='flex justify-end gap-4 mt-3'>
                                             <button className="px-4 py-1 border-[#4A4E56] border-[1px] bg-[#ADADAD24] rounded-lg cursor-pointer text-[#4A4E56]" onClick={() => setDeletePopup(false)}>Cancel</button>
                                             <button className="px-4 py-1 border-[#FF0000] border-[1px] bg-[#FF0000] rounded-lg cursor-pointer text-[#FFFFFF]" onClick={() => {
@@ -481,14 +514,15 @@ const DiningMenu = ({ restaurantId }) => {
 
                         {deleteAddonPopup && (
                             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                                <div className="bg-white w-96 rounded-lg shadow-lg flex flex-col p-6 relative">
-                                    <h3>Are yu sure want to delete ?</h3>
+                                <div className="bg-white w-94 rounded-lg shadow-lg flex justify-center items-center  flex-col p-6 relative">
+                                    <h3>Are you sure want to delete ?</h3>
                                     <div className='flex justify-end gap-4 mt-3'>
-                                        <button className="px-4 py-1 border-[#4A4E56] border-[1px] bg-[#ADADAD24] rounded-lg cursor-pointer text-[#4A4E56]" onClick={() => setDeletePopup(false)}>Cancel</button>
+                                        <button className="px-4 py-1 border-[#4A4E56] border-[1px] bg-[#ADADAD24] rounded-lg cursor-pointer text-[#4A4E56]" onClick={() => setDeleteAddonPopup(false)}>Cancel</button>
                                         <button className="px-4 py-1 border-[#FF0000] border-[1px] bg-[#FF0000] rounded-lg cursor-pointer text-[#FFFFFF]" onClick={() => {
                                             dispatch(deletedAddonIdApi(deleteAddonId))
                                                 .then(() => {
                                                     console.log("Item deleted successfully");
+                                                    dispatch(getAllAddonApi(restaurantId))
                                                     setDeleteAddonPopup(false);
                                                     setRefresh(true);
                                                     // Optionally refresh the data or perform other actions
@@ -511,15 +545,12 @@ const DiningMenu = ({ restaurantId }) => {
                                 {/* <h1 className="text-lg font-bold mb-4 text-gray-800">Add-ons</h1> */}
                                 <div className="flex justify-between py-3  items-center mb-0">
 
-
-
-
                                     <div className="bg-[#F1F5F9] py-0  px-4">
                                         <h2 className="text-[#A3A3A3]  text-md font-normal">
 
                                             {addons?.length} Addons</h2>
                                     </div>
-                                    <button className="px-4 py-2 text-orange-500 font-medium rounded-md"
+                                    {/* <button className="px-4 py-2 text-orange-500 font-medium rounded-md"
                                         onClick={() => {
                                             setShowAddAddon(true)
                                             setShowEditItem(false)
@@ -530,10 +561,10 @@ const DiningMenu = ({ restaurantId }) => {
                                         }
                                     >
                                         + Add Addon
-                                    </button>
+                                    </button> */}
                                 </div>
                                 <div className="flex flex-col bg-[#FFFFFF] gap-4 pt-5">
-                                    {addons.map((addon) => (
+                                    {addons?.map((addon) => (
                                         <div
                                             key={addon.id}
                                             className="flex  bg-[#FFFFFF]  px-4  rounded-lg "
@@ -581,7 +612,14 @@ const DiningMenu = ({ restaurantId }) => {
                                             </div>
                                         </div>
                                     ))}
-                                    <p className="text-xs font-bold px-4 py-2 bg-[#FFFFFF] text-green-700  cursor-pointer">+ Add new add-on</p>
+                                    <div onClick={()=>{
+                                         setShowAddAddon(true)
+                                                setShowEditItem(false)
+                                                setShowEditAddon(false)
+                                                setShowAddItem(false)
+                                    }}>
+                                        <p className="text-xs font-bold px-4 py-2 bg-[#FFFFFF] text-green-700  cursor-pointer">Add new add-on</p>
+                                    </div>
                                 </div>
                             </div>
                         )}

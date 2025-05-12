@@ -94,12 +94,42 @@ export const getNewRestaurants = createAsyncThunk(
       const response = await axios.get(
         `${API_URL}/restaurant/merchant/newonboarded`
       );
+      return response.data
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  })
+
+export const getAllMostLovedRestaurant = createAsyncThunk('restaurant/getAllMostLovedRestaurant', async (_, { rejectWithValue }) => {
+  try {
+    const response = await axios.get(`${API_URL}/restaurant/most-loved-restaurants`);
+    return response.data
+  } catch (error) {
+    return rejectWithValue(error.response?.data || error.message);
+  }
+})
+
+export const AddMostLovedRestaurant = createAsyncThunk(
+  'restaurant/AddMostLovedRestaurant',
+  async (restaurantId, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${API_URL}/restaurant/most-loved-restaurants`, restaurantId);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
+
+export const deleteMostLovedRestaurant = createAsyncThunk('api/deleteMostLovedRestaurant', async (restaurantId, { rejectWithValue }) => {
+  try {
+    const response = await axios.delete(
+      `${API_URL}/restaurant/most-loved-restaurants/${restaurantId}`);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error.response?.data || error.message);
+  }
+})
 
 export const getAllRestaurantPending = createAsyncThunk(
   "restaurant/getAllRestaurantPendeing",
@@ -172,7 +202,36 @@ export const PostUpdateRestaurantRanking = createAsyncThunk(
   }
 );
 
-export const DeleteRestaurant = createAsyncThunk(
+export const getAllMostLovedRestaurant = createAsyncThunk('restaurant/getAllMostLovedRestaurant', async(_, { rejectWithValue }) =>{
+  try{
+    const response = await axios.get(`${API_URL}/restaurant/most-loved-restaurants`);
+    return response.data
+  }catch(error){
+    return rejectWithValue(error.response?.data || error.message);
+  }
+})
+
+export const AddMostLovedRestaurant = createAsyncThunk(
+  'restaurant/AddMostLovedRestaurant',
+  async (restaurantId, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${API_URL}/restaurant/most-loved-restaurants`, restaurantId);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const deleteMostLovedRestaurant = createAsyncThunk('api/deleteMostLovedRestaurant', async (restaurantId, { rejectWithValue }) => {
+  try {
+    const response = await axios.delete(
+      `${API_URL}/restaurant/most-loved-restaurants/${restaurantId}`);
+    return response;
+  } catch (error) {
+    return rejectWithValue(error.response?.data || error.message);
+  }
+})export const DeleteRestaurant = createAsyncThunk(
   "data/sendData",
   async (res_id, { rejectWithValue }) => {
     console.log("aklsdjfoe22333", res_id);
@@ -200,8 +259,10 @@ const restaurantSlice = createSlice({
     rejectedRestaurants: [],
     searchNameResults: [],
     menuCategory: [],
+    mostLovedRestaurant: [],
     loading: false,
     error: null,
+
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -324,6 +385,8 @@ const restaurantSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+
+
       .addCase(searchRestaurantByName.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -335,7 +398,44 @@ const restaurantSlice = createSlice({
       .addCase(searchRestaurantByName.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+
+      .addCase(getAllMostLovedRestaurant.pending, (state, action) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAllMostLovedRestaurant.fulfilled, (state, action) => {
+        state.loading = false;
+        state.mostLovedRestaurant = action.payload;
+      })
+      .addCase(getAllMostLovedRestaurant.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(AddMostLovedRestaurant.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(AddMostLovedRestaurant.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(AddMostLovedRestaurant.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(deleteMostLovedRestaurant.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteMostLovedRestaurant.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(deleteMostLovedRestaurant.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
   },
 });
 
@@ -362,6 +462,7 @@ export const selectPendingRestaurants = (state) =>
 export const selectRestaurantList = (state) => state.restaurant.restaurantList;
 export const selectApiLoading = (state) => state.restaurant.loading;
 export const selectApiError = (state) => state.restaurant.error;
+export const selectMostLovedrestaurant = (state) => state.restaurant.mostLovedRestaurant;
 
 export const { resetRestaurants } = restaurantSlice.actions;
 

@@ -557,7 +557,7 @@ const EditItem = ({ itemId, restaurantId, setShowEditItem }) => {
                   <div className="relative">
                     {/* Dropdown Button */}
                     <div
-                      className="w-4/12 px-3 py-2 mt-4 border cursor-pointer border-gray-400 text-[#9CA3B6] rounded-md bg-white text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-1/2 px-3 py-2 mt-4 border cursor-pointer border-gray-400 text-[#9CA3B6] rounded-md bg-white text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
                       onClick={() => setFormData(prev => ({ ...prev, showAddonDropdown: !prev.showAddonDropdown }))}
                     >
                       Select Add Ons 🡣

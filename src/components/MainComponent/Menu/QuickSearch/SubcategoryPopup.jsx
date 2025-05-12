@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import SearchBox from '../../../GeneralComponent/SearchBox/SearchBox';
 import RestaurantService from '../../../../modules/restaurants/RestaurantService';
 import search from '../../../../assets/images/prime_search.svg'
-import { addNewMostLovedDishes, selectNewDish, selectApiError, selectApiLoading } from '../../../../redux/slices/dishes';
+import { addNewMostLovedDishes, selectNewDish, selectApiError, selectApiLoading, getMostLovedDishes } from '../../../../redux/slices/dishes';
+import { useDispatch } from 'react-redux';
 const SubcategoryPopup = ({ onClose }) => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [subCategories, setSubCategories] = useState(null)
-    const [selectedSubcategory, setSelectedSubcategory] = useState([]);
+    const [subCategories, setSubCategories] = useState([])
+    const [selectedSubcategory, setSelectedSubcategory] = useState(null);
     const [loading, setLoading] = useState(false);
-
+    const dispatch = useDispatch()
     // Fetch restaurants based on search input
     useEffect(() => {
         const fetchSubCategories = async () => {
@@ -19,6 +20,7 @@ const SubcategoryPopup = ({ onClose }) => {
             setLoading(true);
             try {
                 const data = await RestaurantService.searchSubcategory(searchTerm)
+                console.log("data",data);
                 setSubCategories(data)
             } catch (error) {
                 console.error('Error fetching subcategories:', error);
@@ -27,6 +29,7 @@ const SubcategoryPopup = ({ onClose }) => {
             }
 
         }
+console.log("selectedSubcategory",selectedSubcategory);
 
         const delayDebounce = setTimeout(fetchSubCategories, 500);
         return () => clearTimeout(delayDebounce);
@@ -38,9 +41,10 @@ const SubcategoryPopup = ({ onClose }) => {
         setSearchTerm('');
         setSubCategories([]); // Hide the dropdown
     };
-    const handleAddDishes=()=>{
+    const handleAddDishes=async()=>{
         if(selectedSubcategory){
-            dispatchEvent(addNewMostLovedDishes({subcategoryId: selectedSubcategory.subcategory_id}))
+            await dispatch(addNewMostLovedDishes({subcategory: selectedSubcategory.subcategory_id})).unwrap();
+            dispatch(getMostLovedDishes());
             onClose()
         }
     }
@@ -55,17 +59,20 @@ const SubcategoryPopup = ({ onClose }) => {
                 </div>
 
                 {/* Search Box */}
+                <label className='text-textLabel'>Search Sub category</label>
                 <SearchBox
                     placeholder="Search for subcategory by name..."
                     img={search}
-                    className="w-full h-16"
+                    className="w-full h-16 my-2"
                     onSearch={(value) => setSearchTerm(value)}
                     value={searchTerm}
                 />
                 {/* Search Results Dropdown */}
                 {loading && <p className="text-center mt-2">Loading...</p>}
-                {subCategories.length > 0 && (
-                    <div className="border border-gray-300 bg-[#FFFFFF] rounded mt-2 max-h-60 overflow-y-auto p-2">
+                {subCategories?.length > 0 && (
+                    <div className=" bg-[#FFFFFF] rounded -mt-2 max-h-60 overflow-y-auto p-2">
+                    <p className='text-textThin text-sm font-SF pb-2'>{subCategories.length } Result Found</p>
+
                         {subCategories.map((subcategory) => (
                             <div
                                 key={subcategory.subcategory_id}
@@ -74,7 +81,7 @@ const SubcategoryPopup = ({ onClose }) => {
                             >
                                 {/* Left: Subcategory Image */}
                                 <img
-                                    src={subcategory.image || '/placeholder-image.png'}
+                                    src={subcategory.logo || '/placeholder-image.png'}
                                     alt={subcategory.subcategory_title}
                                     className="w-16 h-16 rounded-lg object-cover mr-4"
                                 />
@@ -82,8 +89,8 @@ const SubcategoryPopup = ({ onClose }) => {
                                 {/* Right: Subcategory Details */}
                                 <div className="flex-grow">
                                     <h3 className="text-lg font-semibold text-gray-800">{subcategory.subcategory_title}</h3>
-                                    <p className="text-sm text-gray-600"> items:</p>
-                                    <p className="text-sm text-gray-600"> restaurants:</p>
+                                    {/* <p className="text-sm text-gray-600">{subcategory.item_name}</p>
+                                    <p className="text-sm text-gray-600">{subcategory.restaurant_name}</p> */}
                                 </div>
                             </div>
                         ))}
@@ -92,7 +99,7 @@ const SubcategoryPopup = ({ onClose }) => {
 
 
                 {/* Selected Restaurants Display */}
-                {selectedSubcategory && (
+                {selectedSubcategory  && (
                     <div className="mt-4">
                         <h3 className="text-lg font-semibold mb-2">Selected Subcategory </h3>
                         
@@ -112,8 +119,8 @@ const SubcategoryPopup = ({ onClose }) => {
                                     {/* Right: Subcategory Details */}
                                     <div className="flex-grow">
                                         <h3 className="text-lg font-semibold text-gray-800">{selectedSubcategory.subcategory_title}</h3>
-                                        <p className="text-sm text-gray-600"> items:</p>
-                                        <p className="text-sm text-gray-600"> restaurants:</p>
+                                        {/* <p className="text-sm text-gray-600"> items:</p>
+                                        <p className="text-sm text-gray-600"> restaurants:</p> */}
                                     </div>
 
                                 </div>
@@ -121,7 +128,7 @@ const SubcategoryPopup = ({ onClose }) => {
                             
                         
                         <div className='flex justify-end flex-row gap-4 my-5'>
-                            <button className='px-9 py-1 border-[#C0C0C0] border-[1px] bg-[#FFFFFF] text-[#464E5B] rounded-md' >Clear</button>
+                            <button className='px-9 py-1 border-[#C0C0C0] border-[1px] bg-[#FFFFFF] text-[#464E5B] rounded-md' onClick={()=>{setSelectedSubcategory(null)}}>Clear</button>
                             <button className='px-9 py-1 border-[#2D5FDD] border-[1px] bg-[#2D5FDD] text-[#FFFFFF] rounded-md'
                             onClick={handleAddDishes}>Add</button>
                         </div>

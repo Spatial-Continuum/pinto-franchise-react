@@ -18,9 +18,19 @@ export const addNewMostLovedDishes = createAsyncThunk('api/addNewMostLovedDishes
     try {
       const response = await axios.post(
         `${API_URL}/menu/most-loved-dishes`, 
-        { subcategory: subcategoryId }  // Passing body in request
+        subcategoryId // Passing body in request
       );
       return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  })
+
+  export const deleteMostLovedDishes = createAsyncThunk('api/deleteMostLovedDishes', async (subcategoryId, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(
+        `${API_URL}/menu/most-loved-dishes/${subcategoryId}`);
+      return response;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }
@@ -34,6 +44,7 @@ const dishSlice = createSlice({
         newDish:null,
         loading:false,
         error:null,
+        success:'',
     },
     reducers:{},
     extraReducers:(builder)=>{
@@ -61,6 +72,19 @@ const dishSlice = createSlice({
             state.newDish=action.payload;
         })
         .addCase(addNewMostLovedDishes.rejected, (state, action) =>{
+            state.loading = false;
+            state.error = action.payload;
+        })
+
+        .addCase(deleteMostLovedDishes.pending, (state)=>{
+            state.loading = true;
+            state.error = null;
+        })
+        .addCase(deleteMostLovedDishes.fulfilled, (state, action) =>{
+            state.loading = false;
+            state.success=action.payload;
+        })
+        .addCase(deleteMostLovedDishes.rejected, (state, action) =>{
             state.loading = false;
             state.error = action.payload;
         })

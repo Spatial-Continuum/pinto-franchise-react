@@ -6,7 +6,7 @@ import RestaurantService from './RestaurantService';
 import Upload from '../../assets/images/Upload.svg';
 import { getRestaurantById, selectSelectedRestaurant } from '../../redux/slices/restaurant';
 import { useDispatch, useSelector } from 'react-redux';
-import { createAddonAPi } from '../../redux/slices/addons';
+import { createAddonAPi, getAllAddonApi } from '../../redux/slices/addons';
 const AddAddOn = ({ restaurantId,setRefresh, setShowAddAddon }) => {
     console.log('ifhhi', restaurantId)
     const [addonName, setAddonName] = useState('')
@@ -74,7 +74,7 @@ const AddAddOn = ({ restaurantId,setRefresh, setShowAddAddon }) => {
     
         // If no errors, proceed with submission
         setErrors({}); // Clear errors
-        console.log("Form data on publish:", { addonName, foodType, qty, basePrice, itemImage });
+        console.log("Form data on publish:", { addonName, foodType, qty, basePrice, itemImage,sellingPrice,restaurantId });
     
         const addonData = new FormData()
         addonData.append('addon_name', addonName)
@@ -84,9 +84,9 @@ const AddAddOn = ({ restaurantId,setRefresh, setShowAddAddon }) => {
         addonData.append('base_price', basePrice)
         addonData.append('quantity', qty)
         addonData.append('image', itemImage.file)
-        addonData.append('restaurant_id',restaurantId)
-        // addonData.append('selling_price', sellingPrice)
-        // addonData.append('restaurant', restaurantId)
+        // addonData.append('restaurant_id',restaurantId)
+        addonData.append('selling_price', sellingPrice)
+        addonData.append('restaurant', restaurantId)
         for (const [key, value] of addonData.entries()) {
             if (value instanceof File) {
               console.log(`${key}:`);
@@ -96,10 +96,29 @@ const AddAddOn = ({ restaurantId,setRefresh, setShowAddAddon }) => {
             } else {
               console.log(`${key}: ${value}`);
             }}
-        dispatch(createAddonAPi({restaurantId, addonData}))
+            console.log("Form data on publish111:", { addonName, foodType, qty, basePrice, itemImage,sellingPrice,restaurantId });
+
+        dispatch(createAddonAPi(addonData)).unwrap()
+            .then((response) => {
+                console.log('Addon created successfully:', response);
+                // Handle success (e.g., show a success message, reset form, etc.)
+                dispatch(getAllAddonApi(restaurantId))
+            })
+            .catch((error) => {
+                console.error('Error creating addon:', error);
+                // Handle error (e.g., show an error message)
+            });
+        // Reset form fields
+        setAddonName('');
+        setFoodType('');
+        setQty('');
+        setBasePrice('');
+        setItemImage({ file: null, preview: null });
+        setCommissionPercentage(null);  
+       
         setShowAddAddon(false);
         setRefresh(true)
-        //
+        
 
     }
 
@@ -136,7 +155,7 @@ const AddAddOn = ({ restaurantId,setRefresh, setShowAddAddon }) => {
             </div>
 
             {/* Food Type and Qty */}
-            <div className="flex grid-cols-3 gap-4 mb-6">
+            <div className="flex w-full justify-between gap-4 mb-6">
                 {/* Food Type */}
                 <div className="flex-1">
                     <label className="block text-sm font-medium text-gray-700 mb-2">Food Type</label>
@@ -145,7 +164,7 @@ const AddAddOn = ({ restaurantId,setRefresh, setShowAddAddon }) => {
                             // className={`flex items-center px-4 py-2 border border-gray-300 rounded-md text-gray-700
                             //      ${foodType === 'Veg' ? 'border-orange-500' : 'border-gray-300'}`}
                             //className={`flex items-center px-4 py-2 border ${errors.foodType ? 'border-red-500' : 'border-gray-300'} rounded-md text-gray-700`}
-                            className={`flex items-center gap-2 px-4 py-2 border ${errors.foodType ? 'border-red-500' : 'border-gray-300'} rounded-md cursor-pointer ${formData.foodType === 'Veg' ? 'bg-green-100' : ''}`}
+                            className={`flex items-center gap-2 px-4 py-2 border ${errors.foodType ? 'border-red-500' : 'border-gray-300'} rounded-md cursor-pointer ${foodType === 'Veg' ? 'bg-green-100' : ''}`}
                             onClick={() => setFoodType('Veg')}
                         >
                             <img src={veg} /> &nbsp;Veg
@@ -154,7 +173,7 @@ const AddAddOn = ({ restaurantId,setRefresh, setShowAddAddon }) => {
                             // className={`flex items-center px-4 py-2 border rounded-md border-gray-300 text-gray-700 
                             // ${foodType === 'Non-Veg' ? 'border-orange-500' : 'border-gray-300'}`}
                            // className={`flex items-center px-4 py-2 border ${errors.foodType ? 'border-red-500' : 'border-gray-300'} rounded-md text-gray-700`}
-                           className={`flex items-center gap-2 px-4 py-2 border ${errors.foodType ? 'border-red-500' : 'border-gray-300'} rounded-md cursor-pointer ${formData.foodType === 'Non-Veg' ? 'bg-red-100' : ''}`}
+                           className={`flex items-center gap-2 px-4 py-2 border ${errors.foodType ? 'border-red-500' : 'border-gray-300'} rounded-md cursor-pointer ${foodType === 'Non-Veg' ? 'bg-red-100' : ''}`}
                             onClick={() => setFoodType('Non-Veg')}
                         >
                             <img src={nonveg} />&nbsp;Non-veg
@@ -164,7 +183,7 @@ const AddAddOn = ({ restaurantId,setRefresh, setShowAddAddon }) => {
                 </div>
                 
                 {/* Qty */}
-                <div className="flex-1">
+                <div className="flex flex-col">
                     <label className="block text-sm font-medium text-gray-700 mb-2">Qty</label>
                     <input
                         type="text"
@@ -172,7 +191,7 @@ const AddAddOn = ({ restaurantId,setRefresh, setShowAddAddon }) => {
                         value={qty}
                         onChange={(e) => { setQty(e.target.value) }}
                        // className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500"
-                       className={`w-full border ${errors.qty ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500`}
+                       className={`w-20 border ${errors.qty ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500`}
                        />
                        {errors.qty && <p className="text-red-500 text-xs mt-1">{errors.qty}</p>}
                 </div>
@@ -231,7 +250,7 @@ const AddAddOn = ({ restaurantId,setRefresh, setShowAddAddon }) => {
                     ) : (
                         <label htmlFor="upload-item-image" className="flex flex-col items-center cursor-pointer">
                             <img src={Upload} alt="Upload" className="w-10 h-10 mb-2" />
-                            <span className="text-sm font-medium text-orange-500">Choose Image</span>
+                            <span className="text-sm font-medium text-[#008BFF]">Choose Image</span>
                         </label>
                     )}
                     <input

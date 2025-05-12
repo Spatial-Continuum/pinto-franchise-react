@@ -55,9 +55,10 @@ const RestaurantList = ({searchTerm}) => {
   return (
     <div className="mt-8">
       <h1 className="text-left text-2xl font-bold mb-6"> All Restaurants</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-4 justify-center">
+      <div className="flex flex-wrap gap-4 justify-start">
         {filteredRestaurants.map((restaurant) => (
-          <div
+        <>
+        <div
             key={restaurant.restaurant_id}
             className="flex flex-col items-start bg-[#FFFFFF] border border-gray-300 shadow-lg rounded-lg w-[300px] h-[170px]  p-3"
             onClick={() => navigate(`/menu/restaurant-item/addmenu/${restaurant.restaurant_id}`)}
@@ -85,11 +86,12 @@ const RestaurantList = ({searchTerm}) => {
                 <strong>{getCurrentDayHours(restaurant.opening_hours)}</strong> 
               </span>
               <span>
-                <strong>Items:</strong> {calculateItems(restaurant.menu_categories)}
+                <strong>Items: {calculateItems(restaurant.menu_categories)}</strong> 
               </span>
             </div>
 
           </div>
+        </>
         ))}
       </div>
     </div>

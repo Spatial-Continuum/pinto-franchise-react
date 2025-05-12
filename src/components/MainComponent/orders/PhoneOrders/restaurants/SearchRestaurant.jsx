@@ -37,6 +37,8 @@
             navigate(`/orders/phone-orders/searchrestaurant/customerdetail/${restaurantId}`)
         }
         const displayedRestaurants = searchTerm ? restaurants : allRestaurants;
+        console.log("displayedRestaurants",displayedRestaurants);
+        
         return (
             <div>
 
@@ -72,22 +74,24 @@
 
 
                                 {/* Restaurant Name */}
-                                <h2 className="text-lg font-semibold mt-4">{restaurant.name}</h2>
+                               <div className='flex justify-between items-center mt-2'>
+                                <h2 className="text-lg font-semibold ">{restaurant.name}</h2>
+                                <span className="flex items-center mr-4">
+                                        <img src={ratingstar} alt="rating" />
+                                        <span className='px-3'>{restaurant.average_rating}</span>
+                                    </span>
+                               </div>
 
                                 {/* Rating, Timing */}
-                                <div className="flex  text-gray-600 mt-2">
-                                    <span className="flex items-center mr-4">
-                                        <img src={ratingstar} alt="rating" />
-                                        {restaurant.average_rating}
-                                    </span>
+                                {/* <div className="flex  text-gray-600 mt-2">
+                                    
                                     <span className="flex items-center mr-4">
                                         <img src={clock} alt="time" />
                                         {getTimingForToday(restaurant.opening_hours)}
                                     </span>
-                                </div>
-
+                                </div> */}
                                 {/* Address */}
-                                <p className="text-gray-500 flex mt-2">{restaurant.street_address_1},{restaurant.street_address_2}</p>
+                                <p className="text-gray-500 break-words whitespace-normal mt-2 text-sm">{restaurant.street},{restaurant.street_address_1},{restaurant.sublocality}</p>
                             </div>
                         ))}
                     </div>

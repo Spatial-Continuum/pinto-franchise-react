@@ -1,0 +1,938 @@
+import React, { useEffect, useRef, useState } from 'react'
+import MainLayout from '../../../../GeneralComponent/Layout/MainLayout'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+import { getRestaurantById, selectApiError, selectApiLoading, selectSelectedRestaurant } from '../../../../../redux/slices/restaurant';
+import { Searchloading, SearchMobileNumber } from '../../../../../redux/slices/order';
+import {
+    GoogleMap,
+    Marker,
+    useJsApiLoader,
+    StandaloneSearchBox,
+} from "@react-google-maps/api";
+
+const CustomerOrder = () => {
+        const { id } = useParams()
+        const dispatch = useDispatch()
+        const navigate = useNavigate()
+        const restaurantDetails = useSelector(selectSelectedRestaurant)
+        const loading = useSelector(selectApiLoading)
+        const Searchloadings = useSelector(Searchloading)
+        const [search, setSearch] = useState('')
+        const [Location, setLocation] = useState([])
+        const [selectedOption, setSelectedOption] = useState('');
+        const [AddNewCustomerModal, setAddNewCustomer] = useState(false);
+        const [AddNewAddress, setAddNewAddress] = useState(false);
+        const inputref = useRef(null);
+        const [data, setData] = useState();
+    
+    
+        const mapContainerStyle = { width: "100%", height: "100%" };
+        const defaultCenter = { lat: 11.017363, lng: 76.958885 };
+        const [mapCenter, setMapCenter] = useState(defaultCenter);
+        const [markerPosition, setMarkerPosition] = useState(defaultCenter);
+    
+        const [validFields, setValidFields] = useState({
+            name: '', // Assuming 'name' is a field
+            pincode: '',
+            search_for_address: '',
+            street_address_1: '',
+            street_address_2: '',
+            landmark: '',
+            city: '',
+            state: '',
+            primary_phone: '',
+            secondary_phone: '',
+            email: '',
+            commission_percentage: '',
+            gstin: '',
+            owner_name: '',
+            owner_phone: '',
+            mobile_no: '',
+        });
+    
+        const { isLoaded } = useJsApiLoader({
+            id: "google-map-script",
+            googleMapsApiKey: "AIzaSyANMc42fXDaBF3bYBdHQFbWsquKht3arak",
+            libraries: ["places"],
+        });
+        const handleOnPlaceChanged = () => {
+            let places = inputref.current.getPlaces();
+
+            console.log("places",places);
+            
+
+            if (places.length > 0) {
+                const place = places[0];
+                console.log("hjgjyfkyufy", place);
+                const address = place.formatted_address;
+                console.log("klasdjfljwe", address);
+                const lat = place.geometry.location.lat();
+                const lng = place.geometry.location.lng();
+                console.log("kasjdfiojwoewe");
+                let state = "";
+                let locality = "";
+                let sublocality = "";
+                let pincode = "";
+                let city = "";
+                let street = "";
+                place.address_components.forEach((com) => {
+                    console.log("klasjeoiwle", com);
+                });
+                place.address_components.forEach((component) => {
+                    if (component.types.includes("administrative_area_level_1")) {
+                        state = component.short_name; // State
+                    }
+                    if (component.types.includes("locality")) {
+                        locality = component.long_name; // City
+                    }
+    
+                    if (component.types.includes("sublocality_level_1")) {
+                        sublocality = component.long_name;
+                    }
+                    if (component.types.includes("postal_code")) {
+                        pincode = component.long_name; // Pincode
+                    }
+                    if (component.types.includes("route")) {
+                        street = component.long_name; // Pincode
+                    }
+                    if (component.types.includes("administrative_area_level_3")) {
+                        city = component.long_name;
+                    }
+                });
+                let street1 = `${street},${sublocality}`;
+                sublocality = `${locality},${sublocality}`;
+                const updatedData = {
+                    ...data,
+                    search_for_address: place.name,
+                    latitude: lat,
+                    longitude: lng,
+                    state: state,
+                    city: city,
+                    pincode: pincode,
+                    street_address_2: street1,
+                    street: street1,
+                    address_line_1:address,
+                    sublocality: sublocality,
+                };
+                console.log("kjasdhiwioew", updatedData);
+                setData(updatedData);
+                setMapCenter({ lat, lng });
+                setMarkerPosition({ lat, lng });
+                console.log("aisjiofwe", address);
+            }
+        };
+        const handleInputChange = (e) => {
+            e.preventDefault();
+    
+            const { name, value } = e.target;
+            setData((prev) => ({ ...prev, [name]: value }));
+    
+            setValidFields((prevState) => ({
+                ...prevState,
+                [name]: value.trim() !== "", // Mark as invalid if the field is empty
+            }));
+        };
+    
+        useEffect(() => {
+            if (id) {
+                dispatch(getRestaurantById(id))
+            }
+        }, [id, dispatch]
+        )
+    
+        useEffect(() => {
+            const fetchSubCategories = async () => {
+                if (search.trim() === '') {
+                    setSearch('');
+                    return;
+                }
+                try {
+                    const data = await dispatch(SearchMobileNumber(search));
+                    if (data?.payload?.status === 200) {
+                        setLocation(data?.payload?.data)
+                    } else {
+                        setLocation([]);
+                    }
+                } catch (error) {
+                    console.error('Error fetching subcategories:', error);
+                }
+            }
+            const delayDebounce = setTimeout(fetchSubCategories, 500);
+            return () => clearTimeout(delayDebounce);
+        }, [search, dispatch]);
+    
+        console.log("AddNewAddress",AddNewAddress);
+    return (
+
+        <div className="w-full p-4">
+        <h4 className="font-bold text-lg mb-4">Customer order</h4>
+        {loading && (
+            <div className="text-center">
+                <p>Loading...</p>
+            </div>
+        )}
+
+
+        {!loading && restaurantDetails && (
+            <>       
+                {/* <div className="mt-6">
+                    <h2 className="font-bold font-Roboto text-xl mb-4">{!AddNewAddress ?  "Customer detail" : '' }</h2>
+                </div> */}
+
+                {
+                    AddNewCustomerModal || AddNewAddress ? (
+                        <div className={ `${AddNewAddress} ? bg-white p-5 shadow-lg flex mt-6 gap-4 : flex mt-6 gap-4` } >                               
+                                <div className="w-2/3">
+                                {
+                                    AddNewAddress && (<h4 className='font-semibold'>Add New Address</h4>)
+                                }
+                                    <div className={`${AddNewAddress} ? border-none :border rounded-lg p-4 space-y-4`}>
+                                        {/* Input Fields */}
+                                        <div className="flex gap-4">
+                                            <div className='w-1/2 '>
+                                                <label className="block font-medium">Customer Name</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full  border border-gray-300 rounded-lg px-3 py-2  outline-[#656464]"
+                                                    value={validFields?.username || ''}
+                                                    name='usernamephone'
+                                                    onChange={handleInputChange}
+                                                />
+                                            </div>
+                                            <div className="w-1/2">
+                                                <label className="block font-medium">Phone Number</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-[#656464]"
+                                                    value={validFields?.phone || ''}
+                                                    name='phone'
+                                                    onChange={handleInputChange}
+
+                                                />
+                                            </div>
+                                            <div className="w-1/2">
+                                                <label className="block font-medium">Email</label>
+                                                <input
+                                                    type="email"
+                                                    className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-[#656464]"
+                                                    value={validFields?.email || ''}
+                                                    name='email'
+                                                    onChange={handleInputChange}
+
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-col w-5/6 mb-4">
+                                            <label
+                                                htmlFor="search for address"
+                                                className="text-sm font-medium text-gray-700"
+                                            >
+                                                Search for Address
+                                            </label>
+                                            {isLoaded && (
+                                                <StandaloneSearchBox
+                                                    onLoad={(ref) => (inputref.current = ref)}
+                                                    onPlacesChanged={handleOnPlaceChanged}
+                                                >
+                                                    <input
+                                                        id="search_for_address"
+                                                        name="search_for_address"
+                                                        value={data?.search_for_address || ''}
+                                                        onChange={handleInputChange}
+                                                        type="text"
+                                                        placeholder="Enter search_for_address"
+                                                        className={`w-full px-3 py-2 border ${validFields?.search_for_address
+                                                            ? "border-gray-300"
+                                                            : "border-red-500"
+                                                            } rounded-md outline-[#656464]`}
+                                                    />
+                                                </StandaloneSearchBox>
+                                            )}
+                                        </div>
+                                        <div className="flex gap-4">
+                                            <div className="w-1/2">
+                                                <label className="block font-medium">Street Address 1</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-[#656464]"
+                                                    value={data?.address_line_1 || ''}
+                                                    onChange={handleInputChange}
+                                                    name="street"
+                                                />
+                                            </div>
+                                            <div className="w-1/2">
+                                                <label className="block font-medium">Street Address 2</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-[#656464]"
+                                                    value={data?.street_address_2 || ''}
+                                                    onChange={handleInputChange}
+                                                    name="street_address_2"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-4">
+                                            <div className="w-1/2">
+                                                <label className="block font-medium">City</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-[#656464]"
+                                                    value={data?.city || ''}
+                                                    name='city'
+                                                    onChange={handleInputChange}
+                                                />
+                                            </div>
+                                            <div className="w-1/2">
+                                                <label className="block font-medium">Pincode</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-[#656464]"
+                                                    value={data?.pincode || ''}
+                                                    name='pincode'
+                                                    onChange={handleInputChange}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="block font-medium">Landmark</label>
+                                            <input
+                                                type="text"
+                                                className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-[#656464]"
+                                            />
+                                        </div>
+                                        <div className='flex gap-4'>
+                                            <div>
+                                                <label className="block font-medium">Address Type</label>
+                                                <select className="border border-gray-300 px-3 py-2 rounded-lg">
+                                                    <option>Home</option>
+                                                    <option>Work</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label className="block font-medium">Landmark</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-[#656464]"
+                                                />
+                                            </div>
+                                        </div>
+                                        {/* Buttons */}
+                                        <div className="flex justify-center gap-4 mt-4">
+                                            <button className="px-6 py-2 border border-gray-300 rounded-lg bg-gray-100 hover:bg-gray-200" onClick={() => setAddNewCustomer(false)}>
+                                                Cancel
+                                            </button>
+                                            <button className="px-8 py-2 text-white bg-black rounded-lg hover:bg-blue-600">
+                                                Next
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Right Column */}
+                                <div className="w-1/3">
+                                    {
+                                        AddNewAddress && (
+                                            <div onClick={() => setAddNewAddress(false)} className="flex justify-end">
+                                        <h4>&#10006;</h4>
+                                    </div>
+                                        )
+                                    }
+                                    <h4 className="font-medium text-md mb-4">{AddNewAddress ? "Pin Customer location" :"Customer Location"}</h4>
+                                    <div className="h-80">
+                                    {isLoaded && (
+                                        <GoogleMap
+                                            mapContainerStyle={mapContainerStyle}
+                                            center={mapCenter}
+                                            zoom={14}
+                                        >
+                                            <Marker position={markerPosition} />
+                                        </GoogleMap>
+                                    )}
+                                    </div>
+                                </div>
+                            </div>
+                       
+                        )
+                        :
+                        (
+                            <div className="border border-[#D4D4D4] rounded-lg p-4 shadow-sm w-10/12">
+                            <div>
+                                <label className="block font-regular text-black">Mobile Number</label>
+                                <div className='flex gap-4 mt-2 items-center'>
+                                    <div>
+                                        <input
+                                            type="text"
+                                            className="w-[250px] px-2 py-2 text-gray-700 bg-white focus:outline-none border-[#656464] border-[1px] rounded-lg"
+                                            onChange={(e) => setSearch(e.target.value)}
+                                            value={search}
+                                        />
+                                    </div>
+                                    <div>
+                                        <button className='bg-black text-white rounded-lg px-6 py-2'>Search</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <>
+                                    {
+                                        Searchloadings ? (
+                                            <div className="text-center">
+                                                <p>Loading...</p>
+                                            </div>
+                                        ) : search && Location?.addresses?.length > 0 ? (
+                                            <div className="flex justify-start flex-col mt-4 h-full">
+                                                <div className='flex flex-col gap-2 bg-white p-4 rounded-lg border border-[#D4D4D4] w-96 shadow-lg'>
+                                                    <span>
+                                                        <h2 className="font-bold text-lg text-[#00840D]">Customer Found</h2>
+                                                    </span>
+                                                    <span className="text-sm text-black flex">
+                                                        <p className='w-32'>Phone Number</p> <p>: {" "} {Location.phone}</p>
+                                                    </span>
+                                                    <span className="text-sm text-black flex"> <p className='w-32'>Customer Name</p> <p>: {" "} {Location.username}</p></span>
+                                                    <span className="text-sm text-black flex"><p className='w-32'>Email</p> <p>: {" "} {Location.email}</p></span>
+                                                </div>
+                                                <div className='mt-4 flex flex-col'>
+                                                    <div className='text-[#008BFF] text-md flex gap-2 justify-end'>
+                                                      &#x2295;  <h4 className='font-semibold' onClick={() => { setAddNewAddress(true) }}>New Address</h4>
+                                                    </div>
+                                                </div>
+                                                <div className='flex flex-wrap gap-2 mt-4'>
+                                                    {
+                                                        Location?.addresses?.map((item) => (
+                                                            <div key={item.address_id} className='flex flex-col gap-2 bg-white p-4 rounded-lg border border-[#D4D4D4] w-96 shadow-lg'>
+                                                                <div className="radio-item">
+                                                                    <input
+                                                                        type="radio"
+                                                                        id={`radio-${item.address_id}`} // unique ID
+                                                                        name="ritem" // same name for all radio inputs in the group
+                                                                        value={item.address_id}
+                                                                        checked={selectedOption === item.address_id} // properly checked
+                                                                        onChange={(e) => setSelectedOption(e.target.value)} // handle change
+                                                                    />
+                                                                    <label htmlFor={`radio-${item.address_id}`}>{item.label ? item.label : "No Label"}</label>
+                                                                </div>
+                                                                <h4 className='font-semibold'>{item?.address_type}</h4>
+                                                                <div>
+                                                                    <p>{item?.address_line_1}, {" "} {item?.street},{" "}{item?.sublocality}, {" "}{item?.city}, {" "} {item?.state}</p>
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                    }
+                                                </div>
+                                                <div className="flex justify-center gap-4 mt-4">
+                                            <button className="px-6 py-2 border border-gray-300 rounded-lg bg-gray-100 hover:bg-gray-200" onClick={() => setAddNewCustomer(false)}>
+                                                Cancel
+                                            </button>
+                                            <button className="px-8 py-2 text-white bg-black rounded-lg hover:bg-blue-600" onClick={() => { navigate('/orders/new-orders') }}>
+                                                Next
+                                            </button>
+                                        </div>
+                                            </div>
+                                        )
+                                            :
+                                            search != '' && Location?.length == 0 ? (
+                                                <div className="flex justify-start flex-col mt-4">
+                                                    <div className='flex flex-col gap-2 bg-white p-4 rounded-lg border border-[#D4D4D4] w-96 shadow-lg'>
+                                                        <h2 className="font-bold text-lg text-[#FF0000]">No Customer Found</h2>
+                                                        <span className="text-sm text-black flex">
+                                                            <p className='w-32'>Phone Number</p> <p>: {" "} {search}</p>
+                                                        </span>
+                                                        <button className='bg-[#008B0E] text-white rounded-lg px-6 py-2 mt-4 w-1/2' onClick={() => { setAddNewCustomer(true) }}>Add Customer</button>
+                                                    </div>
+                                                </div>
+
+                                            )
+                                                :
+                                                null
+                                    }
+                                </>
+                            </div>
+
+
+                        </div>
+                        )
+                }
+            </>
+        )}
+    </div>
+
+    )
+}
+
+export default CustomerOrder
+
+
+
+
+
+import React, { useEffect, useRef, useState } from 'react'
+import MainLayout from '../../../../GeneralComponent/Layout/MainLayout'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+import { getRestaurantById, selectApiError, selectApiLoading, selectSelectedRestaurant } from '../../../../../redux/slices/restaurant';
+import { Searchloading, SearchMobileNumber } from '../../../../../redux/slices/order';
+import {
+    GoogleMap,
+    Marker,
+    useJsApiLoader,
+    StandaloneSearchBox,
+} from "@react-google-maps/api";
+
+const CustomerOrder = () => {
+        const { id } = useParams()
+        const dispatch = useDispatch()
+        const navigate = useNavigate()
+        const restaurantDetails = useSelector(selectSelectedRestaurant)
+        const loading = useSelector(selectApiLoading)
+        const Searchloadings = useSelector(Searchloading)
+        const [search, setSearch] = useState('')
+        const [Location, setLocation] = useState([])
+        const [selectedOption, setSelectedOption] = useState('');
+        const [AddNewCustomerModal, setAddNewCustomer] = useState(false);
+        const [AddNewAddress, setAddNewAddress] = useState(false);
+        const inputref = useRef(null);
+        const [data, setData] = useState();
+    
+    
+        const mapContainerStyle = { width: "100%", height: "100%" };
+        const defaultCenter = { lat: 11.017363, lng: 76.958885 };
+        const [mapCenter, setMapCenter] = useState(defaultCenter);
+        const [markerPosition, setMarkerPosition] = useState(defaultCenter);
+    
+        const [validFields, setValidFields] = useState({
+            name: '', // Assuming 'name' is a field
+            pincode: '',
+            search_for_address: '',
+            street_address_1: '',
+            street_address_2: '',
+            landmark: '',
+            city: '',
+            state: '',
+            primary_phone: '',
+            secondary_phone: '',
+            email: '',
+            commission_percentage: '',
+            gstin: '',
+            owner_name: '',
+            owner_phone: '',
+            mobile_no: '',
+        });
+    
+        const { isLoaded } = useJsApiLoader({
+            id: "google-map-script",
+            googleMapsApiKey: "AIzaSyANMc42fXDaBF3bYBdHQFbWsquKht3arak",
+            libraries: ["places"],
+        });
+        const handleOnPlaceChanged = () => {
+            let places = inputref.current.getPlaces();
+
+            console.log("places",places);
+            
+
+            if (places.length > 0) {
+                const place = places[0];
+                console.log("hjgjyfkyufy", place);
+                const address = place.formatted_address;
+                console.log("klasdjfljwe", address);
+                const lat = place.geometry.location.lat();
+                const lng = place.geometry.location.lng();
+                console.log("kasjdfiojwoewe");
+                let state = "";
+                let locality = "";
+                let sublocality = "";
+                let pincode = "";
+                let city = "";
+                let street = "";
+                place.address_components.forEach((com) => {
+                    console.log("klasjeoiwle", com);
+                });
+                place.address_components.forEach((component) => {
+                    if (component.types.includes("administrative_area_level_1")) {
+                        state = component.short_name; // State
+                    }
+                    if (component.types.includes("locality")) {
+                        locality = component.long_name; // City
+                    }
+    
+                    if (component.types.includes("sublocality_level_1")) {
+                        sublocality = component.long_name;
+                    }
+                    if (component.types.includes("postal_code")) {
+                        pincode = component.long_name; // Pincode
+                    }
+                    if (component.types.includes("route")) {
+                        street = component.long_name; // Pincode
+                    }
+                    if (component.types.includes("administrative_area_level_3")) {
+                        city = component.long_name;
+                    }
+                });
+                let street1 = `${street},${sublocality}`;
+                sublocality = `${locality},${sublocality}`;
+                const updatedData = {
+                    ...data,
+                    search_for_address: place.name,
+                    latitude: lat,
+                    longitude: lng,
+                    state: state,
+                    city: city,
+                    pincode: pincode,
+                    street_address_2: street1,
+                    street: street1,
+                    address_line_1:address,
+                    sublocality: sublocality,
+                };
+                console.log("kjasdhiwioew", updatedData);
+                setData(updatedData);
+                setMapCenter({ lat, lng });
+                setMarkerPosition({ lat, lng });
+                console.log("aisjiofwe", address);
+            }
+        };
+        const handleInputChange = (e) => {
+            e.preventDefault();
+    
+            const { name, value } = e.target;
+            setData((prev) => ({ ...prev, [name]: value }));
+    
+            setValidFields((prevState) => ({
+                ...prevState,
+                [name]: value.trim() !== "", // Mark as invalid if the field is empty
+            }));
+        };
+    
+        useEffect(() => {
+            if (id) {
+                dispatch(getRestaurantById(id))
+            }
+        }, [id, dispatch]
+        )
+    
+        useEffect(() => {
+            const fetchSubCategories = async () => {
+                if (search.trim() === '') {
+                    setSearch('');
+                    return;
+                }
+                try {
+                    const data = await dispatch(SearchMobileNumber(search));
+                    if (data?.payload?.status === 200) {
+                        setLocation(data?.payload?.data)
+                    } else {
+                        setLocation([]);
+                    }
+                } catch (error) {
+                    console.error('Error fetching subcategories:', error);
+                }
+            }
+            const delayDebounce = setTimeout(fetchSubCategories, 500);
+            return () => clearTimeout(delayDebounce);
+        }, [search, dispatch]);
+    
+        console.log("AddNewAddress",AddNewAddress);
+    return (
+
+        <div className="w-full p-4">
+        <h4 className="font-bold text-lg mb-4">Customer order</h4>
+        {loading && (
+            <div className="text-center">
+                <p>Loading...</p>
+            </div>
+        )}
+
+
+        {!loading && restaurantDetails && (
+            <>       
+                {/* <div className="mt-6">
+                    <h2 className="font-bold font-Roboto text-xl mb-4">{!AddNewAddress ?  "Customer detail" : '' }</h2>
+                </div> */}
+
+                {
+                    AddNewCustomerModal || AddNewAddress ? (
+                        <div className={ `${AddNewAddress} ? bg-white p-5 shadow-lg flex mt-6 gap-4 : flex mt-6 gap-4` } >                               
+                                <div className="w-2/3">
+                                {
+                                    AddNewAddress && (<h4 className='font-semibold'>Add New Address</h4>)
+                                }
+                                    <div className={`${AddNewAddress} ? border-none :border rounded-lg p-4 space-y-4`}>
+                                        {/* Input Fields */}
+                                        <div className="flex gap-4">
+                                            <div className='w-1/2 '>
+                                                <label className="block font-medium">Customer Name</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full  border border-gray-300 rounded-lg px-3 py-2  outline-[#656464]"
+                                                    value={validFields?.username || ''}
+                                                    name='usernamephone'
+                                                    onChange={handleInputChange}
+                                                />
+                                            </div>
+                                            <div className="w-1/2">
+                                                <label className="block font-medium">Phone Number</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-[#656464]"
+                                                    value={validFields?.phone || ''}
+                                                    name='phone'
+                                                    onChange={handleInputChange}
+
+                                                />
+                                            </div>
+                                            <div className="w-1/2">
+                                                <label className="block font-medium">Email</label>
+                                                <input
+                                                    type="email"
+                                                    className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-[#656464]"
+                                                    value={validFields?.email || ''}
+                                                    name='email'
+                                                    onChange={handleInputChange}
+
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-col w-5/6 mb-4">
+                                            <label
+                                                htmlFor="search for address"
+                                                className="text-sm font-medium text-gray-700"
+                                            >
+                                                Search for Address
+                                            </label>
+                                            {isLoaded && (
+                                                <StandaloneSearchBox
+                                                    onLoad={(ref) => (inputref.current = ref)}
+                                                    onPlacesChanged={handleOnPlaceChanged}
+                                                >
+                                                    <input
+                                                        id="search_for_address"
+                                                        name="search_for_address"
+                                                        value={data?.search_for_address || ''}
+                                                        onChange={handleInputChange}
+                                                        type="text"
+                                                        placeholder="Enter search_for_address"
+                                                        className={`w-full px-3 py-2 border ${validFields?.search_for_address
+                                                            ? "border-gray-300"
+                                                            : "border-red-500"
+                                                            } rounded-md outline-[#656464]`}
+                                                    />
+                                                </StandaloneSearchBox>
+                                            )}
+                                        </div>
+                                        <div className="flex gap-4">
+                                            <div className="w-1/2">
+                                                <label className="block font-medium">Street Address 1</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-[#656464]"
+                                                    value={data?.address_line_1 || ''}
+                                                    onChange={handleInputChange}
+                                                    name="street"
+                                                />
+                                            </div>
+                                            <div className="w-1/2">
+                                                <label className="block font-medium">Street Address 2</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-[#656464]"
+                                                    value={data?.street_address_2 || ''}
+                                                    onChange={handleInputChange}
+                                                    name="street_address_2"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-4">
+                                            <div className="w-1/2">
+                                                <label className="block font-medium">City</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-[#656464]"
+                                                    value={data?.city || ''}
+                                                    name='city'
+                                                    onChange={handleInputChange}
+                                                />
+                                            </div>
+                                            <div className="w-1/2">
+                                                <label className="block font-medium">Pincode</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-[#656464]"
+                                                    value={data?.pincode || ''}
+                                                    name='pincode'
+                                                    onChange={handleInputChange}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="block font-medium">Landmark</label>
+                                            <input
+                                                type="text"
+                                                className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-[#656464]"
+                                            />
+                                        </div>
+                                        <div className='flex gap-4'>
+                                            <div>
+                                                <label className="block font-medium">Address Type</label>
+                                                <select className="border border-gray-300 px-3 py-2 rounded-lg">
+                                                    <option>Home</option>
+                                                    <option>Work</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label className="block font-medium">Landmark</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-[#656464]"
+                                                />
+                                            </div>
+                                        </div>
+                                        {/* Buttons */}
+                                        <div className="flex justify-center gap-4 mt-4">
+                                            <button className="px-6 py-2 border border-gray-300 rounded-lg bg-gray-100 hover:bg-gray-200" onClick={() => setAddNewCustomer(false)}>
+                                                Cancel
+                                            </button>
+                                            <button className="px-8 py-2 text-white bg-black rounded-lg hover:bg-blue-600">
+                                                Next
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Right Column */}
+                                <div className="w-1/3">
+                                    {
+                                        AddNewAddress && (
+                                            <div onClick={() => setAddNewAddress(false)} className="flex justify-end">
+                                        <h4>&#10006;</h4>
+                                    </div>
+                                        )
+                                    }
+                                    <h4 className="font-medium text-md mb-4">{AddNewAddress ? "Pin Customer location" :"Customer Location"}</h4>
+                                    <div className="h-80">
+                                    {isLoaded && (
+                                        <GoogleMap
+                                            mapContainerStyle={mapContainerStyle}
+                                            center={mapCenter}
+                                            zoom={14}
+                                        >
+                                            <Marker position={markerPosition} />
+                                        </GoogleMap>
+                                    )}
+                                    </div>
+                                </div>
+                            </div>
+                       
+                        )
+                        :
+                        (
+                            <div className="border border-[#D4D4D4] rounded-lg p-4 shadow-sm w-10/12">
+                            <div>
+                                <label className="block font-regular text-black">Mobile Number</label>
+                                <div className='flex gap-4 mt-2 items-center'>
+                                    <div>
+                                        <input
+                                            type="text"
+                                            className="w-[250px] px-2 py-2 text-gray-700 bg-white focus:outline-none border-[#656464] border-[1px] rounded-lg"
+                                            onChange={(e) => setSearch(e.target.value)}
+                                            value={search}
+                                        />
+                                    </div>
+                                    <div>
+                                        <button className='bg-black text-white rounded-lg px-6 py-2'>Search</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <>
+                                    {
+                                        Searchloadings ? (
+                                            <div className="text-center">
+                                                <p>Loading...</p>
+                                            </div>
+                                        ) : search && Location?.addresses?.length > 0 ? (
+                                            <div className="flex justify-start flex-col mt-4 h-full">
+                                                <div className='flex flex-col gap-2 bg-white p-4 rounded-lg border border-[#D4D4D4] w-96 shadow-lg'>
+                                                    <span>
+                                                        <h2 className="font-bold text-lg text-[#00840D]">Customer Found</h2>
+                                                    </span>
+                                                    <span className="text-sm text-black flex">
+                                                        <p className='w-32'>Phone Number</p> <p>: {" "} {Location.phone}</p>
+                                                    </span>
+                                                    <span className="text-sm text-black flex"> <p className='w-32'>Customer Name</p> <p>: {" "} {Location.username}</p></span>
+                                                    <span className="text-sm text-black flex"><p className='w-32'>Email</p> <p>: {" "} {Location.email}</p></span>
+                                                </div>
+                                                <div className='mt-4 flex flex-col'>
+                                                    <div className='text-[#008BFF] text-md flex gap-2 justify-end'>
+                                                      &#x2295;  <h4 className='font-semibold' onClick={() => { setAddNewAddress(true) }}>New Address</h4>
+                                                    </div>
+                                                </div>
+                                                <div className='flex flex-wrap gap-2 mt-4'>
+                                                    {
+                                                        Location?.addresses?.map((item) => (
+                                                            <div key={item.address_id} className='flex flex-col gap-2 bg-white p-4 rounded-lg border border-[#D4D4D4] w-96 shadow-lg'>
+                                                                <div className="radio-item">
+                                                                    <input
+                                                                        type="radio"
+                                                                        id={`radio-${item.address_id}`} // unique ID
+                                                                        name="ritem" // same name for all radio inputs in the group
+                                                                        value={item.address_id}
+                                                                        checked={selectedOption === item.address_id} // properly checked
+                                                                        onChange={(e) => setSelectedOption(e.target.value)} // handle change
+                                                                    />
+                                                                    <label htmlFor={`radio-${item.address_id}`}>{item.label ? item.label : "No Label"}</label>
+                                                                </div>
+                                                                <h4 className='font-semibold'>{item?.address_type}</h4>
+                                                                <div>
+                                                                    <p>{item?.address_line_1}, {" "} {item?.street},{" "}{item?.sublocality}, {" "}{item?.city}, {" "} {item?.state}</p>
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                    }
+                                                </div>
+                                                <div className="flex justify-center gap-4 mt-4">
+                                            <button className="px-6 py-2 border border-gray-300 rounded-lg bg-gray-100 hover:bg-gray-200" onClick={() => setAddNewCustomer(false)}>
+                                                Cancel
+                                            </button>
+                                            <button className="px-8 py-2 text-white bg-black rounded-lg hover:bg-blue-600" onClick={() => { navigate('/orders/new-orders') }}>
+                                                Next
+                                            </button>
+                                        </div>
+                                            </div>
+                                        )
+                                            :
+                                            search != '' && Location?.length == 0 ? (
+                                                <div className="flex justify-start flex-col mt-4">
+                                                    <div className='flex flex-col gap-2 bg-white p-4 rounded-lg border border-[#D4D4D4] w-96 shadow-lg'>
+                                                        <h2 className="font-bold text-lg text-[#FF0000]">No Customer Found</h2>
+                                                        <span className="text-sm text-black flex">
+                                                            <p className='w-32'>Phone Number</p> <p>: {" "} {search}</p>
+                                                        </span>
+                                                        <button className='bg-[#008B0E] text-white rounded-lg px-6 py-2 mt-4 w-1/2' onClick={() => { setAddNewCustomer(true) }}>Add Customer</button>
+                                                    </div>
+                                                </div>
+
+                                            )
+                                                :
+                                                null
+                                    }
+                                </>
+                            </div>
+
+
+                        </div>
+                        )
+                }
+            </>
+        )}
+    </div>
+
+    )
+}
+
+export default CustomerOrder
+
+
+
+
+
