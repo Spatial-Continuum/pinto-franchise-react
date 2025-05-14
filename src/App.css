@@ -11,3 +11,61 @@ input[type="number"] {
     -moz-appearance: textfield;
     -webkit-appearance: textfield;
 }
+
+.radio-item {
+    display: inline-block;
+    position: relative;
+    padding: 0 6px;
+    margin: 10px 0 0;
+  }
+  
+  .radio-item input[type='radio'] {
+    display: none;
+  }
+  
+  .radio-item label {
+    color: #FF6B00;
+    font-weight: 600;
+    cursor: pointer;
+    padding-left: 30px;
+    position: relative;
+    line-height: 20px;
+  }
+  
+  .radio-item label:before {
+    content: " ";
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #000;
+    background-color: transparent;
+  }
+
+  .radio-item input[type='radio']:checked + label:before {
+    content: " ";
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #FF6B00;
+    background-color: transparent;
+  }
+  
+  .radio-item input[type='radio']:checked + label:after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    background: #FF6B00;
+    border-radius: 50%;
+  }
+  

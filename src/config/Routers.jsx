@@ -23,6 +23,8 @@ const SetNewPassword = React.lazy(() =>
   import("../components/MainComponent/Login/setNewPassword.jsx")
 );
 // import Login from "../../../src/pages/Auth/Login.jsx";
+import OrderCategory from "../components/MainComponent/orders/PhoneOrders/customers/OrderCategory.jsx";
+import OrderTable from "../components/MainComponent/orders/PhoneOrders/restaurants/OrderTable.jsx";
 const ManageScreen = React.lazy(() =>
   import("../components/MainComponent/Menu/index")
 );
@@ -42,7 +44,10 @@ const ShowQuickFilter = React.lazy(() =>
   )
 );
 const PhoneOrder = React.lazy(() =>
-  import("../components/MainComponent/orders/PhoneOrders/index.jsx")
+  import("../components/MainComponent/orders/PhoneOrders/PhoneOrder.jsx")
+);
+const NewOrders = React.lazy(() =>
+  import("../components/MainComponent/orders/PhoneOrders/customers/NewOrder.jsx")
 );
 const ManageOrder = React.lazy(() =>
   import("../components/MainComponent/orders/ManageOrders/ManageIndex.jsx")
@@ -164,6 +169,26 @@ const Routers = (props) => {
         element={
           <Suspense fallback={<div>Loading....</div>}>
             <SetNewPassword />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/orders/new-orders"
+        element={
+          <Suspense
+            fallback={<div className="text-center m-t-15">Loading...</div>}
+          >
+            <NewOrders />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/orders/category"
+        element={
+          <Suspense
+            fallback={<div className="text-center m-t-15">Loading...</div>}
+          >
+            <OrderCategory />
           </Suspense>
         }
       />
@@ -363,7 +388,7 @@ const Routers = (props) => {
           <Suspense
             fallback={<div className="text-center m-t-15">Loading...</div>}
           >
-            <PhoneOrder />
+            <PhoneOrder/>
           </Suspense>
         }
       />
@@ -406,6 +431,16 @@ const Routers = (props) => {
             fallback={<div className="text-center m-t-15">Loading...</div>}
           >
             <ManageOrder />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/orders/restaurant_customer/:restaurantid/:userid"
+        element={
+          <Suspense
+            fallback={<div className="text-center m-t-15">Loading...</div>}
+          >
+            <OrderTable />
           </Suspense>
         }
       />

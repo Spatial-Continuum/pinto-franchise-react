@@ -1,3 +1,99 @@
 @tailwind base;
-@tailwind components; 
+@tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: "Roboto";
+  src: url("/src/assets/Fonts/Roboto-Bold.ttf") format("truetype");
+  font-weight: 700; /* Bold */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("/src/assets/Fonts/Roboto-SemiBold.ttf") format("truetype");
+  font-weight: 600; /* SemiBold */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("/src/assets/Fonts/Roboto-Medium.ttf") format("truetype");
+  font-weight: 500; /* Medium */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("/src/assets/Fonts/Roboto-Regular.ttf") format("truetype");
+  font-weight: 400; /* Regular */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("/src/assets/Fonts/Roboto-Thin.ttf") format("truetype");
+  font-weight: 300; /* Light */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("/src/assets/Fonts/SFPRODISPLAYMEDIUM.OTF") format("truetype");
+  font-weight: 500; /* Medium */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("/src/assets/Fonts/SFPRODISPLAYREGULAR.OTF") format("truetype");
+  font-weight: 400; /* Regular */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("/src/assets/Fonts/SFPRODISPLAYBOLD.OTF") format("truetype");
+  font-weight: 600; /* Bold */
+  font-style: normal;
+}
+
+.font-montserrat-bold {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+}
+
+.font-montserrat-semibold {
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+}
+
+.font-montserrat-medium {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+}
+
+.font-montserrat-regular {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+}
+
+.font-montserrat-thin {
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+}
+
+.font-SF-medium {
+  font-family: "SF Pro Display", sans-serif;
+  font-weight: 500;
+}
+
+.font-SF-regular {
+  font-family: "SF Pro Display", sans-serif;
+  font-weight: 300;
+}
+
+.font-SF-bold {
+  font-family: "SF Pro Display", sans-serif;
+  font-weight: 600;
+}

@@ -1,4 +1,5 @@
 import React from "react";
+import MainLayout from "../../../../GeneralComponent/Layout/MainLayout";
 
 const OrderTable = () => {
   const order = { id: "12345" }; // Example order ID
@@ -16,7 +17,9 @@ const OrderTable = () => {
   ];
 
   return (
-    <div className="w-full p-4 space-y-6">
+<>
+  <MainLayout>
+          <div className="w-full p-4 space-y-6">
       {/* Restaurant Card */}
       <div className="border rounded-lg p-4 flex justify-between items-center">
         <div className="flex items-center gap-4">
@@ -138,6 +141,8 @@ const OrderTable = () => {
         </table>
       </div>
     </div>
+  </MainLayout>
+</>
   );
 };
 

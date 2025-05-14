@@ -160,7 +160,7 @@ const EditAddOn = ({ restaurantId, addonId, setRefresh, setShowEditAddon }) => {
             </div>
 
             {/* Food Type and Qty */}
-            <div className="flex gap-4 mb-6">
+            <div className="flex w-full justify-between gap-4 mb-6">
                 {/* Food Type */}
                 <div className="flex-1">
                     <label className="block text-sm font-medium text-gray-700 mb-2">Food Type</label>
@@ -194,7 +194,7 @@ const EditAddOn = ({ restaurantId, addonId, setRefresh, setShowEditAddon }) => {
                 </div>
 
                 {/* Qty */}
-                <div className="flex-1">
+                <div className="flex flex-col">
                     <label className="block text-sm font-medium text-gray-700 mb-2">Qty</label>
                     <input
                         type="text"
@@ -205,7 +205,7 @@ const EditAddOn = ({ restaurantId, addonId, setRefresh, setShowEditAddon }) => {
                             qty: e.target.value
                         }))}
                         //className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500"
-                        className={`w-full border ${errors.qty ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500`}
+                        className={`w-20 border ${errors.qty ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500`}
                         />
                         {errors.qty && <p className="text-red-500 text-xs mt-1">{errors.qty}</p>}
                 </div>
