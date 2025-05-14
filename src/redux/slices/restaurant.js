@@ -202,36 +202,37 @@ export const PostUpdateRestaurantRanking = createAsyncThunk(
   }
 );
 
-export const getAllMostLovedRestaurant = createAsyncThunk('restaurant/getAllMostLovedRestaurant', async(_, { rejectWithValue }) =>{
-  try{
-    const response = await axios.get(`${API_URL}/restaurant/most-loved-restaurants`);
-    return response.data
-  }catch(error){
-    return rejectWithValue(error.response?.data || error.message);
-  }
-})
+// export const getAllMostLovedRestaurant = createAsyncThunk('restaurant/getAllMostLovedRestaurant', async(_, { rejectWithValue }) =>{
+//   try{
+//     const response = await axios.get(`${API_URL}/restaurant/most-loved-restaurants`);
+//     return response.data
+//   }catch(error){
+//     return rejectWithValue(error.response?.data || error.message);
+//   }
+// })
 
-export const AddMostLovedRestaurant = createAsyncThunk(
-  'restaurant/AddMostLovedRestaurant',
-  async (restaurantId, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(`${API_URL}/restaurant/most-loved-restaurants`, restaurantId);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data || error.message);
-    }
-  }
-);
+// export const AddMostLovedRestaurant = createAsyncThunk(
+//   'restaurant/AddMostLovedRestaurant',
+//   async (restaurantId, { rejectWithValue }) => {
+//     try {
+//       const response = await axios.post(`${API_URL}/restaurant/most-loved-restaurants`, restaurantId);
+//       return response.data;
+//     } catch (error) {
+//       return rejectWithValue(error.response?.data || error.message);
+//     }
+//   }
+// );
 
-export const deleteMostLovedRestaurant = createAsyncThunk('api/deleteMostLovedRestaurant', async (restaurantId, { rejectWithValue }) => {
-  try {
-    const response = await axios.delete(
-      `${API_URL}/restaurant/most-loved-restaurants/${restaurantId}`);
-    return response;
-  } catch (error) {
-    return rejectWithValue(error.response?.data || error.message);
-  }
-})export const DeleteRestaurant = createAsyncThunk(
+// export const deleteMostLovedRestaurant = createAsyncThunk('api/deleteMostLovedRestaurant', async (restaurantId, { rejectWithValue }) => {
+//   try {
+//     const response = await axios.delete(
+//       `${API_URL}/restaurant/most-loved-restaurants/${restaurantId}`);
+//     return response;
+//   } catch (error) {
+//     return rejectWithValue(error.response?.data || error.message);
+//   }
+// })
+export const DeleteRestaurant = createAsyncThunk(
   "data/sendData",
   async (res_id, { rejectWithValue }) => {
     console.log("aklsdjfoe22333", res_id);
