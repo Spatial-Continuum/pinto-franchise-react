@@ -162,8 +162,28 @@ const CustomerDetail = () => {
     }, [id, dispatch]
     )
 
-    useEffect(() => {
-        const fetchSubCategories = async () => {
+    // useEffect(() => {
+    //     const fetchSubCategories = async () => {
+    //         if (search.trim() === '') {
+    //             setSearch('');
+    //             return;
+    //         }
+    //         try {
+    //             const data = await dispatch(SearchMobileNumber(search));
+    //             if (data?.payload?.status === 200) {
+    //                 setLocation(data?.payload?.data)
+    //             } else {
+    //                 setLocation([]);
+    //             }
+    //         } catch (error) {
+    //             console.error('Error fetching subcategories:', error);
+    //         }
+    //     }
+    //     const delayDebounce = setTimeout(fetchSubCategories, 500);
+    //     return () => clearTimeout(delayDebounce);
+    // }, [search, dispatch]);
+
+    const fetchSubCategories = async () => {
             if (search.trim() === '') {
                 setSearch('');
                 return;
@@ -178,10 +198,7 @@ const CustomerDetail = () => {
             } catch (error) {
                 console.error('Error fetching subcategories:', error);
             }
-        }
-        const delayDebounce = setTimeout(fetchSubCategories, 500);
-        return () => clearTimeout(delayDebounce);
-    }, [search, dispatch]);
+    }
 
     console.log("Location", Location);
 
@@ -747,7 +764,7 @@ const CustomerDetail = () => {
                                                         />
                                                     </div>
                                                     <div>
-                                                        <button className='bg-black text-white rounded-lg px-6 py-2'>Search</button>
+                                                        <button className='bg-black text-white rounded-lg px-6 py-2' onClick={()=>{fetchSubCategories()}}>Search</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -824,9 +841,9 @@ const CustomerDetail = () => {
                                             {
                                                 Location?.addresses?.length > 0 && (
                                                     <button
-                                                        onClick={() => { navigate(`/orders/restaurant_customer/${id}/${selectedOption}`) }}
+                                                        onClick={() => { navigate(`/orders/restaurant_customer/${id}/${Location.user_id}`) }}
                                                         type="button"
-                                                        className="px-8 py-2 mt-4 text-white bg-black rounded-lg hover:bg-blue-600">
+                                                        className="px-8 py-2 mt-4 text-white bg-blue-500 rounded-lg hover:bg-blue-600">
                                                         Next
                                                     </button>
                                                 )

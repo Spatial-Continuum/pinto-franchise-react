@@ -20,7 +20,6 @@ export const store = configureStore({
   reducer: {
     menu: menuReducer,
     restaurant: restaurantReducer,
-
     merchant: merchantReducer,
     item: itemReducer,
     addon: addonReducer,
