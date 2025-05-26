@@ -219,7 +219,10 @@ const handleAssignDelivery = (data) =>{
                             }
                             onClick={()=>{handleAssignDelivery(row)}}
                           >
-                            Assign
+                            
+                            {
+                              Object.keys(row?.delivery_request).length !== 0 ? "Assigned" : "Assign"
+                            }
                           </button>
                         </td>
                         <td className="border p-2 uppercase">
