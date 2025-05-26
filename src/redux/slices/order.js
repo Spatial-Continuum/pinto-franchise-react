@@ -79,13 +79,43 @@ export const GetRestaurantUserOrder = createAsyncThunk(
   async (val) => {
     try {
       const response = await axios.post(`${API_URL}/order/delivery-only-order`,val);
-      return response;
+      return response.data;
     } catch (error) {
       return error.response?.data || error.message;
     }
   }
 );
 
+export const GetNearByPartner= createAsyncThunk(
+  "api/GetNearByPartner",
+  async (val) => {
+    try {
+      console.log("val",val);
+      const response = await axios.get(`${API_URL}/delivery-partner/nearby-partners/${val}`);
+      return response.data;
+    } catch (error) {
+      return error.response?.data || error.message;
+    }
+  }
+);
+
+export const AssignDeliveryOrder = createAsyncThunk(
+  "api/AssignDeliveryOrder",
+  async (val) => {
+    try {
+      const token = localStorage.getItem("access_token");
+      const response = await axios.post(`${API_URL}/delivery-partner/franchise/delivery-request`,val,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      return response;
+    } catch (error) {
+      return error.response?.data || error.message;
+    }
+  }
+);
 
 const manageOrderSlice = createSlice({
   name: "manageorder",
@@ -94,6 +124,7 @@ const manageOrderSlice = createSlice({
     presentOrder: [],
     mobileLocation:[],
     RestaurantUserOrder:[],
+    NearByPartner:[],
     loading: false,
     error: null,
   },
@@ -189,11 +220,26 @@ const manageOrderSlice = createSlice({
         state.error = action.payload;
       })
 
+       .addCase(GetNearByPartner.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(GetNearByPartner.fulfilled, (state, action) => {        
+        state.loading = false;
+        state.NearByPartner = action.payload;
+      })
+      .addCase(GetNearByPartner.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
   },
 });
 export const selectManageOrder = (state) => state.manageOrderApis.manageOrder;
 export const selectPresentOrder = (state) => state.manageOrderApis.presentOrder;
 export const SearchMobileLocation = (state) => state.manageOrderApis.mobileLocation;
+export const GetRestaurantUser= (state) => state.manageOrderApis.RestaurantUserOrder;
+export const GetNearByPartnerList= (state) => state.manageOrderApis.NearByPartner;
 export const Searchloading = (state) => state.manageOrderApis.loading;
 export const CreateCustomerOrder = (state) => state.manageOrderApis.error;
 export default manageOrderSlice.reducer;
+

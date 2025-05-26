@@ -769,7 +769,7 @@ const CustomerOrder = () => {
                                                             }
                                                         </div>
                                                     </div>
-                                                )
+                                                )   
                                                     :
                                                     search != '' && Location?.length == 0 ? (
                                                         <div className="flex justify-start flex-col mt-4">
@@ -792,9 +792,9 @@ const CustomerOrder = () => {
                                     {
                                         Location?.addresses?.length > 0 && (
                                             <button
-                                                onClick={() => { navigate(`/orders/restaurant_customer/${id}/${selectedOption}`) }}
+                                                onClick={() => { navigate(`/orders/restaurant_customer/${id}/${Location?.user_id}`) }}
                                                 type="button"
-                                                className="px-8 py-2 mt-4 text-white bg-black rounded-lg hover:bg-blue-600">
+                                                className="px-8 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-600">
                                                 Next
                                             </button>
                                         )
