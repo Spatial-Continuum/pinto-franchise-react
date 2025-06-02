@@ -165,7 +165,6 @@ const CustomerOrder = () => {
     }, [id, dispatch]
     )
 
-    useEffect(() => {
         const fetchSubCategories = async () => {
             if (search.trim() === '') {
                 setSearch('');
@@ -182,9 +181,7 @@ const CustomerOrder = () => {
                 console.error('Error fetching subcategories:', error);
             }
         }
-        const delayDebounce = setTimeout(fetchSubCategories, 500);
-        return () => clearTimeout(delayDebounce);
-    }, [search, dispatch]);
+
 
     console.log("Location", Location);
 
@@ -210,6 +207,9 @@ const CustomerOrder = () => {
             })
 
     }
+
+    console.log("Location",Location);
+    
     return (
 
         <div className="w-full p-4">
@@ -715,7 +715,7 @@ const CustomerOrder = () => {
                                                 />
                                             </div>
                                             <div>
-                                                <button className='bg-black text-white rounded-lg px-6 py-2'>Search</button>
+                                                <button onClick={()=>{fetchSubCategories()}} className='bg-black text-white rounded-lg px-6 py-2'>Search</button>
                                             </div>
                                         </div>
                                     </div>
@@ -771,7 +771,7 @@ const CustomerOrder = () => {
                                                     </div>
                                                 )   
                                                     :
-                                                    search != '' && Location?.length == 0 ? (
+                                                   search == '' && Location?.addresses?.length == 0 ? (
                                                         <div className="flex justify-start flex-col mt-4">
                                                             <div className='flex flex-col gap-2 bg-white p-4 rounded-lg border border-[#D4D4D4] w-96 shadow-lg'>
                                                                 <h2 className="font-bold text-lg text-[#FF0000]">No Customer Found</h2>
@@ -792,7 +792,7 @@ const CustomerOrder = () => {
                                     {
                                         Location?.addresses?.length > 0 && (
                                             <button
-                                                onClick={() => { navigate(`/orders/restaurant_customer/${id}/${Location?.user_id}`) }}
+                                                onClick={() => { navigate(`/orders/new-orders/${Location?.user_id}`) }}
                                                 type="button"
                                                 className="px-8 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-600">
                                                 Next

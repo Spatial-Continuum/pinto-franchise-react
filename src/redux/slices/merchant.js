@@ -1,14 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import API_URL from "../../globalImport";
 export const fetchMerchantSearchApi = createAsyncThunk(
   "api/fetchMerchantsearch",
-  async ({ name }, { rejectWithValue }) => {
+  async (name , { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${API_URL}/restaurant/merchant/search`,
-        {
-          params: { name },
-        }
+        `${API_URL}/restaurant/merchant/search?name=${name}`,
       );
       return response.data;
     } catch (error) {

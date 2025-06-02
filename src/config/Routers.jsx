@@ -173,7 +173,7 @@ const Routers = (props) => {
         }
       />
       <Route
-        path="/orders/new-orders"
+        path="/orders/new-orders/:id"
         element={
           <Suspense
             fallback={<div className="text-center m-t-15">Loading...</div>}
@@ -183,7 +183,7 @@ const Routers = (props) => {
         }
       />
       <Route
-        path="/orders/category"
+        path="/orders/category/:userid/:restaurantid"
         element={
           <Suspense
             fallback={<div className="text-center m-t-15">Loading...</div>}

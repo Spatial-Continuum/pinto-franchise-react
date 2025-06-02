@@ -15,6 +15,7 @@ import extraApisReducer from "./slices/extraApis";
 import onboardingApi from "./slices/onboardingDeliveryPartner";
 import manageOrder from "./slices/order";
 import Login from "./slices/login";
+import Cart from "./slices/cart";
 
 export const store = configureStore({
   reducer: {
@@ -31,5 +32,6 @@ export const store = configureStore({
     onboardingApis: onboardingApi,
     manageOrderApis: manageOrder,
     loginApis: Login,
+    cart:Cart
   },
 });
