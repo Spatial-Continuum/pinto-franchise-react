@@ -70,6 +70,18 @@ export const getRestaurantList = createAsyncThunk(
     }
   }
 );
+
+export const getTopRestaurantList = createAsyncThunk(
+  "restaurant/getTopRestaurantList",
+  async (restaurantId, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${API_URL}/restaurant/merchant/toprestaurants`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 //getMenuBy restaurantId
 export const getMenuByRestaurant = createAsyncThunk(
   "restaurant/getMenuByRestayrant",
@@ -261,6 +273,7 @@ const restaurantSlice = createSlice({
     searchNameResults: [],
     menuCategory: [],
     mostLovedRestaurant: [],
+    ToprestaurantList:[],
     loading: false,
     error: null,
 
@@ -342,6 +355,20 @@ const restaurantSlice = createSlice({
         state.restaurantList = action.payload;
       })
       .addCase(getRestaurantList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+
+      .addCase(getTopRestaurantList.pending, (state, action) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getTopRestaurantList.fulfilled, (state, action) => {
+        state.loading = false;
+        state.ToprestaurantList = action.payload;
+      })
+      .addCase(getTopRestaurantList.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
@@ -464,7 +491,7 @@ export const selectRestaurantList = (state) => state.restaurant.restaurantList;
 export const selectApiLoading = (state) => state.restaurant.loading;
 export const selectApiError = (state) => state.restaurant.error;
 export const selectMostLovedrestaurant = (state) => state.restaurant.mostLovedRestaurant;
-
+export const selectTopLovedrestaurant = (state) => state.restaurant.ToprestaurantList;
 export const { resetRestaurants } = restaurantSlice.actions;
 
 export default restaurantSlice.reducer;

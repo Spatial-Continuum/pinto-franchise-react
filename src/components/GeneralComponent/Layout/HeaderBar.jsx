@@ -6,7 +6,7 @@ const HeaderBar = (props) => {
   const formattedDate = new Intl.DateTimeFormat('en-US', options).format(today);
   return ( 
   
-    <div className="flex justify-between items-center bg-white  p-4  overflow-hidden sticky top-0 z-10">
+    <div className="flex justify-between items-center bg-white  p-4  overflow-hidden sticky top-0">
     {/* Left Side: Logo and Orders Text */}
     <div className="flex items-center">
      
